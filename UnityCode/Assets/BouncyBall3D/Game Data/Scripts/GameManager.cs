@@ -104,7 +104,7 @@ public class GameManager : Singleton<GameManager>
         levelScore.text = "" + score;
         ScoreWin.text = "" + score;
 
-        scoreTextCompletion.text = score.ToString();
+        //scoreTextCompletion.text = score.ToString();
         bestScoreTxt.text = bestScore.ToString();
         scoreTokens.text = score.ToString() + " Tokens";
 
@@ -169,7 +169,7 @@ public class GameManager : Singleton<GameManager>
         levelScore.text = "" + score;
         ScoreWin.text = "" + score;
 
-        scoreTextCompletion.text = score.ToString();
+        //scoreTextCompletion.text = score.ToString();
         bestScoreTxt.text = bestScore.ToString();
         scoreTokens.text = score.ToString() + " Tokens";
 

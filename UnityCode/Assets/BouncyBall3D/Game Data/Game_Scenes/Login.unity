@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00157643, g: 0.00060816546, b: 0.0008438936, a: 1}
+  m_IndirectSpecularColor: {r: 0.0015604764, g: 0.0006062045, b: 0.0008401077, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -7624,7 +7624,7 @@ PrefabInstance:
     - target: {fileID: 8234168566597244148, guid: 04f87422bbc7e41e18fe377c29510e85, type: 3}
       propertyPath: _listSelectPrefab
       value: 
-      objectReference: {fileID: 3738294242931905465, guid: 7387fec3f894546c6a462bd128ab0615, type: 3}
+      objectReference: {fileID: 3738294242931905465, guid: 5ce1ec532df7b43289095375eb4e9c7e, type: 3}
     - target: {fileID: 8234168566597244151, guid: 04f87422bbc7e41e18fe377c29510e85, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -7700,7 +7700,7 @@ PrefabInstance:
     - target: {fileID: 8234168567151989342, guid: 04f87422bbc7e41e18fe377c29510e85, type: 3}
       propertyPath: _cardPrefab
       value: 
-      objectReference: {fileID: 7897510225993194610, guid: 174400d16198246d28cd975ea88273df, type: 3}
+      objectReference: {fileID: 3738294242931905465, guid: 5ce1ec532df7b43289095375eb4e9c7e, type: 3}
     - target: {fileID: 8612469505867757692, guid: 04f87422bbc7e41e18fe377c29510e85, type: 3}
       propertyPath: m_Sprite
       value: 

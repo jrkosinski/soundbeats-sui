@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.00157643, g: 0.00060816546, b: 0.0008438936, a: 1}
+  m_IndirectSpecularColor: {r: 0.0015604764, g: 0.0006062045, b: 0.0008401077, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -21264,7 +21264,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -845.0001, y: -59.000122}
+  m_AnchoredPosition: {x: -845.00024, y: -59}
   m_SizeDelta: {x: -38.995003, y: -7}
   m_Pivot: {x: 0.53, y: 0.11}
 --- !u!114 &1294080050
@@ -30616,6 +30616,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1331081832}
     m_Modifications:
+    - target: {fileID: 1679251503077316317, guid: 9be1edd06897b4c14ab1db2ee36b0175, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: cc26ffa98f306ed4fa537e42a292587f, type: 3}
+    - target: {fileID: 7776969478145900440, guid: 9be1edd06897b4c14ab1db2ee36b0175, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: cc26ffa98f306ed4fa537e42a292587f, type: 3}
     - target: {fileID: 8386645013151995135, guid: 9be1edd06897b4c14ab1db2ee36b0175, type: 3}
       propertyPath: m_SizeDelta.y
       value: -534.1432
@@ -30632,6 +30640,10 @@ PrefabInstance:
       propertyPath: m_Text
       value: CONGRATS!
       objectReference: {fileID: 0}
+    - target: {fileID: 8386645014179885288, guid: 9be1edd06897b4c14ab1db2ee36b0175, type: 3}
+      propertyPath: m_FontData.m_Font
+      value: 
+      objectReference: {fileID: 12800000, guid: cc26ffa98f306ed4fa537e42a292587f, type: 3}
     - target: {fileID: 8386645014278981664, guid: 9be1edd06897b4c14ab1db2ee36b0175, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
