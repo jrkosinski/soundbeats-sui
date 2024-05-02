@@ -171,7 +171,7 @@ public class UserData
     {
         foreach (string key in _nftNames)
         {
-            if (key == "Anna")
+            if (key == "Alien")
             {
                 _nfts[key] = true;
             }

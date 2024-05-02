@@ -94,8 +94,19 @@ public class GameManager : Singleton<GameManager>
         //WinPanel.SetActive(true);
         //revivePanel.SetActive(true);
         Winpanel.SetActive(true);
+        //replace best score 
+        int bestScore = this.GetBestScore(score);
 
-        UIManager.Instance.ShowHUD(false);
+        //UIManager.Instance.ShowHUD(false);
+        scoreText.text = "" + score;
+        songName.text = "" + songName.name;
+        songNameWin.text = "" + songName.name;
+        levelScore.text = "" + score;
+        ScoreWin.text = "" + score;
+
+        scoreTextCompletion.text = score.ToString();
+        bestScoreTxt.text = bestScore.ToString();
+        scoreTokens.text = score.ToString() + " Tokens";
 
         if (LevelGenerator.Instance.currentSong.stars < star)
         {
@@ -103,8 +114,7 @@ public class GameManager : Singleton<GameManager>
             LevelGenerator.Instance.currentSong.SaveData();
         }
 
-        //replace best score 
-        int bestScore = this.GetBestScore(score);
+
 
         //send score to leaderboard
         if (SuiWallet.HasActiveAddress())
@@ -142,7 +152,7 @@ public class GameManager : Singleton<GameManager>
         gameState = GameState.Lost;
         SoundManager.Instance.StopTrack();
         revivePanel.SetActive(true);
-        UIManager.Instance.ShowHUD(false);
+        //UIManager.Instance.ShowHUD(false);
 
         if (LevelGenerator.Instance.currentSong.stars < star)
         {
@@ -152,6 +162,16 @@ public class GameManager : Singleton<GameManager>
 
         //replace best score 
         int bestScore = this.GetBestScore(score);
+
+        scoreText.text = "" + score;
+        songName.text = "" + songName.name;
+        songNameWin.text = "" + songName.name;
+        levelScore.text = "" + score;
+        ScoreWin.text = "" + score;
+
+        scoreTextCompletion.text = score.ToString();
+        bestScoreTxt.text = bestScore.ToString();
+        scoreTokens.text = score.ToString() + " Tokens";
 
         //send score to leaderboard
         if (SuiWallet.HasActiveAddress())
@@ -171,12 +191,7 @@ public class GameManager : Singleton<GameManager>
         }
         //Debug.Log(PlayerPrefsExtra.GetInt(songName.name));
 
-
         PlayerPrefsExtra.Save();
-        // Add score here
-        scoreTextCompletion.text = score.ToString();
-        bestScoreTxt.text = bestScore.ToString();
-        scoreTokens.text = score.ToString() + " Tokens";
 
         LevelGenerator.Instance.RemovePlatforms();
         //if (score > 0)

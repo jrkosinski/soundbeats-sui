@@ -66,13 +66,16 @@ public class NetworkManager : Singleton<NetworkManager>
         Debug.Log("Json   " + json);
         var dictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
         //Debug.Log("Dictionary  " + dictionary["signature"]);
-        SendRequest(
-            ServerConfig.FormatServerUrl(ServerConfig.API_POST_CREATE_NFT),
+        StartCoroutine(SendPostRequest(ServerConfig.FormatServerUrl(ServerConfig.API_POST_CREATE_NFT),
             callbackOnSuccess,
-            callbackOnFail,
-            "post",
-            dictionary
-        );
+            callbackOnFail, json));
+        //SendRequest(
+        //    ServerConfig.FormatServerUrl(ServerConfig.API_POST_CREATE_NFT),
+        //    callbackOnSuccess,
+        //    callbackOnFail,
+        //    "post",
+        //    dictionary
+        //);
     }
 
     /// <summary>
@@ -175,9 +178,9 @@ public class NetworkManager : Singleton<NetworkManager>
     public void SendLeaderboardScore(string wallet, int score, UnityAction<LeaderboardScoreDto> callbackOnSuccess, UnityAction<string> callbackOnFail)
     {
         CreateLeaderboardDto body = new CreateLeaderboardDto();
-        body.authId = wallet;
+        body.authType = "evm";
         body.score = score;
-        body.authId = "evm";
+        body.authId = UserData.WalletAddress;
         print("body.wallet : " + body.authId + " - body.score : " + body.score);
         SendLeaderboardScore(body, callbackOnSuccess, callbackOnFail);
     }
