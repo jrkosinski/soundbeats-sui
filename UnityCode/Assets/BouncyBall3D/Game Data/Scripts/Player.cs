@@ -130,7 +130,6 @@ public class Player : MonoBehaviour
     }
     public void ResetPlayer()
     {
-        Debug.Log("ResetPlayer");
         mainCamera = Camera.main;
         canMove = false;
         platformHitCount = 1;
@@ -170,7 +169,6 @@ public class Player : MonoBehaviour
         Text_Name.text = characters[index].name;
         characterSelect = index;
         characters[index].transform.position = new Vector3(characters[index].transform.position.x, 0, characters[index].transform.position.z);
-        Debug.Log(index);
         for (int i = 0; i <= Level_Selected_character.Length - 1; i++)
         {
             Level_Selected_character[i].SetActive(false);
@@ -239,7 +237,7 @@ public class Player : MonoBehaviour
 
             if (check == true)
             {
-                Debug.Log("Isgrounded");
+                //Debug.Log("Isgrounded");
 
                 if (index % 2 == 0)
                 {
@@ -332,7 +330,7 @@ public class Player : MonoBehaviour
         //swiped left
         if (GameManager.instance.gameState == GameState.Gameplay)
         {
-            float moveSpeed = 5;
+            float moveSpeed = 20;
             transform.Translate(new Vector3(-1, 0, 0) * moveSpeed * Time.deltaTime);
         }
     }
@@ -342,7 +340,7 @@ public class Player : MonoBehaviour
         //swiped right
         if (GameManager.instance.gameState == GameState.Gameplay)
         {
-            float moveSpeed = 5;
+            float moveSpeed = 20;
             transform.Translate(new Vector3(1, 0, 0) * moveSpeed * Time.deltaTime);
         }
     }
@@ -506,7 +504,7 @@ public class Player : MonoBehaviour
     }
     void CheckPlatform()
     {
-        Debug.Log("CheckPlatform");
+        //Debug.Log("CheckPlatform");
         if (Physics.CheckSphere(jumpingPart.position, 1.5f, platformLayer))
         {
             //randomNumber = UnityEngine.Random.Range(1, 3);

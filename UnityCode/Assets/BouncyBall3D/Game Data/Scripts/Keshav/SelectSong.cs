@@ -41,7 +41,6 @@ public class SelectSong : MonoBehaviour
             }
         }
         SongSelectionPopup.Instance.setData(LevelNumber - 1, canSeePlayer);
-        Debug.Log("Test");
         StartCoroutine(SetSongData());
     }
 

@@ -218,7 +218,7 @@ public class LevelGenerator : Singleton<LevelGenerator>
         }
 
 
-        if (GameManager.instance.gameState == GameState.Gameplay && Random.Range(0, 10) > 7 && GameManager.instance.isSpeedupActive == false)
+        if (GameManager.instance.gameState == GameState.Gameplay && Random.Range(0, 10) > 8 && GameManager.instance.isSpeedupActive == false)
         {
             GameObject speedUp = Instantiate(PowerUpPrefab, platform.transform);
         }

@@ -61,6 +61,6 @@ public class GoogleAnalytics : Singleton<GoogleAnalytics>
 
     public void CallSendGTag(string category, string action, string label, int value = 0)
     {
-        Debug.Log("GA TAG : category : " + category + " - action : " + action + " - label" + label);
+        Debug.Log("GA TAG : category : " + category + " - action : " + action + " - label : " + label);
     }
 }

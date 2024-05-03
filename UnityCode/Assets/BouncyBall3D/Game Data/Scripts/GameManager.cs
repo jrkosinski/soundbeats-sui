@@ -238,17 +238,17 @@ public class GameManager : Singleton<GameManager>
         songNameWin.text = LevelGenerator.Instance.currentSong.SongScore.ToString();
 
         levelScore.text = score.ToString();
-        for (int i = 0; i < 3; i++)
-        {
-            if (i < star)
-            {
-                stars[i].color = activeStars;
-            }
-            else
-            {
-                stars[i].color = inactiveStars;
-            }
-        }
+        //for (int i = 0; i < 3; i++)
+        //{
+        //    if (i < star)
+        //    {
+        //        stars[i].color = activeStars;
+        //    }
+        //    else
+        //    {
+        //        stars[i].color = inactiveStars;
+        //    }
+        //}
     }
 
     void videocomplet(bool copmlet) { }

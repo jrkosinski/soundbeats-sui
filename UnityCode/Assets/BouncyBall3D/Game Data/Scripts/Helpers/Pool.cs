@@ -12,7 +12,7 @@ public class Pool : MonoBehaviour
 
     void Awake()
     {
-        
+
     }
 
     public void SetMovingPlatform()
@@ -22,7 +22,7 @@ public class Pool : MonoBehaviour
             for (int i = 0; i < startAmount; i++)
             {
                 GameObject newitem = Instantiate(itemPrefab, transform);
-                Debug.Log("***************************Moving_Platform***************************");
+                //Debug.Log("***************************Moving_Platform***************************");
                 newitem.SetActive(false);
                 poolQueue.Enqueue(newitem);
             }
@@ -34,7 +34,7 @@ public class Pool : MonoBehaviour
         for (int i = 0; i < amount; i++)
         {
             GameObject newItem = Instantiate(itemPrefab, transform);
-            Debug.Log("***************************Platform***************************");
+            //Debug.Log("***************************Platform***************************");
             newItem.SetActive(false);
             poolQueue.Enqueue(newItem);
         }

@@ -141,6 +141,8 @@ public class UIController : MonoBehaviour
             bool owned = UserData.OwnsNft(this.Name);
             this.MintNftScreenButton.GetComponent<Image>().sprite = selected && owned ? this.SelectedSprite : this.UnselectedSprite;
             this.MintButton.GetComponent<Image>().sprite = selected && owned ? this.SelectedSprite : this.UnselectedSprite;
+            this.MintNftScreenButton.GetComponent<Image>().color = this.Locked ? Color.red : Color.white;
+            this.MintButton.GetComponent<Image>().color = this.Locked ? Color.red : Color.white;
 
             if (selected && owned)
             {
@@ -153,7 +155,7 @@ public class UIController : MonoBehaviour
                 {
                     if (owned)
                     {
-                        this.MintNftScreenText.text = "NFT Owned";
+                        this.MintNftScreenText.text = "Select";
                         this.MintText.text = "Select";
                     }
                     else
@@ -166,7 +168,7 @@ public class UIController : MonoBehaviour
                 {
                     if (owned)
                     {
-                        this.MintNftScreenText.text = "NFT Owned";
+                        this.MintNftScreenText.text = "Select";
                         this.MintText.text = "Select";
                     }
                     else
@@ -194,15 +196,6 @@ public class UIController : MonoBehaviour
     {
         //get user owned NFTs
         NetworkManager.Instance.GetUserOwnedBeatsNfts(SuiWallet.ActiveWalletAddress, OnSuccessfulGetBeatsNfts, OnErrorGetBeatsNfts);
-
-        this.NftUiList.Add(NftUiElements_Anna);
-        //this.NftUiList.Add(NftUiElements_Marshmallow);
-        //this.NftUiList.Add(NftUiElements_Taral);
-        //this.NftUiList.Add(NftUiElements_Alien);
-        this.NftUiList.Add(NftUiElements_Neon);
-        this.NftUiList.Add(NftUiElements_Robot);
-        this.NftUiList.Add(NftUiElements_Rainbow);
-        this.NftUiList.Add(NftUiElements_Wanderer);
 
         ActiveAddressText.text = SuiWallet.ActiveWalletAddress;
 
@@ -299,6 +292,13 @@ public class UIController : MonoBehaviour
         NftUiElements_Wanderer.ImageUrl = GameData.NftImageUrlBase + "Wanderer.png";
         NftUiElements_Wanderer.SelectedSprite = sprite_Green;
         NftUiElements_Wanderer.UnselectedSprite = sprite_Pink;
+
+        this.NftUiList.Add(NftUiElements_Anna);
+        this.NftUiList.Add(NftUiElements_Neon);
+        this.NftUiList.Add(NftUiElements_Robot);
+        this.NftUiList.Add(NftUiElements_Rainbow);
+        this.NftUiList.Add(NftUiElements_Wanderer);
+
         //Log Out (click logout button)
         onLogOutButton.onClick.AddListener(() =>
         {
@@ -435,6 +435,12 @@ public class UIController : MonoBehaviour
             MintNftScreenButtonClick(3);
         });
 
+        MintNFTScreen_Button_Wanderer.onClick.AddListener(() =>
+        {
+            MintNftScreenButtonClick(4);
+        });
+
+
         MintNFTScreen_Button_Close.onClick.AddListener(() =>
         {
             Mint_NFTScreen.SetActive(false);
@@ -529,7 +535,6 @@ public class UIController : MonoBehaviour
         NFTLinkText = SuiWallet.ActiveWalletAddress;
         txtAddressNFT_WalletScreen.text = NFTLinkText;
         txtAddress_WalletScreen.text = NFTLinkText;
-        Debug.LogError("UserData.UserName : " + UserData.UserName);
         txtUserName_WalletScreen.text = "Hello " + UserData.UserName;
         txtLevel_WalletScreen.text = "Level " + UserData.currentLevel;
         string nftSignature = PlayerPrefsExtra.GetString("nftSignature");

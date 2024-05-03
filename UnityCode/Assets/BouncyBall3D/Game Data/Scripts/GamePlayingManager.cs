@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -40,6 +41,15 @@ public class GamePlayingManager : MonoBehaviour
 
     private void Start()
     {
+        if (IsMobilePlatform())
+        {
+            gameStartText.GetComponent<TextMeshProUGUI>().text = "Swipe up to start/un-pause, swipe down to pause\nswipe left/Right to move Left/Right";
+        }
+        else
+        {
+            gameStartText.GetComponent<TextMeshProUGUI>().text = "Press Space to start/pause\nWASD / Arrow keys to move";
+        }
+
         CameraFollow.instance.target = Player.instance.gameObject.transform;
         GameManager.instance.platform = platform;
         GameManager.instance.gameStartText = gameStartText;
@@ -119,5 +129,14 @@ public class GamePlayingManager : MonoBehaviour
         LevelGenerator.Instance.StartWithSong();
         Player.instance.transform.GetChild(8).gameObject.SetActive(false);
         Player.instance.transform.GetChild(8).gameObject.SetActive(true);
+    }
+
+    bool IsMobilePlatform()
+    {
+#if !UNITY_EDITOR && (UNITY_ANDROID || UNITY_IOS)
+        return true;
+#else
+        return false;
+#endif
     }
 }
