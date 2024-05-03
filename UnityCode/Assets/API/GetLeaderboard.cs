@@ -81,8 +81,9 @@ public class GetLeaderboard : Singleton<GetLeaderboard>
         {
             SongData songData = songDataSet.Songs[i];
             SelectSong newSongObject = Instantiate(songPrefab, contentParent);
-            newSongObject.transform.GetChild(0).GetComponent<Text>().text = i + 1 + ")";
-            newSongObject.transform.GetChild(1).GetComponent<Text>().text = songData.currentSong.name + "_" + UserData.UserName + "_" + "beatmap";
+            newSongObject.transform.GetChild(0).GetComponent<Image>().sprite = songData.currentSong.SongImage;
+            //newSongObject.transform.GetChild(0).GetComponent<Text>().text = i + 1 + ")";
+            newSongObject.transform.GetChild(2).GetComponent<Text>().text = songData.currentSong.name + "_" + UserData.UserName + "_" + "beatmap";
             Debug.Log(songData.currentSong.name);
             newSongObject.LevelNumber = i + 1;
         }
