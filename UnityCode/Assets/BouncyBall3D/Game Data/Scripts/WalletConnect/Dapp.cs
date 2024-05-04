@@ -27,8 +27,6 @@ namespace WalletConnectUnity.Modal.Sample
         {
             _dappButtons.SetActive(true);
             Application.targetFrameRate = Screen.currentResolution.refreshRate;
-            Debug.Log($"[WalletConnectModalSample] WalletConnectModal.SignClient : " + WalletConnectModal.SignClient);
-
             // When WalletConnectModal is ready, enable buttons and subscribe to other events.
             // WalletConnectModal.SignClient can be null if WalletConnectModal is not ready.
             WalletConnectModal.Ready += (sender, args) =>
@@ -45,8 +43,8 @@ namespace WalletConnectUnity.Modal.Sample
                 else
                 {
                     //EnableNetworksList();
-                    OnContinueButton();
                     Debug.Log($"[WalletConnectModalSample] EnableNetworksList.");
+                    OnContinueButton();
 
                 }
                 // Invoked after wallet connected
@@ -105,16 +103,24 @@ namespace WalletConnectUnity.Modal.Sample
 
             _continueButton.interactable = _selectedChains.Count != 0;
         }
-
+        private WalletConnectModalOptions options;
         public void OnContinueButton()
         {
-            _selectedChains.Add(Chain.Ethereum);
-            var options = new WalletConnectModalOptions
+            print("Continue Button Event");
+            if (_selectedChains.Count == 0)
+                _selectedChains.Add(Chain.Ethereum);
+            options = new WalletConnectModalOptions
             {
                 ConnectOptions = BuildConnectOptions()
             };
 
             WalletConnectModal.Open(options);
+        }
+
+        public void OnCloseModel()
+        {
+            //LoginManager.instance.LoadingScreen.SetActive(false);
+            Invoke("OnContinueButton", 1f);
         }
 
         private ConnectOptions BuildConnectOptions()

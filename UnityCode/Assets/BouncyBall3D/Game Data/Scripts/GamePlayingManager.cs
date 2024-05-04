@@ -20,24 +20,15 @@ public class GamePlayingManager : MonoBehaviour
     public PowerupProgress powerupTimer;
     public Text scoreText;
     public Animator scoreAnim;
-    public Animator reviveAnim;
-    public GameObject revivePanel, playButton, Winpanel;
+    public GameObject revivePanel, Winpanel;
     [Space]
     public Text songName;
-    public Text songNameWin;
+    public Text BestScoreForWinPanel, scoreForWinPanel, scoreTokenForWinPanel;
 
-    public Text levelScore;
-    public Image[] stars = new Image[3];
-
-    public Text scoreTextCompletion;
-    public Text bestScoreTxt;
-    public Text scoreTokens;
-    public Button playAgain_Button;
+    public Text BestScoreForLosePanel, scoreForLosePanel, scoreTokenForLosePanel;
 
     public GameObject quitScreen;
-    public Text ScoreWin;
     public GameObject pauseButton;
-
 
     private void Start()
     {
@@ -57,19 +48,16 @@ public class GamePlayingManager : MonoBehaviour
         GameManager.instance.powerupTimer = powerupTimer;
         GameManager.instance.scoreText = scoreText;
         GameManager.instance.scoreAnim = scoreAnim;
-        GameManager.instance.reviveAnim = reviveAnim;
         GameManager.instance.revivePanel = revivePanel;
-        GameManager.instance.playButton = playButton;
         GameManager.instance.Winpanel = Winpanel;
         GameManager.instance.songName = songName;
-        GameManager.instance.songNameWin = songNameWin;
-        GameManager.instance.levelScore = levelScore;
-        GameManager.instance.scoreTextCompletion = scoreTextCompletion;
-        GameManager.instance.bestScoreTxt = bestScoreTxt;
-        GameManager.instance.scoreTokens = scoreTokens;
-        GameManager.instance.playAgain_Button = playAgain_Button;
+        GameManager.instance.BestScoreForWinPanel = BestScoreForWinPanel;
+        GameManager.instance.scoreTokenForWinPanel = scoreTokenForWinPanel;
+        GameManager.instance.scoreForWinPanel = scoreForWinPanel;
+        GameManager.instance.BestScoreForLosePanel = BestScoreForLosePanel;
+        GameManager.instance.scoreForLosePanel = scoreForLosePanel;
+        GameManager.instance.scoreTokenForLosePanel = scoreTokenForLosePanel;
         GameManager.instance.quitScreen = quitScreen;
-        GameManager.instance.ScoreWin = ScoreWin;
         GameManager.instance.pauseButton = pauseButton;
         Player.instance.gameObject.SetActive(true);
         Player.instance.ResetPlayer();
@@ -124,7 +112,7 @@ public class GamePlayingManager : MonoBehaviour
         Player.instance.ResetPlayer();
         revivePanel.SetActive(false);
         Winpanel.SetActive(false);
-        playButton.SetActive(true);
+        gameStartText.SetActive(true);
         GameManager.instance.platform.SetActive(true);
         LevelGenerator.Instance.StartWithSong();
         Player.instance.transform.GetChild(8).gameObject.SetActive(false);

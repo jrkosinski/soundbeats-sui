@@ -194,6 +194,8 @@ public class UIController : MonoBehaviour
 
     private void Start()
     {
+
+        Time.timeScale = 1;
         //get user owned NFTs
         NetworkManager.Instance.GetUserOwnedBeatsNfts(SuiWallet.ActiveWalletAddress, OnSuccessfulGetBeatsNfts, OnErrorGetBeatsNfts);
 

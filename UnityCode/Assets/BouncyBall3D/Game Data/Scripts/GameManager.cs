@@ -33,24 +33,16 @@ public class GameManager : Singleton<GameManager>
     public PowerupProgress powerupTimer;
     public Text scoreText;
     public Animator scoreAnim;
-    public Animator reviveAnim;
-    public GameObject revivePanel, playButton, Winpanel;
+    public GameObject revivePanel, Winpanel;
     [Space]
     public Text songName;
-    public Text songNameWin;
-
-    public Text levelScore;
+    public Text BestScoreForWinPanel, scoreForWinPanel, scoreTokenForWinPanel;
     public Image[] stars = new Image[3];
     public Color activeStars, inactiveStars;
 
-    public Text scoreTextCompletion;
-    public Text bestScoreTxt;
-    public Text scoreTokens;
-    public Button playAgain_Button;
-
+    public Text BestScoreForLosePanel, scoreForLosePanel, scoreTokenForLosePanel;
     public GameObject quitScreen;
     public GameObject pauseButton;
-    public Text ScoreWin;
 
     public static GameManager instance;
     private void Awake()
@@ -98,23 +90,16 @@ public class GameManager : Singleton<GameManager>
         int bestScore = this.GetBestScore(score);
 
         //UIManager.Instance.ShowHUD(false);
-        scoreText.text = "" + score;
         songName.text = "" + songName.name;
-        songNameWin.text = "" + songName.name;
-        levelScore.text = "" + score;
-        ScoreWin.text = "" + score;
+        scoreForWinPanel.text = "" + score;
+        scoreTokenForWinPanel.text = score.ToString() + " Tokens";
+        BestScoreForWinPanel.text = bestScore.ToString();
 
-        //scoreTextCompletion.text = score.ToString();
-        bestScoreTxt.text = bestScore.ToString();
-        scoreTokens.text = score.ToString() + " Tokens";
-
-        if (LevelGenerator.Instance.currentSong.stars < star)
-        {
-            LevelGenerator.Instance.currentSong.stars = star;
-            LevelGenerator.Instance.currentSong.SaveData();
-        }
-
-
+        //if (LevelGenerator.Instance.currentSong.stars < star)
+        //{
+        //    LevelGenerator.Instance.currentSong.stars = star;
+        //    LevelGenerator.Instance.currentSong.SaveData();
+        //}
 
         //send score to leaderboard
         if (SuiWallet.HasActiveAddress())
@@ -128,7 +113,6 @@ public class GameManager : Singleton<GameManager>
         }
 
         ShowLevelProgress();
-        ScoreWin.text = score.ToString();
         if (score > PlayerPrefsExtra.GetInt(LevelGenerator.Instance.currentSong.name))
         {
             PlayerPrefsExtra.SetInt(LevelGenerator.Instance.currentSong.name, score);
@@ -154,24 +138,17 @@ public class GameManager : Singleton<GameManager>
         revivePanel.SetActive(true);
         //UIManager.Instance.ShowHUD(false);
 
-        if (LevelGenerator.Instance.currentSong.stars < star)
-        {
-            LevelGenerator.Instance.currentSong.stars = star;
-            LevelGenerator.Instance.currentSong.SaveData();
-        }
+        //if (LevelGenerator.Instance.currentSong.stars < star)
+        //{
+        //    LevelGenerator.Instance.currentSong.stars = star;
+        //    LevelGenerator.Instance.currentSong.SaveData();
+        //}
 
         //replace best score 
         int bestScore = this.GetBestScore(score);
-
-        scoreText.text = "" + score;
-        songName.text = "" + songName.name;
-        songNameWin.text = "" + songName.name;
-        levelScore.text = "" + score;
-        ScoreWin.text = "" + score;
-
-        //scoreTextCompletion.text = score.ToString();
-        bestScoreTxt.text = bestScore.ToString();
-        scoreTokens.text = score.ToString() + " Tokens";
+        BestScoreForLosePanel.text = "" + UserData.BestScore;
+        scoreForLosePanel.text = "" + score;
+        scoreTokenForLosePanel.text = score.ToString() + " Tokens";
 
         //send score to leaderboard
         if (SuiWallet.HasActiveAddress())
@@ -216,7 +193,6 @@ public class GameManager : Singleton<GameManager>
             bestScore = score;
             UserData.BestScore = bestScore;
         }
-
         return bestScore;
     }
 
@@ -235,9 +211,8 @@ public class GameManager : Singleton<GameManager>
     void ShowLevelProgress()
     {
         songName.text = LevelGenerator.Instance.currentSong.name;
-        songNameWin.text = LevelGenerator.Instance.currentSong.SongScore.ToString();
-
-        levelScore.text = score.ToString();
+        //songNameWin.text = LevelGenerator.Instance.currentSong.SongScore.ToString();
+        scoreForWinPanel.text = score.ToString();
         //for (int i = 0; i < 3; i++)
         //{
         //    if (i < star)
@@ -262,7 +237,6 @@ public class GameManager : Singleton<GameManager>
         {
             player.Revive();
             revivePanel.SetActive(false);
-            //playButton.SetActive(true);
             //  Advertisements.Instance.ShowRewardedVideo(videocomplet);
         }
     }
@@ -275,7 +249,6 @@ public class GameManager : Singleton<GameManager>
         {
             player.Revive();
             revivePanel.SetActive(false);
-            //playButton.SetActive(true);
         }
     }
     public void HidePopup()
@@ -285,7 +258,7 @@ public class GameManager : Singleton<GameManager>
         player.ResetPlayer();
         revivePanel.SetActive(false);
         Winpanel.SetActive(false);
-        playButton.SetActive(true);
+        gameStartText.SetActive(true);
         GameManager.instance.platform.SetActive(true);
         LevelGenerator.Instance.StartWithSong();
     }
@@ -371,8 +344,6 @@ public class GameManager : Singleton<GameManager>
 
     public void NoThanks()
     {
-        reviveAnim.SetTrigger("No");
-
         //Advertisements.Instance.ShowInterstitial();
     }
 
@@ -392,7 +363,7 @@ public class GameManager : Singleton<GameManager>
         scoreText.text = "0";
         player.ResetPlayer();
         revivePanel.SetActive(false);
-        playButton.SetActive(true);
+        gameStartText.SetActive(true);
         LevelGenerator.Instance.RemovePlatforms();
         LevelGenerator.Instance.myDataList.dataSave.Clear();
         UIManager.Instance.ShowMainMenu();
@@ -531,6 +502,12 @@ public class GameManager : Singleton<GameManager>
         producerSelectSong.SetActive(true);
     }
 
+    public void CloseProducer()
+    {
+        producer = false;
+        producerSelectSong.SetActive(false);
+    }
+
     public void okBtn()
     {
         mainCamera.SetActive(true);
@@ -590,6 +567,7 @@ public class GameManager : Singleton<GameManager>
         score = 0;
         LevelGenerator.Instance.RemovePlatforms();
         HidePopup();
+        producer = false;
         LevelGenerator.Instance.myDataList.dataSave.Clear();
         UIManager.Instance.ShowMainMenu();
         UIController.instance.Mint_NFTScreen.SetActive(false);

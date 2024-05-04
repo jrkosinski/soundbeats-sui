@@ -115,7 +115,8 @@ public class Player : MonoBehaviour
         //Text_Name.text = Selected_character[UserData.SelectedNftIndex].name;
         //characters[UserData.SelectedNftIndex].SetActive(true);
         //marshmello_Animator.Play("Idle");
-
+        Time.timeScale = 1;
+        characterSelect = UserData.SelectedNftIndex;
         Debug.Log("MakeCharacterReady :==>  " + characterSelect);
         //ResetPlayer();
         //  StartCoroutine(GameManager.Instance.GameStartText());
@@ -140,7 +141,7 @@ public class Player : MonoBehaviour
         marshmello_Animator = Selected_character[UserData.SelectedNftIndex].GetComponent<Animator>();
         //Selected_character[PlayerPrefs.GetInt("Selected_player")].SetActive(true);
         //Text_Name.text = Selected_character[characterSelect].name;
-
+        marshmello_Animator.Play("Idle");
         var obj = transform;
         obj.position = new Vector3(0f, .5f, 0f);
         obj.rotation = Quaternion.identity;
@@ -167,6 +168,7 @@ public class Player : MonoBehaviour
         Text_Name.transform.parent.gameObject.SetActive(true);
 
         Text_Name.text = characters[index].name;
+        UserData.SelectedNftIndex = index;
         characterSelect = index;
         characters[index].transform.position = new Vector3(characters[index].transform.position.x, 0, characters[index].transform.position.z);
         for (int i = 0; i <= Level_Selected_character.Length - 1; i++)
@@ -290,7 +292,7 @@ public class Player : MonoBehaviour
             }
             else if (fingerDownPos.y - fingerUpPos.y < 0)
             {
-                //  OnSwipeDown();
+                OnSwipeDown();
             }
             fingerUpPos = fingerDownPos;
 
