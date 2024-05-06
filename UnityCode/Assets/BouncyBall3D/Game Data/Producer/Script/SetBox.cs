@@ -27,7 +27,7 @@ public class SetBox : MonoBehaviour
 
         Vector3 setBoxPos = boxPos[randomboxPos];
         setBoxPos.z = boxZPos;
-
+        Debug.Log("its heare");
         Instantiate(boxs[randomBox], setBoxPos, Quaternion.identity, gameObject.transform);
 
     }

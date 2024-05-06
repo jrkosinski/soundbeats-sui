@@ -373,6 +373,7 @@ public class AudioVisualizeManager : MonoBehaviour
             Debug.Log($"<color=green> CURRENT_PLAY_BACK_TIME : </color> " + BeatDetect.beatDetect.currentTime + $" <color=green> SECONDS </color>");
             SetBox.instance.boxZPos = BeatDetect.beatDetect.currentTime * LevelGenerator.Instance.Distance;
             SetBox.instance.SetBoxUseList();
+            Debug.Log("dhjghff");
             SetBox.instance.cameraZPos = audioSource.time;
             SetBox.instance.lastPos = audioSource.clip.length;
         }
@@ -401,7 +402,7 @@ public class AudioVisualizeManager : MonoBehaviour
     {
         ClipPrep();
         if (beat)
-        {
+        {  
 
             beat = false;
         }
