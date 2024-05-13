@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "674530818692",
+    "project_id": "soundbeats-mobile",
+    "storage_bucket": "soundbeats-mobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:674530818692:android:857cd6d12851ae919560d1",
+        "android_client_info": {
+          "package_name": "com.DefaultCompany.Soundbeats"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDy36MQRXBwkpSEOL18ctIRS3OlYJn4P4I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -181,7 +181,7 @@ public class GameManager : Singleton<GameManager>
         //    this.tempTokenAmount = requestTokenDto.amount; //TODO: we really should have the amount be part of the response DTO
         //    NetworkManager.Instance.RequestToken(requestTokenDto, OnSuccessfulRequestPrivateToken, OnErrorRequestPrivateToken);
         //}
-        //GoogleAnalytics.Instance.SendPlayerLost(score, this.GetGameDuration());
+        GoogleAnalytics.Instance.SendPlayerLost(score, this.GetGameDuration());
         score = 0;
     }
 

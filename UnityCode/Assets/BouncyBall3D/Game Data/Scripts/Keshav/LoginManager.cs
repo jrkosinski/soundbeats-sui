@@ -41,6 +41,7 @@ public class LoginManager : MonoBehaviour
         ConnectWalletButton.onClick.AddListener(() =>
         {
             LoadingScreen.SetActive(true);
+            GoogleAnalytics.Instance.SendFakeWalletLogin(SystemInfo.deviceModel + " - " + SystemInfo.operatingSystemFamily);
             StartCoroutine(LoadingSceen());
         });
     }
@@ -242,6 +243,7 @@ public class LoginManager : MonoBehaviour
             //#endif
             UserData.currentLevel = verifySignatureResponseDto.level;
             NetworkManager.Instance.CheckUsername("" + UserData.UserName, isUserNameSaved, null);
+            GoogleAnalytics.Instance.SendLoginEvent(verifySignatureResponseDto.wallet, UserData.UserName);
             if (verifySignatureResponseDto.suiWallet != "")
             {
                 SuiWallet.ActiveWalletAddress = verifySignatureResponseDto.suiWallet;

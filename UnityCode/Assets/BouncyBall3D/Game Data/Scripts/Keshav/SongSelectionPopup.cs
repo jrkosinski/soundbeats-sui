@@ -77,6 +77,8 @@ public class SongSelectionPopup : Singleton<SongSelectionPopup>
         if (GameManager.instance.producer == false)
         {
             //SceneManager.LoadScene("LoadingSceneForPlaying");
+            GoogleAnalytics.Instance.SendGameStart(_song.name);
+            Debug.Log("PlaySong " + _song.name);
             SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 3);
             DontDestroyOnLoad(GameManager.instance.gameObject);
             DontDestroyOnLoad(LevelGenerator.Instance.gameObject);
@@ -87,10 +89,11 @@ public class SongSelectionPopup : Singleton<SongSelectionPopup>
             CameraFollow.instance.target = Player.instance.gameObject.transform;
             Player.instance.ResetPlayer();
             LevelGenerator.Instance.currentSong = _song;
-            Debug.Log("PlaySong " + _song.name);
+
         }
         if (GameManager.instance.producer == true)
         {
+            GoogleAnalytics.Instance.SendProducerStart(_song.name);
             LevelGenerator.Instance.currentSong = _song;
             GameManager.instance.SelectSong(setProducerSongIndex);
             DontDestroyOnLoad(GameManager.instance.gameObject);
