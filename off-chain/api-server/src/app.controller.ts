@@ -1,11 +1,17 @@
 import {
-    Body, Controller, Get, Post, Put, Query, HttpCode,
-    BadRequestException, 
+    Body,
+    Controller,
+    Get,
+    Post,
+    Put,
+    Query,
+    HttpCode,
+    BadRequestException,
     UnauthorizedException,
-    InternalServerErrorException, 
-    } from '@nestjs/common'
-import { ApiOperation } from '@nestjs/swagger'
-import { AppService } from './app.service'
+    InternalServerErrorException,
+} from '@nestjs/common';
+import { ApiOperation } from '@nestjs/swagger';
+import { AppService } from './app.service';
 import {
     MintBeatsNftDto,
     MintBeatmapsNftDto,
@@ -30,12 +36,14 @@ import {
     GetLeaderboardSprintDto,
     GetLeaderboardSprintResponseDto,
     GetAccountDto,
-    GetAccountResponseDto, 
-    CheckUsernameDto, 
+    GetAccountResponseDto,
+    CheckUsernameDto,
     CheckUsernameResponseDto,
-    UpdateUserLevelDto
-} from './entity/req.entity'
-import { SuiService } from './sui.service'
+    UpdateUserLevelDto,
+    UpdateUserOAuthDto,
+    UpdateUserOAuthResponseDto,
+} from './entity/req.entity';
+import { SuiService } from './sui.service';
 import { AppLogger } from './app.logger';
 
 const LEADERBOARD_DEFAULT_LIMIT: number = 100;
@@ -48,7 +56,7 @@ const MAX_SIGNATURE_LENGTH = 500;
 
 @Controller()
 export class AppController {
-    logger: AppLogger
+    logger: AppLogger;
 
     constructor(private readonly appService: AppService, private readonly suiService: SuiService) {
         this.logger = new AppLogger('app.controller');
@@ -59,8 +67,8 @@ export class AppController {
         return 'ok';
     }
 
-    // *** NFTS and TOKENS *** 
-    
+    // *** NFTS and TOKENS ***
+
     returnError(apiCall: string, errorCode: number, message: any) {
         this.logger.error(`${apiCall} returning ${errorCode}: ${message}`);
         switch (errorCode) {
@@ -70,8 +78,8 @@ export class AppController {
                 throw new UnauthorizedException(message);
             case 500:
                 throw new InternalServerErrorException(message);
-        } 
-        
+        }
+
         throw new BadRequestException(message);
     }
 
@@ -93,21 +101,26 @@ export class AppController {
             this.returnError(logString, 400, 'name cannot be null or empty');
         }
         if (name.length > MAX_NFT_NAME_LENGTH) {
-            this.returnError(logString, 400, `name exceeded max length of ${MAX_NFT_NAME_LENGTH}`)
+            this.returnError(logString, 400, `name exceeded max length of ${MAX_NFT_NAME_LENGTH}`);
         }
         if (!imageUrl || imageUrl == '') {
             this.returnError(logString, 400, 'imageUrl cannot be null or empty');
         }
         if (imageUrl.length > MAX_URL_LENGTH) {
-            this.returnError(logString, 400, `imageUrl exceeded max length of ${MAX_URL_LENGTH}`)
+            this.returnError(logString, 400, `imageUrl exceeded max length of ${MAX_URL_LENGTH}`);
         }
 
         try {
-            const output = await this.suiService.mintBeatsNfts(recipient, name, "Soundbeats NFT", imageUrl, quantity ?? 1);
+            const output = await this.suiService.mintBeatsNfts(
+                recipient,
+                name,
+                'Soundbeats NFT',
+                imageUrl,
+                quantity ?? 1,
+            );
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
-        }
-        catch (e) {
+        } catch (e) {
             this.returnError(logString, 500, e.toString());
         }
     }
@@ -119,12 +132,12 @@ export class AppController {
         const logString = `POST /api/v1/nfts/beatmaps ${JSON.stringify(body)}`;
         this.logger.log(logString);
         let { recipient, username, title, artist, beatmapJson, imageUrl, quantity } = body;
-        
+
         if (!username || username == '') {
             this.returnError(logString, 400, 'username cannot be null or empty');
         }
         if (username.length > MAX_USERNAME_LENGTH) {
-            this.returnError(logString, 400, `username exceeded max length of ${MAX_USERNAME_LENGTH}`)
+            this.returnError(logString, 400, `username exceeded max length of ${MAX_USERNAME_LENGTH}`);
         }
         if (!title || title == '') {
             this.returnError(logString, 400, 'title cannot be null or empty');
@@ -133,27 +146,34 @@ export class AppController {
             artist = '';
         }
         if (artist.length > MAX_USERNAME_LENGTH) {
-            this.returnError(logString, 400, `artist exceeded max length of ${MAX_USERNAME_LENGTH}`)
+            this.returnError(logString, 400, `artist exceeded max length of ${MAX_USERNAME_LENGTH}`);
         }
         if (!beatmapJson || beatmapJson == '') {
             this.returnError(logString, 400, 'beatmapJson cannot be null or empty');
         }
         if (beatmapJson.length > MAX_JSON_LENGTH) {
-            this.returnError(logString, 400, `beatmapJson exceeded max length of ${MAX_JSON_LENGTH}`)
+            this.returnError(logString, 400, `beatmapJson exceeded max length of ${MAX_JSON_LENGTH}`);
         }
-        if (!imageUrl|| imageUrl == '') {
+        if (!imageUrl || imageUrl == '') {
             this.returnError(logString, 400, 'imageUrl cannot be null or empty');
         }
         if (imageUrl.length > MAX_URL_LENGTH) {
-            this.returnError(logString, 400, `imageUrl exceeded max length of ${MAX_URL_LENGTH}`)
+            this.returnError(logString, 400, `imageUrl exceeded max length of ${MAX_URL_LENGTH}`);
         }
 
         try {
-            const output = await this.suiService.mintBeatmapsNfts(recipient, username, title, artist, beatmapJson, imageUrl, quantity ?? 1);
+            const output = await this.suiService.mintBeatmapsNfts(
+                recipient,
+                username,
+                title,
+                artist,
+                beatmapJson,
+                imageUrl,
+                quantity ?? 1,
+            );
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
-        }
-        catch (e) {
+        } catch (e) {
             this.returnError(logString, 500, e);
         }
     }
@@ -178,8 +198,7 @@ export class AppController {
             const output = await this.suiService.getBeatsNfts(wallet);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
-        }
-        catch (e) {
+        } catch (e) {
             this.returnError(logString, 500, e);
         }
     }
@@ -198,8 +217,7 @@ export class AppController {
             const output = await this.suiService.getBeatmapsNfts(wallet);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
-        }
-        catch (e) {
+        } catch (e) {
             this.returnError(logString, 500, e);
         }
     }
@@ -211,19 +229,18 @@ export class AppController {
         const logString = `POST /api/v1/token ${JSON.stringify(body)}`;
         this.logger.log(logString);
         const { amount, recipient } = body;
-        if (!amount  || amount <= 0) {
+        if (!amount || amount <= 0) {
             this.returnError(logString, 400, 'amount cannot be null, zero or negative');
         }
-        if (!recipient  || recipient == '') {
+        if (!recipient || recipient == '') {
             this.returnError(logString, 400, 'recipient cannot be null or empty');
         }
-        
+
         try {
             const output = await this.suiService.mintTokens(recipient, amount);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
-        }
-        catch (e) {
+        } catch (e) {
             this.returnError(logString, 500, e);
         }
     }
@@ -237,13 +254,12 @@ export class AppController {
         if (!wallet || wallet == '') {
             this.returnError(logString, 400, 'wallet cannot be null or empty');
         }
-        
+
         try {
             const output = await this.suiService.getTokenBalance(wallet);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
-        }
-        catch (e) {
+        } catch (e) {
             this.returnError(logString, 500, e);
         }
     }
@@ -255,25 +271,24 @@ export class AppController {
         this.logger.log(logString);
         let { address, signature, message } = query;
         if (!address || address == '') {
-            this.returnError(logString, 400, 'address cannot be null or empty')
+            this.returnError(logString, 400, 'address cannot be null or empty');
         }
         if (!signature || signature == '') {
-            this.returnError(logString, 400, 'signature cannot be null or empty')
+            this.returnError(logString, 400, 'signature cannot be null or empty');
         }
         if (!message || message == '') {
-            this.returnError(logString, 400, 'message cannot be null or empty')
+            this.returnError(logString, 400, 'message cannot be null or empty');
         }
-        
+
         try {
             const output = await this.suiService.verifySignature(address, signature, message);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
-        }
-        catch (e) {
+        } catch (e) {
             this.returnError(logString, 500, e);
         }
     }
-    
+
     @ApiOperation({ summary: 'Check if a username exists or is taken' })
     @Get('/api/v1/username')
     async checkUsername(@Query() query: CheckUsernameDto) {
@@ -281,23 +296,22 @@ export class AppController {
         this.logger.log(logString);
         let { username } = query;
         if (!username || username == '') {
-            this.returnError(logString, 400, 'username cannot be null or empty')
+            this.returnError(logString, 400, 'username cannot be null or empty');
         }
 
         try {
             const exists: boolean = await this.suiService.checkUsernameExists(username);
             const output: CheckUsernameResponseDto = {
-                exists
-            }; 
+                exists,
+            };
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
-        }
-        catch (e) {
+        } catch (e) {
             this.returnError(logString, 500, e);
         }
     }
 
-    // *** LEADERBOARD *** 
+    // *** LEADERBOARD ***
 
     @ApiOperation({ summary: 'Get a user score from the leaderboard' })
     @Get('/api/v1/leaderboard')
@@ -315,14 +329,12 @@ export class AppController {
             let output = null;
             if (wallet && wallet.length) {
                 output = await this.suiService.getLeaderboardScore(wallet, sprint);
-            }
-            else {
+            } else {
                 output = await this.suiService.getLeaderboardScores(limit, sprint);
             }
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
-        }
-        catch (e) {
+        } catch (e) {
             this.returnError(logString, 500, e);
         }
     }
@@ -333,30 +345,29 @@ export class AppController {
     async addLeaderboardScore(@Body() body: AddLeaderboardDto): Promise<AddLeaderboardResponseDto> {
         const logString = `POST /api/v1/leaderboard ${JSON.stringify(body)}`;
         this.logger.log(logString);
-        const { score, authId, authType } = body
-        
-        if (!score  || score <= 0) {
+        const { score, authId, authType } = body;
+
+        if (!score || score <= 0) {
             this.returnError(logString, 400, 'score cannot be null, zero or negative');
         }
         if (!authId || authId == '') {
-            this.returnError(logString, 400, 'wallet cannot be null or empty')
+            this.returnError(logString, 400, 'wallet cannot be null or empty');
         }
         if (authId.length > MAX_WALLET_LENGTH) {
-            this.returnError(logString, 400, `wallet exceeded max length of ${MAX_WALLET_LENGTH}`)
+            this.returnError(logString, 400, `wallet exceeded max length of ${MAX_WALLET_LENGTH}`);
         }
         if (!authType || authType == '') {
-            this.returnError(logString, 400, 'authType cannot be null or empty')
+            this.returnError(logString, 400, 'authType cannot be null or empty');
         }
         if (authType.length > MAX_USERNAME_LENGTH) {
-            this.returnError(logString, 400, `authType exceeded max length of ${MAX_USERNAME_LENGTH}`)
+            this.returnError(logString, 400, `authType exceeded max length of ${MAX_USERNAME_LENGTH}`);
         }
-        
+
         try {
-            const output = await this.suiService.addLeaderboardScore(authId, authId, score)
+            const output = await this.suiService.addLeaderboardScore(authId, authId, score);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
-        }
-        catch (e) {
+        } catch (e) {
             this.returnError(logString, 500, e);
         }
     }
@@ -371,19 +382,17 @@ export class AppController {
             let output = null;
             if (sprint && sprint.length) {
                 output = await this.suiService.getLeaderboardSprint(sprint);
-            }
-            else {
+            } else {
                 output = await this.suiService.getLeaderboardSprints(limit);
             }
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
-        }
-        catch (e) {
+        } catch (e) {
             this.returnError(logString, 500, e);
         }
     }
 
-    // *** AUTH and REGISTRATION *** 
+    // *** AUTH and REGISTRATION ***
 
     @ApiOperation({ summary: 'Start an auth session' })
     @Post('/api/v1/auth')
@@ -392,7 +401,7 @@ export class AppController {
         const logString = `POST /api/v1/auth ${JSON.stringify(body)}`;
         this.logger.log(logString);
         let { evmWallet } = body;
-        if (!evmWallet  || evmWallet == '') {
+        if (!evmWallet || evmWallet == '') {
             this.returnError(logString, 400, 'evmWallet cannot be null or empty');
         }
         if (evmWallet.length > MAX_WALLET_LENGTH) {
@@ -401,8 +410,7 @@ export class AppController {
 
         try {
             return await this.suiService.startAuthSession(evmWallet);
-        }
-        catch (e) {
+        } catch (e) {
             this.returnError(logString, 500, e);
         }
     }
@@ -414,7 +422,7 @@ export class AppController {
         const logString = `POST /api/v1/verify ${JSON.stringify(body)}`;
         this.logger.log(logString);
         let status = '';
-        
+
         let { wallet, walletType, sessionId, messageToSign, action, signature, username } = body;
         if (!wallet || wallet == '') {
             this.returnError(logString, 400, 'wallet cannot be null or empty');
@@ -431,7 +439,7 @@ export class AppController {
         if (!messageToSign) {
             this.returnError(logString, 400, 'messageToSign cannot be null or empty');
         }
-        if (!signature  || signature == '') {
+        if (!signature || signature == '') {
             this.returnError(logString, 400, 'signature cannot be null or empty');
         }
         if (signature.length > MAX_SIGNATURE_LENGTH) {
@@ -443,27 +451,52 @@ export class AppController {
         if (username.length > MAX_USERNAME_LENGTH) {
             this.returnError(logString, 400, `username exceeds max length of ${MAX_USERNAME_LENGTH}`);
         }
-        
+
         try {
             if (!action) {
                 action = 'verify';
             }
 
-            const output = await this.suiService.verifySignature2(sessionId, walletType, wallet, action, signature, messageToSign, username);
+            const output = await this.suiService.verifySignature2(
+                sessionId,
+                walletType,
+                wallet,
+                action,
+                signature,
+                messageToSign,
+                username,
+            );
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
-            
+
             status = output.failureReason;
             if (output.verified) {
-                return output; 
+                return output;
             }
-        }
-        catch (e) {
+        } catch (e) {
             this.returnError(logString, 500, e);
         }
 
-        console.log(status); 
-        console.log(['sessionInvalid', 'sessionIdInvalid', 'sessionComplete', 'sessionExpired', 'walletMismatch', 'messageMismatch'].indexOf(status))
-        if (['sessionInvalid', 'sessionIdInvalid', 'sessionComplete', 'sessionExpired', 'walletMismatch', 'messageMismatch'].indexOf(status) >= 0) {
+        console.log(status);
+        console.log(
+            [
+                'sessionInvalid',
+                'sessionIdInvalid',
+                'sessionComplete',
+                'sessionExpired',
+                'walletMismatch',
+                'messageMismatch',
+            ].indexOf(status),
+        );
+        if (
+            [
+                'sessionInvalid',
+                'sessionIdInvalid',
+                'sessionComplete',
+                'sessionExpired',
+                'walletMismatch',
+                'messageMismatch',
+            ].indexOf(status) >= 0
+        ) {
             this.returnError(logString, 401, status);
         }
 
@@ -478,53 +511,91 @@ export class AppController {
         this.logger.log(logString);
         let { authId, authType } = query;
         if (!authId || authId == '') {
-            this.returnError(logString, 400, 'Auth Id cannot be null or empty')
+            this.returnError(logString, 400, 'Auth Id cannot be null or empty');
         }
         if (!authType) {
-            this.returnError(logString, 400, 'Auth type cannot be null or empty')
+            this.returnError(logString, 400, 'Auth type cannot be null or empty');
         }
         try {
             output = await this.suiService.getAccountFromLogin(authId, authType);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
-            if (output.status === "success") {
+            if (output.status === 'success') {
                 return output;
             }
-        }
-        catch (e) {
+        } catch (e) {
             this.returnError(logString, 500, e);
         }
-        
+
         this.returnError(logString, 400, output.status);
     }
 
     @ApiOperation({ summary: "Update user's level" })
     @Post('/api/v1/level')
     async updateUserLevel(@Body() body: UpdateUserLevelDto): Promise<GetAccountResponseDto> {
-        const logString = `GET /api/v1/level ${JSON.stringify(body)}`;
+        const logString = `POST /api/v1/level ${JSON.stringify(body)}`;
         let output = { suiWallet: '', status: '', username: '', level: 0 };
         this.logger.log(logString);
         let { authId, authType, level } = body;
         if (!authId || authId == '') {
-            this.returnError(logString, 400, 'Auth Id cannot be null or empty')
+            this.returnError(logString, 400, 'Auth Id cannot be null or empty');
         }
         if (!authType) {
-            this.returnError(logString, 400, 'Auth type cannot be null or empty')
+            this.returnError(logString, 400, 'Auth type cannot be null or empty');
         }
         if (isNaN(level) || level < 0) {
-            this.returnError(logString, 400, 'Level must be a positive number, and is required')
+            this.returnError(logString, 400, 'Level must be a positive number, and is required');
         }
-        
+
         try {
             output = await this.suiService.updateUserLevel(authId, authType, level);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
-            if (output.status === "success") {
+            if (output.status === 'success') {
                 return output;
             }
-        }
-        catch (e) {
+        } catch (e) {
             this.returnError(logString, 500, e);
         }
 
         this.returnError(logString, 400, output.status);
+    }
+
+    @ApiOperation({ summary: 'Create new user account from OAuth login' })
+    @Post('/api/v1/oauth')
+    async updateUserOAuth(@Body() body: UpdateUserOAuthDto): Promise<UpdateUserOAuthResponseDto> {
+        const logString = `POST /api/v1/oauth ${JSON.stringify(body)}`;
+        this.logger.log(logString);
+        let status = '';
+
+        let { suiAddress, username, oauthToken } = body;
+        if (!suiAddress || suiAddress == '') {
+            this.returnError(logString, 400, 'suiAddress cannot be null or empty');
+        }
+        if (!username || username == '') {
+            this.returnError(logString, 400, 'username cannot be null or empty');
+        }
+        if (!oauthToken || oauthToken == '') {
+            this.returnError(logString, 400, 'oauthToken cannot be null or empty');
+        }
+        if (suiAddress.length > MAX_WALLET_LENGTH) {
+            this.returnError(logString, 400, `suiAddress exceeds max length of ${MAX_WALLET_LENGTH}`);
+        }
+        if (username.length > MAX_USERNAME_LENGTH) {
+            this.returnError(logString, 400, `username exceeds max length of ${MAX_USERNAME_LENGTH}`);
+        }
+        if (oauthToken.length > 700) {
+            this.returnError(logString, 400, `oauthToken exceeds max length of ${700}`);
+        }
+
+        try {
+            const output = await this.suiService.updateUserFromOAuth(suiAddress, username, oauthToken);
+            this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
+
+            status = output.status;
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+
+        this.returnError(logString, 400, status);
     }
 }
