@@ -38,6 +38,7 @@ export class SuiService {
     authManager: IAuthManager;
     network: string;
     logger: AppLogger;
+    noncesToWallets: { [key: string]: string };
 
     constructor() {
         //derive keypair
@@ -726,16 +727,23 @@ export class SuiService {
         return output;
     }
 
+    //TODO: comment header
     async updateUserFromOAuth(
         suiAddress: string,
         username: string,
         oauthToken: string,
+        nonceToken: string,
     ): Promise<{ username: string; authId: string; status: string }> {
         const output = { username: '', authId: '', status: '' };
         const authRecord = await this.authManager.getAuthRecord(suiAddress, 'sui');
 
         if (!authRecord) {
-            if (await this.authManager.register(suiAddress, 'sui', suiAddress, username, { source: 'oauth' })) {
+            if (
+                await this.authManager.register(suiAddress, 'sui', suiAddress, username, {
+                    source: 'oauth',
+                    nonce: nonceToken,
+                })
+            ) {
                 output.username = username;
                 output.authId = suiAddress;
                 output.status = 'created';
@@ -746,6 +754,27 @@ export class SuiService {
             output.username = authRecord.username;
             output.authId = authRecord.suiWallet;
             output.status = 'exists';
+        }
+
+        //add nonce token
+        if (output.authId && output.authId.length) this.noncesToWallets[nonceToken] = output.authId;
+
+        return output;
+    }
+
+    //TODO: comment header
+    async getUserFromOAuth(nonceToken: string): Promise<{ status: string; suiWallet: string }> {
+        const output = {
+            status: '',
+            suiWallet: '',
+        };
+
+        if (!this.noncesToWallets) {
+            output.status = 'notfound';
+        } else {
+            output.suiWallet = this.noncesToWallets[nonceToken];
+            output.status = 'notfound';
+            delete this.noncesToWallets[nonceToken];
         }
 
         return output;

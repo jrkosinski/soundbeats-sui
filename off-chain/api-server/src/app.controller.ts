@@ -42,6 +42,8 @@ import {
     UpdateUserLevelDto,
     UpdateUserOAuthDto,
     UpdateUserOAuthResponseDto,
+    GetUserOAuthDto,
+    GetUserOAuthResponseDto,
 } from './entity/req.entity';
 import { SuiService } from './sui.service';
 import { AppLogger } from './app.logger';
@@ -53,6 +55,7 @@ const MAX_USERNAME_LENGTH = 100;
 const MAX_WALLET_LENGTH = 100;
 const MAX_JSON_LENGTH = 1000;
 const MAX_SIGNATURE_LENGTH = 500;
+const MAX_STRING_LENGTH = 1000;
 
 @Controller()
 export class AppController {
@@ -566,15 +569,12 @@ export class AppController {
         this.logger.log(logString);
         let status = '';
 
-        let { suiAddress, username, oauthToken } = body;
+        let { suiAddress, username, oauthToken, nonceToken } = body;
         if (!suiAddress || suiAddress == '') {
             this.returnError(logString, 400, 'suiAddress cannot be null or empty');
         }
         if (!username || username == '') {
             this.returnError(logString, 400, 'username cannot be null or empty');
-        }
-        if (!oauthToken || oauthToken == '') {
-            this.returnError(logString, 400, 'oauthToken cannot be null or empty');
         }
         if (suiAddress.length > MAX_WALLET_LENGTH) {
             this.returnError(logString, 400, `suiAddress exceeds max length of ${MAX_WALLET_LENGTH}`);
@@ -582,12 +582,21 @@ export class AppController {
         if (username.length > MAX_USERNAME_LENGTH) {
             this.returnError(logString, 400, `username exceeds max length of ${MAX_USERNAME_LENGTH}`);
         }
-        if (oauthToken.length > 700) {
-            this.returnError(logString, 400, `oauthToken exceeds max length of ${700}`);
+        if (!oauthToken || oauthToken == '') {
+            this.returnError(logString, 400, 'oauthToken cannot be null or empty');
+        }
+        if (oauthToken.length > MAX_STRING_LENGTH) {
+            this.returnError(logString, 400, `oauthToken exceeds max length of ${MAX_STRING_LENGTH}`);
+        }
+        if (!nonceToken || nonceToken == '') {
+            this.returnError(logString, 400, 'nonceToken cannot be null or empty');
+        }
+        if (nonceToken.length > MAX_STRING_LENGTH) {
+            this.returnError(logString, 400, `nonceToken exceeds max length of ${MAX_STRING_LENGTH}`);
         }
 
         try {
-            const output = await this.suiService.updateUserFromOAuth(suiAddress, username, oauthToken);
+            const output = await this.suiService.updateUserFromOAuth(suiAddress, username, oauthToken, nonceToken);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
 
             status = output.status;
@@ -597,5 +606,29 @@ export class AppController {
         }
 
         this.returnError(logString, 400, status);
+    }
+
+    @ApiOperation({ summary: 'Get new user account created from OAuth login' })
+    @Get('/api/v1/oauth')
+    async getUserOAuth(@Query() query: GetUserOAuthDto): Promise<string> {
+        const logString = `GET /api/v1/oauth ${JSON.stringify(query)}`;
+        this.logger.log(logString);
+
+        let { nonceToken } = query;
+        if (!nonceToken || nonceToken == '') {
+            this.returnError(logString, 400, 'nonceToken cannot be null or empty');
+        }
+        if (nonceToken.length > MAX_STRING_LENGTH) {
+            this.returnError(logString, 400, `nonceToken exceeds max length of ${MAX_STRING_LENGTH}`);
+        }
+
+        try {
+            const output = await this.suiService.getUserFromOAuth(nonceToken);
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+
+        this.returnError(logString, 400, '?');
     }
 }

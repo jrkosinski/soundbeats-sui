@@ -259,13 +259,33 @@ export class UpdateUserLevelDto {
 }
 
 export class UpdateUserOAuthDto {
+    @ApiProperty({ description: 'Sui wallet address' })
     suiAddress: string;
+    @ApiProperty({ description: 'Token from OAuth login' })
     oauthToken: string;
+    @ApiProperty({ description: 'A secret number' })
+    nonceToken: string;
+    @ApiProperty({ description: 'Normally, the email' })
     username: string;
 }
 
 export class UpdateUserOAuthResponseDto {
+    @ApiProperty({ description: '' })
     authId: string;
+    @ApiProperty({ description: '' })
     username: string;
+    @ApiProperty({ description: 'Success or failure of the operation' })
+    status: string;
+}
+
+export class GetUserOAuthDto {
+    @ApiProperty({ description: 'A secret number' })
+    nonceToken: string;
+}
+
+export class GetUserOAuthResponseDto {
+    @ApiProperty({ description: 'A secret number' })
+    suiWallet: string;
+    @ApiProperty({ description: 'Success or failure of the operation' })
     status: string;
 }
