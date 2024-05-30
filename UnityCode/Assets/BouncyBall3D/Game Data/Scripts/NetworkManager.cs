@@ -26,6 +26,7 @@ public class ServerConfig
     public const string API_GET_USERNAME = "api/v1/username";
     public const string API_GET_ACCOUNT = "api/v1/accounts?authType=evm&authId=";
     public const string API_POST_LEVEL = "api/v1/level";
+    public const string API_GET_OAUTH = "api/v1/oauth?nonceToken=";
 
     //devnet urls
     public const string API_DOMAIN_DEVNET = "54.95.68.79:3000";
@@ -314,6 +315,23 @@ public class NetworkManager : Singleton<NetworkManager>
 
         SendRequest(
             ServerConfig.FormatServerUrl(ServerConfig.API_GET_USERNAME + "?username=" + username),
+            callbackOnSuccess,
+            callbackOnFail,
+            "get"
+        );
+    }
+
+    /// <summary>
+    /// After oauth session, this return the sui wallet id. 
+    /// </summary>
+    /// <param name="callbackOnSuccess">Callback on success.</param>
+    /// <param name="callbackOnFail">Callback on fail.</param>
+    public void GetSUIAddress(string nonceToken, UnityAction<UpdateUserLevelDto> callbackOnSuccess, UnityAction<string> callbackOnFail)
+    {
+        Debug.Log(ServerConfig.API_GET_OAUTH + nonceToken);
+
+        SendRequest(
+            ServerConfig.FormatServerUrl(ServerConfig.API_GET_OAUTH + nonceToken),
             callbackOnSuccess,
             callbackOnFail,
             "get"

@@ -12,6 +12,7 @@ using WalletConnectUnity.Modal;
 using Unity.VisualScripting;
 using WalletConnectUnity.Core.Evm;
 using System;
+using System.Text;
 using System.Linq;
 using UnityEngine.SceneManagement;
 
@@ -46,6 +47,27 @@ public class LoginManager : MonoBehaviour
         });
     }
 
+    // Function to generate a random 32-byte hex-encoded string
+    public string GenerateRandomHexString(int length)
+    {
+        // Length of the byte array
+        int byteArrayLength = length / 2;
+
+        // Generate random bytes
+        byte[] randomBytes = new byte[byteArrayLength];
+        System.Random random = new System.Random();
+        random.NextBytes(randomBytes);
+
+        // Convert bytes to hex string
+        StringBuilder sb = new StringBuilder(byteArrayLength * 2);
+        foreach (byte b in randomBytes)
+        {
+            sb.AppendFormat("{0:x2}", b);
+        }
+
+        return sb.ToString();
+    }
+
     public IEnumerator LoadingSceen()
     {
         yield return new WaitForSeconds(0.0001f);
@@ -66,14 +88,21 @@ public class LoginManager : MonoBehaviour
         }
     }
 
-    public void EVMSelect(bool value)
+    public void generateNonceTokenAndOpenwebView()
     {
-
+        string nonceToken = GenerateRandomHexString(64);
+        Debug.Log("Nonce Token: " + nonceToken);
+#if UNITY_EDITOR
+       getSUIAddress();
+#else
+        GPMWebViewManager.Instance.ShowUrlFullScreen(nonceToken);
+#endif
     }
 
-    public void SUISelect(bool value)
+    public void getSUIAddress()
     {
-
+        //NetworkManager.Instance.GetSUIAddress("a123", OnSuccessfulGetSUIWalletAddress, OnErrorStartAuthSession);
+        NetworkManager.Instance.GetSUIAddress("" + GPMWebViewManager.Instance.nonce_token, OnSuccessfulGetSUIWalletAddress, OnErrorStartAuthSession);
     }
 
     public void setuserName()
@@ -277,6 +306,25 @@ public class LoginManager : MonoBehaviour
         {
             ErrorScreen.SetActive(true);
             txtError_ErrorScreen.text = "Username is not available. Please choose another username";
+        }
+    }
+
+    private void OnSuccessfulGetSUIWalletAddress(UpdateUserLevelDto updateUserLevelDto)
+    {
+        Debug.Log("OnSuccessfulGetSUIWalletAddress");
+        //set active wallet address 
+        if (updateUserLevelDto.suiWallet != "")
+        {
+            LoadingScreen.SetActive(true);
+            SuiWallet.ActiveWalletAddress = updateUserLevelDto.suiWallet;
+            UserData.UserName = updateUserLevelDto.username;
+            UserData.currentLevel = updateUserLevelDto.level;
+            SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+        else
+        {
+            ErrorScreen.SetActive(true);
+            txtError_ErrorScreen.text = "Please try after some time.";
         }
     }
 
