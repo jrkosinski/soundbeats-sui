@@ -38,7 +38,7 @@ public class GPMWebViewManager : Singleton<GPMWebViewManager>
             OnCallback,
             new List<string>()
             {
-            "http://game.soundbeats.io:8080/result"
+            "http://game.soundbeats.io:8080/0x"
             });
     }
 
@@ -68,7 +68,6 @@ public class GPMWebViewManager : Singleton<GPMWebViewManager>
                 if (string.IsNullOrEmpty(data) == false)
                 {
                     Debug.LogFormat("close WebView : {0}", data);
-                    LoginManager.instance.getSUIAddress();
                 }
                 else if (error != null)
                 {
@@ -77,8 +76,8 @@ public class GPMWebViewManager : Singleton<GPMWebViewManager>
                 else
                 {
                     Debug.Log(string.Format("close WebView."));
-                    LoginManager.instance.getSUIAddress();
                 }
+                LoginManager.instance.startGame();
                 break;
             case GpmWebViewCallback.CallbackType.PageStarted:
                 if (string.IsNullOrEmpty(data) == false)
@@ -101,15 +100,21 @@ public class GPMWebViewManager : Singleton<GPMWebViewManager>
             case GpmWebViewCallback.CallbackType.Scheme:
                 if (error == null)
                 {
-                    if (data.Equals("http://game.soundbeats.io:8080/static/js/bundle.js") == true)
-                    {
-                        Debug.Log(string.Format("scheme:{0}", data));
-                    }
-                    else if (data.Contains("http://game.soundbeats.io:8080/result") == true)
+                    Debug.Log(string.Format("Output scheme:{0}", data));
+                    if (data.Contains("http://game.soundbeats.io:8080/0x") == true)
                     {
                         Debug.Log(string.Format("scheme to close:{0}", data));
+                        string[] dataArray = data.Split('/');
+                        for (int i = 0; i < dataArray.Length; i++)
+                        {
+                            Debug.Log("Value at index = " + i + " is : " + dataArray[i]);
+                        }
+
+                        Debug.Log(dataArray.Length + " ==> Address : " + dataArray[dataArray.Length - 2]);
+                        Debug.Log(dataArray.Length + " ==> UserName : " + dataArray[dataArray.Length - 1]);
+                        SuiWallet.ActiveWalletAddress = dataArray[dataArray.Length - 2];
+                        UserData.UserName = dataArray[dataArray.Length - 1];
                         GpmWebView.Close();
-                        LoginManager.instance.getSUIAddress();
                     }
                 }
                 else
@@ -129,7 +134,7 @@ public class GPMWebViewManager : Singleton<GPMWebViewManager>
 #if UNITY_ANDROID
             case GpmWebViewCallback.CallbackType.BackButtonClose:
                 Debug.Log("BackButtonClose");
-                LoginManager.instance.getSUIAddress();
+                LoginManager.instance.startGame();
                 break;
 #endif
         }

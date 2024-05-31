@@ -93,7 +93,7 @@ public class LoginManager : MonoBehaviour
         string nonceToken = GenerateRandomHexString(64);
         Debug.Log("Nonce Token: " + nonceToken);
 #if UNITY_EDITOR
-       getSUIAddress();
+       startGame();
 #else
         GPMWebViewManager.Instance.ShowUrlFullScreen(nonceToken);
 #endif
@@ -101,8 +101,15 @@ public class LoginManager : MonoBehaviour
 
     public void getSUIAddress()
     {
+        //startGame();
         //NetworkManager.Instance.GetSUIAddress("a123", OnSuccessfulGetSUIWalletAddress, OnErrorStartAuthSession);
-        NetworkManager.Instance.GetSUIAddress("" + GPMWebViewManager.Instance.nonce_token, OnSuccessfulGetSUIWalletAddress, OnErrorStartAuthSession);
+        //NetworkManager.Instance.GetSUIAddress("" + GPMWebViewManager.Instance.nonce_token, OnSuccessfulGetSUIWalletAddress, OnErrorStartAuthSession);
+    }
+
+    public void startGame()
+    {
+        LoadingScreen.SetActive(true);
+        SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public void setuserName()
