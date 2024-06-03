@@ -332,7 +332,7 @@ public class Player : MonoBehaviour
         //swiped left
         if (GameManager.instance.gameState == GameState.Gameplay)
         {
-            float moveSpeed = 20;
+            float moveSpeed = 10;
             transform.Translate(new Vector3(-1, 0, 0) * moveSpeed * Time.deltaTime);
         }
     }
@@ -342,7 +342,7 @@ public class Player : MonoBehaviour
         //swiped right
         if (GameManager.instance.gameState == GameState.Gameplay)
         {
-            float moveSpeed = 20;
+            float moveSpeed = 10;
             transform.Translate(new Vector3(1, 0, 0) * moveSpeed * Time.deltaTime);
         }
     }

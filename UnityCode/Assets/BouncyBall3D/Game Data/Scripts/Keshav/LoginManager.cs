@@ -108,6 +108,7 @@ public class LoginManager : MonoBehaviour
 
     public void startGame()
     {
+        Debug.Log("Start Game");
         LoadingScreen.SetActive(true);
         SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex + 1);
     }

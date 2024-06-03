@@ -27,7 +27,7 @@ public class GPMWebViewManager : Singleton<GPMWebViewManager>
                 title = "Soundbeats",
                 isBackButtonVisible = false,
                 isForwardButtonVisible = false,
-                isCloseButtonVisible = true,
+                isCloseButtonVisible = false,
                 supportMultipleWindows = false,
 #if UNITY_IOS
                 contentMode = GpmWebViewContentMode.MOBILE,
@@ -77,7 +77,7 @@ public class GPMWebViewManager : Singleton<GPMWebViewManager>
                 {
                     Debug.Log(string.Format("close WebView."));
                 }
-                LoginManager.instance.startGame();
+                //LoginManager.instance.startGame();
                 break;
             case GpmWebViewCallback.CallbackType.PageStarted:
                 if (string.IsNullOrEmpty(data) == false)
@@ -114,7 +114,15 @@ public class GPMWebViewManager : Singleton<GPMWebViewManager>
                         Debug.Log(dataArray.Length + " ==> UserName : " + dataArray[dataArray.Length - 1]);
                         SuiWallet.ActiveWalletAddress = dataArray[dataArray.Length - 2];
                         UserData.UserName = dataArray[dataArray.Length - 1];
-                        GpmWebView.Close();
+
+                        Debug.Log(" SuiWallet.ActiveWalletAddress: " + SuiWallet.ActiveWalletAddress);
+                        Debug.Log(" UserName : " + UserData.UserName);
+                        LoginManager.instance.startGame();
+                        if (GpmWebView.IsActive() == true)
+                        {
+                            GpmWebView.Close();
+                        }
+
                     }
                 }
                 else
@@ -134,7 +142,6 @@ public class GPMWebViewManager : Singleton<GPMWebViewManager>
 #if UNITY_ANDROID
             case GpmWebViewCallback.CallbackType.BackButtonClose:
                 Debug.Log("BackButtonClose");
-                LoginManager.instance.startGame();
                 break;
 #endif
         }
