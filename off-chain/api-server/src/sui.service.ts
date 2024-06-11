@@ -43,7 +43,7 @@ export class SuiService {
     constructor() {
         //derive keypair
         this.keypair = Ed25519Keypair.deriveKeypair(process.env.MNEMONIC_PHRASE);
-
+        this.noncesToWallets = {};
         this.logger = new AppLogger('sui.service');
 
         //create connect to the correct environment
@@ -763,17 +763,22 @@ export class SuiService {
     }
 
     //TODO: comment header
-    async getUserFromOAuth(nonceToken: string): Promise<{ status: string; suiWallet: string }> {
-        const output = {
+    async getUserFromOAuth(
+        nonceToken: string,
+    ): Promise<{ status: string; suiWallet: string; level: number; username: string }> {
+        let output = {
             status: '',
             suiWallet: '',
+            username: '',
+            level: 0,
         };
 
         if (!this.noncesToWallets) {
             output.status = 'notfound';
         } else {
             output.suiWallet = this.noncesToWallets[nonceToken];
-            output.status = 'notfound';
+
+            output = await this.getAccountFromLogin(output.suiWallet, 'sui');
             delete this.noncesToWallets[nonceToken];
         }
 

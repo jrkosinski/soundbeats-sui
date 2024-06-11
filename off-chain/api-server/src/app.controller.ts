@@ -582,12 +582,9 @@ export class AppController {
         if (username.length > MAX_USERNAME_LENGTH) {
             this.returnError(logString, 400, `username exceeds max length of ${MAX_USERNAME_LENGTH}`);
         }
-        if (!oauthToken || oauthToken == '') {
-            this.returnError(logString, 400, 'oauthToken cannot be null or empty');
-        }
-        if (oauthToken.length > MAX_STRING_LENGTH) {
-            this.returnError(logString, 400, `oauthToken exceeds max length of ${MAX_STRING_LENGTH}`);
-        }
+        //if (!oauthToken || oauthToken == '') {
+        //    this.returnError(logString, 400, 'oauthToken cannot be null or empty');
+        //}
         if (!nonceToken || nonceToken == '') {
             this.returnError(logString, 400, 'nonceToken cannot be null or empty');
         }
@@ -610,7 +607,7 @@ export class AppController {
 
     @ApiOperation({ summary: 'Get new user account created from OAuth login' })
     @Get('/api/v1/oauth')
-    async getUserOAuth(@Query() query: GetUserOAuthDto): Promise<string> {
+    async getUserOAuth(@Query() query: GetUserOAuthDto): Promise<GetUserOAuthResponseDto> {
         const logString = `GET /api/v1/oauth ${JSON.stringify(query)}`;
         this.logger.log(logString);
 

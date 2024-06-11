@@ -193,7 +193,6 @@ export class GetAccountDto {
     authType: 'evm' | 'sui';
 }
 
-//TODO: need this?
 export class GetAccountResponseDto {
     @ApiProperty({ description: 'SUI wallet address' })
     suiWallet: string;
@@ -283,9 +282,4 @@ export class GetUserOAuthDto {
     nonceToken: string;
 }
 
-export class GetUserOAuthResponseDto {
-    @ApiProperty({ description: 'A secret number' })
-    suiWallet: string;
-    @ApiProperty({ description: 'Success or failure of the operation' })
-    status: string;
-}
+export class GetUserOAuthResponseDto extends GetAccountResponseDto {}
