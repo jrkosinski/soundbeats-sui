@@ -268,31 +268,6 @@ export class AppController {
         }
     }
 
-    @ApiOperation({ summary: 'Verify a signed message. DEPRECATED.' })
-    @Get('/api/v1/verify')
-    async verifySignature(@Query() query: VerifySignatureDto): Promise<VerifySignatureResponseDto> {
-        const logString = `GET /api/v1/verify ${JSON.stringify(query)}`;
-        this.logger.log(logString);
-        let { address, signature, message } = query;
-        if (!address || address == '') {
-            this.returnError(logString, 400, 'address cannot be null or empty');
-        }
-        if (!signature || signature == '') {
-            this.returnError(logString, 400, 'signature cannot be null or empty');
-        }
-        if (!message || message == '') {
-            this.returnError(logString, 400, 'message cannot be null or empty');
-        }
-
-        try {
-            const output = await this.suiService.verifySignature(address, signature, message);
-            this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
-            return output;
-        } catch (e) {
-            this.returnError(logString, 500, e);
-        }
-    }
-
     @ApiOperation({ summary: 'Check if a username exists or is taken' })
     @Get('/api/v1/username')
     async checkUsername(@Query() query: CheckUsernameDto) {
@@ -411,94 +386,6 @@ export class AppController {
         } catch (e) {
             this.returnError(logString, 500, e);
         }
-    }
-
-    @ApiOperation({ summary: 'Verify a signed message. DEPRECATED' })
-    @Post('/api/v1/verify')
-    @HttpCode(200)
-    async verifyAuthSession(@Body() body: AuthVerifyDto): Promise<AuthVerifyResponseDto> {
-        const logString = `POST /api/v1/verify ${JSON.stringify(body)}`;
-        this.logger.log(logString);
-        let status = '';
-
-        let { wallet, walletType, sessionId, messageToSign, action, signature, username } = body;
-        if (!wallet || wallet == '') {
-            this.returnError(logString, 400, 'wallet cannot be null or empty');
-        }
-        if (wallet.length > MAX_WALLET_LENGTH) {
-            this.returnError(logString, 400, `wallet exceeds max length of ${MAX_WALLET_LENGTH}`);
-        }
-        if (!walletType) {
-            this.returnError(logString, 400, 'walletType cannot be null or empty');
-        }
-        if (!sessionId) {
-            this.returnError(logString, 400, 'sessionId cannot be null or empty');
-        }
-        if (!messageToSign) {
-            this.returnError(logString, 400, 'messageToSign cannot be null or empty');
-        }
-        if (!signature || signature == '') {
-            this.returnError(logString, 400, 'signature cannot be null or empty');
-        }
-        if (signature.length > MAX_SIGNATURE_LENGTH) {
-            this.returnError(logString, 400, `signature exceeds max length of ${MAX_SIGNATURE_LENGTH}`);
-        }
-        if (!username || username == '') {
-            this.returnError(logString, 400, 'username cannot be null or empty');
-        }
-        if (username.length > MAX_USERNAME_LENGTH) {
-            this.returnError(logString, 400, `username exceeds max length of ${MAX_USERNAME_LENGTH}`);
-        }
-
-        try {
-            if (!action) {
-                action = 'verify';
-            }
-
-            const output = await this.suiService.verifySignature2(
-                sessionId,
-                walletType,
-                wallet,
-                action,
-                signature,
-                messageToSign,
-                username,
-            );
-            this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
-
-            status = output.failureReason;
-            if (output.verified) {
-                return output;
-            }
-        } catch (e) {
-            this.returnError(logString, 500, e);
-        }
-
-        console.log(status);
-        console.log(
-            [
-                'sessionInvalid',
-                'sessionIdInvalid',
-                'sessionComplete',
-                'sessionExpired',
-                'walletMismatch',
-                'messageMismatch',
-            ].indexOf(status),
-        );
-        if (
-            [
-                'sessionInvalid',
-                'sessionIdInvalid',
-                'sessionComplete',
-                'sessionExpired',
-                'walletMismatch',
-                'messageMismatch',
-            ].indexOf(status) >= 0
-        ) {
-            this.returnError(logString, 401, status);
-        }
-
-        this.returnError(logString, 400, status);
     }
 
     @ApiOperation({ summary: 'Get a SUI address given an associated login.' })

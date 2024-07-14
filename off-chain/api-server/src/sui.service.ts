@@ -431,6 +431,29 @@ export class SuiService {
         return output;
     }
 
+    //TODO: comment header
+    async getUserFromOAuth(
+        nonceToken: string,
+    ): Promise<{ status: string; suiWallet: string; level: number; username: string }> {
+        let output = {
+            status: '',
+            suiWallet: '',
+            username: '',
+            level: 0,
+        };
+
+        if (!this.noncesToWallets) {
+            output.status = 'notfound';
+        } else {
+            output.suiWallet = this.noncesToWallets[nonceToken];
+
+            output = await this.getAccountFromLogin(output.suiWallet);
+            delete this.noncesToWallets[nonceToken];
+        }
+
+        return output;
+    }
+
     /**
      * Updates a user's game level.
      * @param authId User's account id.
