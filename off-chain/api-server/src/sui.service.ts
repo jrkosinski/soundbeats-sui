@@ -377,12 +377,10 @@ export class SuiService {
      */
     async addLeaderboardScore(
         authId: string,
-        authType: string,
         score: number,
         sprint: string | null | 'current' | '' = null,
     ): Promise<{ score: number; network: string }> {
-        const aType: 'evm' | 'sui' = authType != 'sui' ? 'evm' : 'sui';
-        const user = await this.getAccountFromLogin(authId, aType);
+        const user = await this.getAccountFromLogin(authId);
         let username = authId;
         if (user) {
             username = user.username;
@@ -414,15 +412,13 @@ export class SuiService {
      * Tries to retrieve an existing SUI wallet address given the login information.
      *
      * @param authId
-     * @param authType
      * @returns The status of the search and SUI wallet address (if found)
      */
     async getAccountFromLogin(
         authId: string,
-        authType: 'evm' | 'sui',
     ): Promise<{ suiWallet: string; username: string; level: number; status: string }> {
         const output = { suiWallet: '', status: '', username: '', level: 0 };
-        const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, authType);
+        const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, 'sui');
         if (authRecord == null) {
             output.status = 'notfound';
         } else {
@@ -435,14 +431,18 @@ export class SuiService {
         return output;
     }
 
-    //TODO: comment header
+    /**
+     * Updates a user's game level.
+     * @param authId User's account id.
+     * @param level
+     * @returns
+     */
     async updateUserLevel(
         authId: string,
-        authType: 'evm' | 'sui',
         level: number,
     ): Promise<{ suiWallet: string; username: string; level: number; status: string }> {
         const output = { suiWallet: '', status: '', username: '', level: 0 };
-        const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, authType);
+        const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, 'sui');
         if (authRecord == null) {
             output.status = 'notfound';
         } else {

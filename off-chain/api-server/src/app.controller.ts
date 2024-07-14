@@ -349,7 +349,7 @@ export class AppController {
     async addLeaderboardScore(@Body() body: AddLeaderboardDto): Promise<AddLeaderboardResponseDto> {
         const logString = `POST /api/v1/leaderboard ${JSON.stringify(body)}`;
         this.logger.log(logString);
-        const { score, authId, authType } = body;
+        const { score, authId } = body;
 
         if (!score || score <= 0) {
             this.returnError(logString, 400, 'score cannot be null, zero or negative');
@@ -360,15 +360,9 @@ export class AppController {
         if (authId.length > MAX_WALLET_LENGTH) {
             this.returnError(logString, 400, `wallet exceeded max length of ${MAX_WALLET_LENGTH}`);
         }
-        if (!authType || authType == '') {
-            this.returnError(logString, 400, 'authType cannot be null or empty');
-        }
-        if (authType.length > MAX_USERNAME_LENGTH) {
-            this.returnError(logString, 400, `authType exceeded max length of ${MAX_USERNAME_LENGTH}`);
-        }
 
         try {
-            const output = await this.suiService.addLeaderboardScore(authId, authId, score);
+            const output = await this.suiService.addLeaderboardScore(authId, score);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
@@ -513,15 +507,12 @@ export class AppController {
         const logString = `GET /api/v1/accounts ${JSON.stringify(query)}`;
         let output = { suiWallet: '', status: '', username: '', level: 0 };
         this.logger.log(logString);
-        let { authId, authType } = query;
+        let { authId } = query;
         if (!authId || authId == '') {
             this.returnError(logString, 400, 'Auth Id cannot be null or empty');
         }
-        if (!authType) {
-            this.returnError(logString, 400, 'Auth type cannot be null or empty');
-        }
         try {
-            output = await this.suiService.getAccountFromLogin(authId, authType);
+            output = await this.suiService.getAccountFromLogin(authId);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             if (output.status === 'success') {
                 return output;
@@ -539,19 +530,16 @@ export class AppController {
         const logString = `POST /api/v1/level ${JSON.stringify(body)}`;
         let output = { suiWallet: '', status: '', username: '', level: 0 };
         this.logger.log(logString);
-        let { authId, authType, level } = body;
+        let { authId, level } = body;
         if (!authId || authId == '') {
             this.returnError(logString, 400, 'Auth Id cannot be null or empty');
-        }
-        if (!authType) {
-            this.returnError(logString, 400, 'Auth type cannot be null or empty');
         }
         if (isNaN(level) || level < 0) {
             this.returnError(logString, 400, 'Level must be a positive number, and is required');
         }
 
         try {
-            output = await this.suiService.updateUserLevel(authId, authType, level);
+            output = await this.suiService.updateUserLevel(authId, level);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             if (output.status === 'success') {
                 return output;
