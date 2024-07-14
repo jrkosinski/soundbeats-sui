@@ -1,0 +1,2333 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>sui-game-server documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avaoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+
+               if ($darkModeToggles.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
+            <a href="../" class="navbar-brand">sui-game-server documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content controller">
+                   <div class="content-data">
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Controllers</li>
+  <li class="breadcrumb-item" >AppController</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/app.controller.ts</code>
+        </p>
+
+
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#addLeaderboardScore" >addLeaderboardScore</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#checkUsername" >checkUsername</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getAccountFromLogin" >getAccountFromLogin</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getBeatmapsNfts" >getBeatmapsNfts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getBeatsNfts" >getBeatsNfts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getBeatsTokenBalance" >getBeatsTokenBalance</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getLeaderboardScore" >getLeaderboardScore</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getLeaderboardSprint" >getLeaderboardSprint</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getNfts" >getNfts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#getUserOAuth" >getUserOAuth</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                <a href="#healthcheck" >healthcheck</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#mintBeatmapsNfts" >mintBeatmapsNfts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#mintBeatsNfts" >mintBeatsNfts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#mintBeatsToken" >mintBeatsToken</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#mintNfts" >mintNfts</a>
+                            </li>
+                            <li>
+                                <a href="#returnError" >returnError</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#startAuthSession" >startAuthSession</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateUserLevel" >updateUserLevel</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateUserOAuth" >updateUserOAuth</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addLeaderboardScore"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>addLeaderboardScore</b></span>
+                        <a href="#addLeaderboardScore"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addLeaderboardScore(body: <a href="../classes/AddLeaderboardDto.html" target="_self">AddLeaderboardDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Add to a user score on the leaderboard&#x27;})<br />@Post(&#x27;/api/v1/leaderboard&#x27;)<br />@HttpCode(200)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="324"
+                                    class="link-to-prism">src/app.controller.ts:324</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/AddLeaderboardDto.html" target="_self" >AddLeaderboardDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/AddLeaderboardResponseDto.html" target="_self" >Promise&lt;AddLeaderboardResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="checkUsername"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>checkUsername</b></span>
+                        <a href="#checkUsername"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>checkUsername(query: <a href="../classes/CheckUsernameDto.html" target="_self">CheckUsernameDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Check if a username exists or is taken&#x27;})<br />@Get(&#x27;/api/v1/username&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="273"
+                                    class="link-to-prism">src/app.controller.ts:273</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/CheckUsernameDto.html" target="_self" >CheckUsernameDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>unknown</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAccountFromLogin"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>getAccountFromLogin</b></span>
+                        <a href="#getAccountFromLogin"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAccountFromLogin(query: <a href="../classes/GetAccountDto.html" target="_self">GetAccountDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Get a SUI address given an associated login.&#x27;})<br />@Get(&#x27;/api/v1/accounts&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="393"
+                                    class="link-to-prism">src/app.controller.ts:393</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/GetAccountDto.html" target="_self" >GetAccountDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/GetAccountResponseDto.html" target="_self" >Promise&lt;GetAccountResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getBeatmapsNfts"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>getBeatmapsNfts</b></span>
+                        <a href="#getBeatmapsNfts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getBeatmapsNfts(query: <a href="../classes/GetBeatsNftsDto.html" target="_self">GetBeatsNftsDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Gets list of user-owned BEATMAPS NFTs&#x27;})<br />@Get(&#x27;/api/v1/nfts/beatmaps&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="212"
+                                    class="link-to-prism">src/app.controller.ts:212</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/GetBeatsNftsDto.html" target="_self" >GetBeatsNftsDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/GetBeatmapsNftsResponseDto.html" target="_self" >Promise&lt;GetBeatmapsNftsResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getBeatsNfts"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>getBeatsNfts</b></span>
+                        <a href="#getBeatsNfts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getBeatsNfts(query: <a href="../classes/GetBeatsNftsDto.html" target="_self">GetBeatsNftsDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Gets list of user-owned BEATS NFTs&#x27;})<br />@Get(&#x27;/api/v1/nfts/beats&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="193"
+                                    class="link-to-prism">src/app.controller.ts:193</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/GetBeatsNftsDto.html" target="_self" >GetBeatsNftsDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/GetBeatsNftsResponseDto.html" target="_self" >Promise&lt;GetBeatsNftsResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getBeatsTokenBalance"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>getBeatsTokenBalance</b></span>
+                        <a href="#getBeatsTokenBalance"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getBeatsTokenBalance(query: <a href="../classes/GetTokenBalanceDto.html" target="_self">GetTokenBalanceDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Get BEATS token balance&#x27;})<br />@Get(&#x27;/api/v1/token&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="254"
+                                    class="link-to-prism">src/app.controller.ts:254</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/GetTokenBalanceDto.html" target="_self" >GetTokenBalanceDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/GetTokenBalanceResponseDto.html" target="_self" >Promise&lt;GetTokenBalanceResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getLeaderboardScore"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>getLeaderboardScore</b></span>
+                        <a href="#getLeaderboardScore"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getLeaderboardScore(query: <a href="../classes/GetLeaderboardDto.html" target="_self">GetLeaderboardDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Get a user score from the leaderboard&#x27;})<br />@Get(&#x27;/api/v1/leaderboard&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="297"
+                                    class="link-to-prism">src/app.controller.ts:297</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/GetLeaderboardDto.html" target="_self" >GetLeaderboardDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/GetLeaderboardResponseDto.html" target="_self" >Promise&lt;GetLeaderboardResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getLeaderboardSprint"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>getLeaderboardSprint</b></span>
+                        <a href="#getLeaderboardSprint"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getLeaderboardSprint(query: <a href="../classes/GetLeaderboardSprintDto.html" target="_self">GetLeaderboardSprintDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Add to a user score on the leaderboard&#x27;})<br />@Get(&#x27;/api/v1/sprint&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="350"
+                                    class="link-to-prism">src/app.controller.ts:350</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/GetLeaderboardSprintDto.html" target="_self" >GetLeaderboardSprintDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/GetLeaderboardSprintResponseDto.html" target="_self" >Promise&lt;GetLeaderboardSprintResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getNfts"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>getNfts</b></span>
+                        <a href="#getNfts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getNfts(query: <a href="../classes/GetBeatsNftsDto.html" target="_self">GetBeatsNftsDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Gets list of user-owned NFTs. DEPRECATED: use getBeatsNft and getBeatmapsNft instead&#x27;})<br />@Get(&#x27;/api/v1/nfts&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="187"
+                                    class="link-to-prism">src/app.controller.ts:187</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/GetBeatsNftsDto.html" target="_self" >GetBeatsNftsDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/GetBeatsNftsResponseDto.html" target="_self" >Promise&lt;GetBeatsNftsResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getUserOAuth"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>getUserOAuth</b></span>
+                        <a href="#getUserOAuth"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getUserOAuth(query: <a href="../classes/GetUserOAuthDto.html" target="_self">GetUserOAuthDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Get new user account created from OAuth login.&#x27;})<br />@Get(&#x27;/api/v1/oauth&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="486"
+                                    class="link-to-prism">src/app.controller.ts:486</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>query</td>
+                                            <td>
+                                                            <code><a href="../classes/GetUserOAuthDto.html" target="_self" >GetUserOAuthDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/GetUserOAuthResponseDto.html" target="_self" >Promise&lt;GetUserOAuthResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="healthcheck"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                        <span ><b>healthcheck</b></span>
+                        <a href="#healthcheck"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>healthcheck()</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@Get(&#x27;/&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="70"
+                                    class="link-to-prism">src/app.controller.ts:70</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mintBeatmapsNfts"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>mintBeatmapsNfts</b></span>
+                        <a href="#mintBeatmapsNfts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>mintBeatmapsNfts(body: <a href="../classes/MintBeatmapsNftDto.html" target="_self">MintBeatmapsNftDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Mint instances of BEATMAPS NFT to the given recipient&#x27;})<br />@Post(&#x27;/api/v1/nfts/beatmaps&#x27;)<br />@HttpCode(200)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="135"
+                                    class="link-to-prism">src/app.controller.ts:135</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/MintBeatmapsNftDto.html" target="_self" >MintBeatmapsNftDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/MintNftResponseDto.html" target="_self" >Promise&lt;MintNftResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mintBeatsNfts"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>mintBeatsNfts</b></span>
+                        <a href="#mintBeatsNfts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>mintBeatsNfts(body: <a href="../classes/MintBeatsNftDto.html" target="_self">MintBeatsNftDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Mint instances of BEATS NFT to a given recipient&#x27;})<br />@Post(&#x27;/api/v1/nfts/beats&#x27;)<br />@HttpCode(200)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="100"
+                                    class="link-to-prism">src/app.controller.ts:100</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/MintBeatsNftDto.html" target="_self" >MintBeatsNftDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/MintNftResponseDto.html" target="_self" >Promise&lt;MintNftResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mintBeatsToken"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>mintBeatsToken</b></span>
+                        <a href="#mintBeatsToken"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>mintBeatsToken(body: <a href="../classes/MintTokenDto.html" target="_self">MintTokenDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Request BEATS token&#x27;})<br />@Post(&#x27;/api/v1/token&#x27;)<br />@HttpCode(200)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="232"
+                                    class="link-to-prism">src/app.controller.ts:232</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/MintTokenDto.html" target="_self" >MintTokenDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/MintTokenResponseDto.html" target="_self" >Promise&lt;MintTokenResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mintNfts"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>mintNfts</b></span>
+                        <a href="#mintNfts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>mintNfts(body: <a href="../classes/MintBeatsNftDto.html" target="_self">MintBeatsNftDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Mint NFT&#x27;})<br />@Post(&#x27;/api/v1/nfts&#x27;)<br />@HttpCode(200)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="93"
+                                    class="link-to-prism">src/app.controller.ts:93</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/MintBeatsNftDto.html" target="_self" >MintBeatsNftDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/MintNftResponseDto.html" target="_self" >Promise&lt;MintNftResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="returnError"></a>
+                    <span class="name">
+                        <span ><b>returnError</b></span>
+                        <a href="#returnError"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>returnError(apiCall: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, errorCode: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, message: <a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank">any</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="76"
+                                    class="link-to-prism">src/app.controller.ts:76</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>apiCall</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>errorCode</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>message</td>
+                                            <td>
+                                                            <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >void</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="startAuthSession"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>startAuthSession</b></span>
+                        <a href="#startAuthSession"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>startAuthSession(body: <a href="../classes/StartAuthSessionDto.html" target="_self">StartAuthSessionDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Start an auth session. DEPRECATED&#x27;})<br />@Post(&#x27;/api/v1/auth&#x27;)<br />@HttpCode(200)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="373"
+                                    class="link-to-prism">src/app.controller.ts:373</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/StartAuthSessionDto.html" target="_self" >StartAuthSessionDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/StartAuthSessionResponseDto.html" target="_self" >Promise&lt;StartAuthSessionResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateUserLevel"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>updateUserLevel</b></span>
+                        <a href="#updateUserLevel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateUserLevel(body: <a href="../classes/UpdateUserLevelDto.html" target="_self">UpdateUserLevelDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Update user&#x27;s level.&#x27;})<br />@Post(&#x27;/api/v1/level&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="416"
+                                    class="link-to-prism">src/app.controller.ts:416</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/UpdateUserLevelDto.html" target="_self" >UpdateUserLevelDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/GetAccountResponseDto.html" target="_self" >Promise&lt;GetAccountResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateUserOAuth"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>updateUserOAuth</b></span>
+                        <a href="#updateUserOAuth"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateUserOAuth(body: <a href="../classes/UpdateUserOAuthDto.html" target="_self">UpdateUserOAuthDto</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@ApiOperation({summary: &#x27;Create new user account from OAuth login.&#x27;})<br />@Post(&#x27;/api/v1/oauth&#x27;)<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="443"
+                                    class="link-to-prism">src/app.controller.ts:443</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>body</td>
+                                            <td>
+                                                            <code><a href="../classes/UpdateUserOAuthDto.html" target="_self" >UpdateUserOAuthDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/UpdateUserOAuthResponseDto.html" target="_self" >Promise&lt;UpdateUserOAuthResponseDto&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+    Body,
+    Controller,
+    Get,
+    Post,
+    Put,
+    Query,
+    HttpCode,
+    BadRequestException,
+    UnauthorizedException,
+    InternalServerErrorException,
+} from &#x27;@nestjs/common&#x27;;
+import { ApiOperation } from &#x27;@nestjs/swagger&#x27;;
+import { AppService } from &#x27;./app.service&#x27;;
+import {
+    MintBeatsNftDto,
+    MintBeatmapsNftDto,
+    MintNftResponseDto,
+    GetTokenBalanceDto,
+    GetTokenBalanceResponseDto,
+    GetBeatsNftsDto,
+    GetBeatsNftsResponseDto,
+    GetBeatmapsNftsResponseDto,
+    MintTokenDto,
+    MintTokenResponseDto,
+    VerifySignatureDto,
+    VerifySignatureResponseDto,
+    StartAuthSessionDto,
+    StartAuthSessionResponseDto,
+    AuthVerifyDto,
+    AuthVerifyResponseDto,
+    GetLeaderboardDto,
+    GetLeaderboardResponseDto,
+    AddLeaderboardDto,
+    AddLeaderboardResponseDto,
+    GetLeaderboardSprintDto,
+    GetLeaderboardSprintResponseDto,
+    GetAccountDto,
+    GetAccountResponseDto,
+    CheckUsernameDto,
+    CheckUsernameResponseDto,
+    UpdateUserLevelDto,
+    UpdateUserOAuthDto,
+    UpdateUserOAuthResponseDto,
+    GetUserOAuthDto,
+    GetUserOAuthResponseDto,
+} from &#x27;./entity/req.entity&#x27;;
+import { SuiService } from &#x27;./sui.service&#x27;;
+import { AppLogger } from &#x27;./app.logger&#x27;;
+import { deprecate } from &#x27;util&#x27;;
+
+const LEADERBOARD_DEFAULT_LIMIT: number &#x3D; 100;
+const MAX_URL_LENGTH &#x3D; 400;
+const MAX_NFT_NAME_LENGTH &#x3D; 100;
+const MAX_USERNAME_LENGTH &#x3D; 100;
+const MAX_WALLET_LENGTH &#x3D; 100;
+const MAX_JSON_LENGTH &#x3D; 1000;
+const MAX_SIGNATURE_LENGTH &#x3D; 500;
+const MAX_STRING_LENGTH &#x3D; 1000;
+
+@Controller()
+export class AppController {
+    logger: AppLogger;
+
+    constructor(private readonly appService: AppService, private readonly suiService: SuiService) {
+        this.logger &#x3D; new AppLogger(&#x27;app.controller&#x27;);
+    }
+
+    @Get(&#x27;/&#x27;)
+    healthcheck() {
+        return &#x27;ok&#x27;;
+    }
+
+    // *** NFTS and TOKENS ***
+
+    returnError(apiCall: string, errorCode: number, message: any) {
+        this.logger.error(&#x60;${apiCall} returning ${errorCode}: ${message}&#x60;);
+        switch (errorCode) {
+            case 400:
+                throw new BadRequestException(message);
+            case 401:
+                throw new UnauthorizedException(message);
+            case 500:
+                throw new InternalServerErrorException(message);
+        }
+
+        throw new BadRequestException(message);
+    }
+
+    @ApiOperation({ summary: &#x27;Mint NFT&#x27; })
+    @Post(&#x27;/api/v1/nfts&#x27;)
+    @HttpCode(200)
+    async mintNfts(@Body() body: MintBeatsNftDto): Promise&lt;MintNftResponseDto&gt; {
+        return this.mintBeatsNfts(body);
+    }
+
+    @ApiOperation({ summary: &#x27;Mint instances of BEATS NFT to a given recipient&#x27; })
+    @Post(&#x27;/api/v1/nfts/beats&#x27;)
+    @HttpCode(200)
+    async mintBeatsNfts(@Body() body: MintBeatsNftDto): Promise&lt;MintNftResponseDto&gt; {
+        const logString &#x3D; &#x60;POST /api/v1/nfts/beats ${JSON.stringify(body)}&#x60;;
+        this.logger.log(logString);
+        const { name, recipient, imageUrl, quantity } &#x3D; body;
+        if (!name || name &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;name cannot be null or empty&#x27;);
+        }
+        if (name.length &gt; MAX_NFT_NAME_LENGTH) {
+            this.returnError(logString, 400, &#x60;name exceeded max length of ${MAX_NFT_NAME_LENGTH}&#x60;);
+        }
+        if (!imageUrl || imageUrl &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;imageUrl cannot be null or empty&#x27;);
+        }
+        if (imageUrl.length &gt; MAX_URL_LENGTH) {
+            this.returnError(logString, 400, &#x60;imageUrl exceeded max length of ${MAX_URL_LENGTH}&#x60;);
+        }
+
+        try {
+            const output &#x3D; await this.suiService.mintBeatsNfts(
+                recipient,
+                name,
+                &#x27;Soundbeats NFT&#x27;,
+                imageUrl,
+                quantity ?? 1,
+            );
+            this.logger.log(&#x60;${logString} returning ${JSON.stringify(output)}&#x60;);
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e.toString());
+        }
+    }
+
+    @ApiOperation({ summary: &#x27;Mint instances of BEATMAPS NFT to the given recipient&#x27; })
+    @Post(&#x27;/api/v1/nfts/beatmaps&#x27;)
+    @HttpCode(200)
+    async mintBeatmapsNfts(@Body() body: MintBeatmapsNftDto): Promise&lt;MintNftResponseDto&gt; {
+        const logString &#x3D; &#x60;POST /api/v1/nfts/beatmaps ${JSON.stringify(body)}&#x60;;
+        this.logger.log(logString);
+        let { recipient, username, title, artist, beatmapJson, imageUrl, quantity } &#x3D; body;
+
+        if (!username || username &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;username cannot be null or empty&#x27;);
+        }
+        if (username.length &gt; MAX_USERNAME_LENGTH) {
+            this.returnError(logString, 400, &#x60;username exceeded max length of ${MAX_USERNAME_LENGTH}&#x60;);
+        }
+        if (!title || title &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;title cannot be null or empty&#x27;);
+        }
+        if (!artist) {
+            artist &#x3D; &#x27;&#x27;;
+        }
+        if (artist.length &gt; MAX_USERNAME_LENGTH) {
+            this.returnError(logString, 400, &#x60;artist exceeded max length of ${MAX_USERNAME_LENGTH}&#x60;);
+        }
+        if (!beatmapJson || beatmapJson &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;beatmapJson cannot be null or empty&#x27;);
+        }
+        if (beatmapJson.length &gt; MAX_JSON_LENGTH) {
+            this.returnError(logString, 400, &#x60;beatmapJson exceeded max length of ${MAX_JSON_LENGTH}&#x60;);
+        }
+        if (!imageUrl || imageUrl &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;imageUrl cannot be null or empty&#x27;);
+        }
+        if (imageUrl.length &gt; MAX_URL_LENGTH) {
+            this.returnError(logString, 400, &#x60;imageUrl exceeded max length of ${MAX_URL_LENGTH}&#x60;);
+        }
+
+        try {
+            const output &#x3D; await this.suiService.mintBeatmapsNfts(
+                recipient,
+                username,
+                title,
+                artist,
+                beatmapJson,
+                imageUrl,
+                quantity ?? 1,
+            );
+            this.logger.log(&#x60;${logString} returning ${JSON.stringify(output)}&#x60;);
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+    }
+
+    @ApiOperation({ summary: &#x27;Gets list of user-owned NFTs. DEPRECATED: use getBeatsNft and getBeatmapsNft instead&#x27; })
+    @Get(&#x27;/api/v1/nfts&#x27;)
+    async getNfts(@Query() query: GetBeatsNftsDto): Promise&lt;GetBeatsNftsResponseDto&gt; {
+        return this.getBeatsNfts(query);
+    }
+
+    @ApiOperation({ summary: &#x27;Gets list of user-owned BEATS NFTs&#x27; })
+    @Get(&#x27;/api/v1/nfts/beats&#x27;)
+    async getBeatsNfts(@Query() query: GetBeatsNftsDto): Promise&lt;GetBeatsNftsResponseDto&gt; {
+        const logString &#x3D; &#x60;GET /api/v1/nfts/beats ${JSON.stringify(query)}&#x60;;
+        this.logger.log(logString);
+        const { wallet } &#x3D; query;
+        if (!wallet || wallet &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;wallet cannot be null or empty&#x27;);
+        }
+
+        try {
+            const output &#x3D; await this.suiService.getBeatsNfts(wallet);
+            this.logger.log(&#x60;${logString} returning ${JSON.stringify(output)}&#x60;);
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+    }
+
+    @ApiOperation({ summary: &#x27;Gets list of user-owned BEATMAPS NFTs&#x27; })
+    @Get(&#x27;/api/v1/nfts/beatmaps&#x27;)
+    async getBeatmapsNfts(@Query() query: GetBeatsNftsDto): Promise&lt;GetBeatmapsNftsResponseDto&gt; {
+        const logString &#x3D; &#x60;GET /api/v1/nfts/beatmaps ${JSON.stringify(query)}&#x60;;
+        this.logger.log(logString);
+        const { wallet } &#x3D; query;
+        if (!wallet || wallet &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;wallet cannot be null or empty&#x27;);
+        }
+
+        try {
+            const output &#x3D; await this.suiService.getBeatmapsNfts(wallet);
+            this.logger.log(&#x60;${logString} returning ${JSON.stringify(output)}&#x60;);
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+    }
+
+    @ApiOperation({ summary: &#x27;Request BEATS token&#x27; })
+    @Post(&#x27;/api/v1/token&#x27;)
+    @HttpCode(200)
+    async mintBeatsToken(@Body() body: MintTokenDto): Promise&lt;MintTokenResponseDto&gt; {
+        const logString &#x3D; &#x60;POST /api/v1/token ${JSON.stringify(body)}&#x60;;
+        this.logger.log(logString);
+        const { amount, recipient } &#x3D; body;
+        if (!amount || amount &lt;&#x3D; 0) {
+            this.returnError(logString, 400, &#x27;amount cannot be null, zero or negative&#x27;);
+        }
+        if (!recipient || recipient &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;recipient cannot be null or empty&#x27;);
+        }
+
+        try {
+            const output &#x3D; await this.suiService.mintTokens(recipient, amount);
+            this.logger.log(&#x60;${logString} returning ${JSON.stringify(output)}&#x60;);
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+    }
+
+    @ApiOperation({ summary: &#x27;Get BEATS token balance&#x27; })
+    @Get(&#x27;/api/v1/token&#x27;)
+    async getBeatsTokenBalance(@Query() query: GetTokenBalanceDto): Promise&lt;GetTokenBalanceResponseDto&gt; {
+        const logString &#x3D; &#x60;GET /api/v1/token ${JSON.stringify(query)}&#x60;;
+        this.logger.log(logString);
+        const { wallet } &#x3D; query;
+        if (!wallet || wallet &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;wallet cannot be null or empty&#x27;);
+        }
+
+        try {
+            const output &#x3D; await this.suiService.getTokenBalance(wallet);
+            this.logger.log(&#x60;${logString} returning ${JSON.stringify(output)}&#x60;);
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+    }
+
+    @ApiOperation({ summary: &#x27;Check if a username exists or is taken&#x27; })
+    @Get(&#x27;/api/v1/username&#x27;)
+    async checkUsername(@Query() query: CheckUsernameDto) {
+        const logString &#x3D; &#x60;GET /api/v1/username ${JSON.stringify(query)}&#x60;;
+        this.logger.log(logString);
+        let { username } &#x3D; query;
+        if (!username || username &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;username cannot be null or empty&#x27;);
+        }
+
+        try {
+            const exists: boolean &#x3D; await this.suiService.checkUsernameExists(username);
+            const output: CheckUsernameResponseDto &#x3D; {
+                exists,
+            };
+            this.logger.log(&#x60;${logString} returning ${JSON.stringify(output)}&#x60;);
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+    }
+
+    // *** LEADERBOARD ***
+
+    @ApiOperation({ summary: &#x27;Get a user score from the leaderboard&#x27; })
+    @Get(&#x27;/api/v1/leaderboard&#x27;)
+    async getLeaderboardScore(@Query() query: GetLeaderboardDto): Promise&lt;GetLeaderboardResponseDto&gt; {
+        const logString &#x3D; &#x60;GET /api/v1/leaderboard ${JSON.stringify(query)}&#x60;;
+        this.logger.log(logString);
+        try {
+            let { wallet, limit, sprint } &#x3D; query;
+            if (!wallet || wallet &#x3D;&#x3D; &#x27;&#x27;) {
+                wallet &#x3D; null;
+            }
+            if (!limit) {
+                limit &#x3D; LEADERBOARD_DEFAULT_LIMIT;
+            }
+            let output &#x3D; null;
+            if (wallet &amp;&amp; wallet.length) {
+                output &#x3D; await this.suiService.getLeaderboardScore(wallet, sprint);
+            } else {
+                output &#x3D; await this.suiService.getLeaderboardScores(limit, sprint);
+            }
+            this.logger.log(&#x60;${logString} returning ${JSON.stringify(output)}&#x60;);
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+    }
+
+    @ApiOperation({ summary: &#x27;Add to a user score on the leaderboard&#x27; })
+    @Post(&#x27;/api/v1/leaderboard&#x27;)
+    @HttpCode(200)
+    async addLeaderboardScore(@Body() body: AddLeaderboardDto): Promise&lt;AddLeaderboardResponseDto&gt; {
+        const logString &#x3D; &#x60;POST /api/v1/leaderboard ${JSON.stringify(body)}&#x60;;
+        this.logger.log(logString);
+        const { score, authId } &#x3D; body;
+
+        if (!score || score &lt;&#x3D; 0) {
+            this.returnError(logString, 400, &#x27;score cannot be null, zero or negative&#x27;);
+        }
+        if (!authId || authId &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;wallet cannot be null or empty&#x27;);
+        }
+        if (authId.length &gt; MAX_WALLET_LENGTH) {
+            this.returnError(logString, 400, &#x60;wallet exceeded max length of ${MAX_WALLET_LENGTH}&#x60;);
+        }
+
+        try {
+            const output &#x3D; await this.suiService.addLeaderboardScore(authId, score);
+            this.logger.log(&#x60;${logString} returning ${JSON.stringify(output)}&#x60;);
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+    }
+
+    @ApiOperation({ summary: &#x27;Add to a user score on the leaderboard&#x27; })
+    @Get(&#x27;/api/v1/sprint&#x27;)
+    async getLeaderboardSprint(@Body() query: GetLeaderboardSprintDto): Promise&lt;GetLeaderboardSprintResponseDto&gt; {
+        const logString &#x3D; &#x60;GET /api/v1/sprint ${JSON.stringify(query)}&#x60;;
+        this.logger.log(logString);
+        try {
+            let { sprint, limit } &#x3D; query;
+            let output &#x3D; null;
+            if (sprint &amp;&amp; sprint.length) {
+                output &#x3D; await this.suiService.getLeaderboardSprint(sprint);
+            } else {
+                output &#x3D; await this.suiService.getLeaderboardSprints(limit);
+            }
+            this.logger.log(&#x60;${logString} returning ${JSON.stringify(output)}&#x60;);
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+    }
+
+    // *** AUTH and REGISTRATION ***
+
+    @ApiOperation({ summary: &#x27;Start an auth session. DEPRECATED&#x27; })
+    @Post(&#x27;/api/v1/auth&#x27;)
+    @HttpCode(200)
+    async startAuthSession(@Body() body: StartAuthSessionDto): Promise&lt;StartAuthSessionResponseDto&gt; {
+        const logString &#x3D; &#x60;POST /api/v1/auth ${JSON.stringify(body)}&#x60;;
+        this.logger.log(logString);
+        let { evmWallet } &#x3D; body;
+        if (!evmWallet || evmWallet &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;evmWallet cannot be null or empty&#x27;);
+        }
+        if (evmWallet.length &gt; MAX_WALLET_LENGTH) {
+            this.returnError(logString, 400, &#x60;evmWallet exceeds max length of ${MAX_WALLET_LENGTH}&#x60;);
+        }
+
+        try {
+            return await this.suiService.startAuthSession(evmWallet);
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+    }
+
+    @ApiOperation({ summary: &#x27;Get a SUI address given an associated login.&#x27; })
+    @Get(&#x27;/api/v1/accounts&#x27;)
+    async getAccountFromLogin(@Query() query: GetAccountDto): Promise&lt;GetAccountResponseDto&gt; {
+        const logString &#x3D; &#x60;GET /api/v1/accounts ${JSON.stringify(query)}&#x60;;
+        let output &#x3D; { suiWallet: &#x27;&#x27;, status: &#x27;&#x27;, username: &#x27;&#x27;, level: 0 };
+        this.logger.log(logString);
+        let { authId } &#x3D; query;
+        if (!authId || authId &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;Auth Id cannot be null or empty&#x27;);
+        }
+        try {
+            output &#x3D; await this.suiService.getAccountFromLogin(authId);
+            this.logger.log(&#x60;${logString} returning ${JSON.stringify(output)}&#x60;);
+            if (output.status &#x3D;&#x3D;&#x3D; &#x27;success&#x27;) {
+                return output;
+            }
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+
+        this.returnError(logString, 400, output.status);
+    }
+
+    @ApiOperation({ summary: &quot;Update user&#x27;s level.&quot; })
+    @Post(&#x27;/api/v1/level&#x27;)
+    async updateUserLevel(@Body() body: UpdateUserLevelDto): Promise&lt;GetAccountResponseDto&gt; {
+        const logString &#x3D; &#x60;POST /api/v1/level ${JSON.stringify(body)}&#x60;;
+        let output &#x3D; { suiWallet: &#x27;&#x27;, status: &#x27;&#x27;, username: &#x27;&#x27;, level: 0 };
+        this.logger.log(logString);
+        let { authId, level } &#x3D; body;
+        if (!authId || authId &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;Auth Id cannot be null or empty&#x27;);
+        }
+        if (isNaN(level) || level &lt; 0) {
+            this.returnError(logString, 400, &#x27;Level must be a positive number, and is required&#x27;);
+        }
+
+        try {
+            output &#x3D; await this.suiService.updateUserLevel(authId, level);
+            this.logger.log(&#x60;${logString} returning ${JSON.stringify(output)}&#x60;);
+            if (output.status &#x3D;&#x3D;&#x3D; &#x27;success&#x27;) {
+                return output;
+            }
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+
+        this.returnError(logString, 400, output.status);
+    }
+
+    @ApiOperation({ summary: &#x27;Create new user account from OAuth login.&#x27; })
+    @Post(&#x27;/api/v1/oauth&#x27;)
+    async updateUserOAuth(@Body() body: UpdateUserOAuthDto): Promise&lt;UpdateUserOAuthResponseDto&gt; {
+        const logString &#x3D; &#x60;POST /api/v1/oauth ${JSON.stringify(body)}&#x60;;
+        this.logger.log(logString);
+        let status &#x3D; &#x27;&#x27;;
+
+        let { suiAddress, username, oauthToken, nonceToken } &#x3D; body;
+        if (!suiAddress || suiAddress &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;suiAddress cannot be null or empty&#x27;);
+        }
+        if (!username || username &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;username cannot be null or empty&#x27;);
+        }
+        if (suiAddress.length &gt; MAX_WALLET_LENGTH) {
+            this.returnError(logString, 400, &#x60;suiAddress exceeds max length of ${MAX_WALLET_LENGTH}&#x60;);
+        }
+        if (username.length &gt; MAX_USERNAME_LENGTH) {
+            this.returnError(logString, 400, &#x60;username exceeds max length of ${MAX_USERNAME_LENGTH}&#x60;);
+        }
+        //if (!oauthToken || oauthToken &#x3D;&#x3D; &#x27;&#x27;) {
+        //    this.returnError(logString, 400, &#x27;oauthToken cannot be null or empty&#x27;);
+        //}
+        if (!nonceToken || nonceToken &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;nonceToken cannot be null or empty&#x27;);
+        }
+        if (nonceToken.length &gt; MAX_STRING_LENGTH) {
+            this.returnError(logString, 400, &#x60;nonceToken exceeds max length of ${MAX_STRING_LENGTH}&#x60;);
+        }
+
+        try {
+            const output &#x3D; await this.suiService.updateUserFromOAuth(suiAddress, username, oauthToken, nonceToken);
+            this.logger.log(&#x60;${logString} returning ${JSON.stringify(output)}&#x60;);
+
+            status &#x3D; output.status;
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+
+        this.returnError(logString, 400, status);
+    }
+
+    @ApiOperation({ summary: &#x27;Get new user account created from OAuth login.&#x27; })
+    @Get(&#x27;/api/v1/oauth&#x27;)
+    async getUserOAuth(@Query() query: GetUserOAuthDto): Promise&lt;GetUserOAuthResponseDto&gt; {
+        const logString &#x3D; &#x60;GET /api/v1/oauth ${JSON.stringify(query)}&#x60;;
+        this.logger.log(logString);
+
+        let { nonceToken } &#x3D; query;
+        if (!nonceToken || nonceToken &#x3D;&#x3D; &#x27;&#x27;) {
+            this.returnError(logString, 400, &#x27;nonceToken cannot be null or empty&#x27;);
+        }
+        if (nonceToken.length &gt; MAX_STRING_LENGTH) {
+            this.returnError(logString, 400, &#x60;nonceToken exceeds max length of ${MAX_STRING_LENGTH}&#x60;);
+        }
+
+        try {
+            const output &#x3D; await this.suiService.getUserFromOAuth(nonceToken);
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+
+        this.returnError(logString, 400, &#x27;?&#x27;);
+    }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'controller';
+            var COMPODOC_CURRENT_PAGE_URL = 'AppController.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

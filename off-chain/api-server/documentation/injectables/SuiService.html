@@ -1,0 +1,3065 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>sui-game-server documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avaoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+
+               if ($darkModeToggles.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
+            <a href="../" class="navbar-brand">sui-game-server documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >SuiService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/sui.service.ts</code>
+        </p>
+
+
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#authManager" >authManager</a>
+                            </li>
+                            <li>
+                                <a href="#beatmapsNftOwnerCap" >beatmapsNftOwnerCap</a>
+                            </li>
+                            <li>
+                                <a href="#beatsNftOwnerCap" >beatsNftOwnerCap</a>
+                            </li>
+                            <li>
+                                <a href="#keypair" >keypair</a>
+                            </li>
+                            <li>
+                                <a href="#leaderboard" >leaderboard</a>
+                            </li>
+                            <li>
+                                <a href="#logger" >logger</a>
+                            </li>
+                            <li>
+                                <a href="#network" >network</a>
+                            </li>
+                            <li>
+                                <a href="#noncesToWallets" >noncesToWallets</a>
+                            </li>
+                            <li>
+                                <a href="#provider" >provider</a>
+                            </li>
+                            <li>
+                                <a href="#signer" >signer</a>
+                            </li>
+                            <li>
+                                <a href="#treasuryCap" >treasuryCap</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                <a href="#_createRpcProvider" >_createRpcProvider</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#_detectTokenInfo" >_detectTokenInfo</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#_getUserNFTs" >_getUserNFTs</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#addLeaderboardScore" >addLeaderboardScore</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#checkUsernameExists" >checkUsernameExists</a>
+                            </li>
+                            <li>
+                                <a href="#createWallet" >createWallet</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getAccountFromLogin" >getAccountFromLogin</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getBeatmapsNfts" >getBeatmapsNfts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getBeatsNfts" >getBeatsNfts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getLeaderboardScore" >getLeaderboardScore</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getLeaderboardScores" >getLeaderboardScores</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getLeaderboardSprint" >getLeaderboardSprint</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getLeaderboardSprints" >getLeaderboardSprints</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getTokenBalance" >getTokenBalance</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getUserFromOAuth" >getUserFromOAuth</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#mintBeatmapsNfts" >mintBeatmapsNfts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#mintBeatsNfts" >mintBeatsNfts</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#mintTokens" >mintTokens</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#startAuthSession" >startAuthSession</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateUserLevel" >updateUserLevel</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor()</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/sui.service.ts:41</a></div>
+                            </td>
+                        </tr>
+
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_createRpcProvider"></a>
+                    <span class="name">
+                        <span ><b>_createRpcProvider</b></span>
+                        <a href="#_createRpcProvider"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>_createRpcProvider(environment: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="621"
+                                    class="link-to-prism">src/sui.service.ts:621</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Creates a Json RPC provider for the given environment (default devnet)</p>
+<p>NOTE: it&#39;s not about what you wear; it&#39;s all about where you are</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>environment</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>SuiClient</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>JsonRpcProvider</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_detectTokenInfo"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>_detectTokenInfo</b></span>
+                        <a href="#_detectTokenInfo"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_detectTokenInfo(wallet: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, packageId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="519"
+                                    class="link-to-prism">src/sui.service.ts:519</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>From objects owned by the admin wallet, extracts the package id and object id of the
+BEATS token and NFT library.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>wallet</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>packageId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>null</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type | null&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>A package id and treasury cap id</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="_getUserNFTs"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>_getUserNFTs</b></span>
+                        <a href="#_getUserNFTs"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>_getUserNFTs(wallet: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, nftType: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="650"
+                                    class="link-to-prism">src/sui.service.ts:650</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>wallet</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                        </tr>
+                                        <tr>
+                                                <td>nftType</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>&#x27;BEATS_NFT&#x27;</code>
+                                            </td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;any[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="addLeaderboardScore"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>addLeaderboardScore</b></span>
+                        <a href="#addLeaderboardScore"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>addLeaderboardScore(authId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, score: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, sprint: string | null | "current" | string)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="378"
+                                    class="link-to-prism">src/sui.service.ts:378</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Adds a new leaderboard score for the given wallet address.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>score</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    <p>the score to add for the given wallet</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>sprint</td>
+                                            <td>
+                                                        <code>string | null | &quot;current&quot; | string</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>null</code>
+                                            </td>
+
+                                            <td>
+                                                    <p>unique sprint id, or &quot;current&quot;, &quot;&quot;, or &quot;default&quot;</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>LeaderboardDto</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="checkUsernameExists"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>checkUsernameExists</b></span>
+                        <a href="#checkUsernameExists"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>checkUsernameExists(username: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="494"
+                                    class="link-to-prism">src/sui.service.ts:494</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Returns true if the username is already taken (in the database) by a user.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>username</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>The username in question</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>boolean</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createWallet"></a>
+                    <span class="name">
+                        <span ><b>createWallet</b></span>
+                        <a href="#createWallet"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+<code>createWallet()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="94"
+                                    class="link-to-prism">src/sui.service.ts:94</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>literal type</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getAccountFromLogin"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getAccountFromLogin</b></span>
+                        <a href="#getAccountFromLogin"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getAccountFromLogin(authId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="417"
+                                    class="link-to-prism">src/sui.service.ts:417</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Tries to retrieve an existing SUI wallet address given the login information.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The status of the search and SUI wallet address (if found)</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getBeatmapsNfts"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getBeatmapsNfts</b></span>
+                        <a href="#getBeatmapsNfts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getBeatmapsNfts(wallet: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="314"
+                                    class="link-to-prism">src/sui.service.ts:314</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Examines all instances of BEATMAPS NFTs owned by the given wallet address, and returns a list
+of the unique NFT types owned by the address.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>wallet</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>GetBeatsNftsResponseDto</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getBeatsNfts"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getBeatsNfts</b></span>
+                        <a href="#getBeatsNfts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getBeatsNfts(wallet: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="285"
+                                    class="link-to-prism">src/sui.service.ts:285</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Examines all instances of BEATS NFTs owned by the given wallet address, and returns a list
+of the unique NFT types owned by the address.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>wallet</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>GetBeatsNftsResponseDto</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getLeaderboardScore"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getLeaderboardScore</b></span>
+                        <a href="#getLeaderboardScore"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getLeaderboardScore(wallet: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, sprint: string | null | "current" | string)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="348"
+                                    class="link-to-prism">src/sui.service.ts:348</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Returns the leaderboard score of the given wallet (default 0).</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>wallet</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                            </td>
+
+                                            <td>
+                                                    <p>the wallet address to query score</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>sprint</td>
+                                            <td>
+                                                        <code>string | null | &quot;current&quot; | string</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>null</code>
+                                            </td>
+
+                                            <td>
+                                                    <p>unique sprint id, or &quot;current&quot;, &quot;&quot;, or &quot;default&quot;</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>LeaderboardDto</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getLeaderboardScores"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getLeaderboardScores</b></span>
+                        <a href="#getLeaderboardScores"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getLeaderboardScores(limit: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, sprint: string | null | "current" | string)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="363"
+                                    class="link-to-prism">src/sui.service.ts:363</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Returns all leaderboard scores, or the leaderboard score of the given wallet only,
+if the wallet parameter is provided (i.e., if &#39;wallet&#39; is null or undefined, returns ALL scores)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>limit</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>0</code>
+                                            </td>
+
+                                            <td>
+                                                    <p>0 means &#39;unlimited&#39;</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>sprint</td>
+                                            <td>
+                                                        <code>string | null | &quot;current&quot; | string</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>null</code>
+                                            </td>
+
+                                            <td>
+                                                    <p>unique sprint id, or &quot;current&quot;, &quot;&quot;, or &quot;default&quot;</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>GetLeaderboardResponseDto</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getLeaderboardSprint"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getLeaderboardSprint</b></span>
+                        <a href="#getLeaderboardSprint"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getLeaderboardSprint(sprintId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="397"
+                                    class="link-to-prism">src/sui.service.ts:397</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Gets the specified leaderboard sprint configuration, if it exists.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>sprintId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/ISprint.html" target="_self" >Promise&lt;ISprint&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>The given sprint configuration, if found; otherwise null.</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getLeaderboardSprints"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getLeaderboardSprints</b></span>
+                        <a href="#getLeaderboardSprints"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getLeaderboardSprints(limit: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="407"
+                                    class="link-to-prism">src/sui.service.ts:407</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Gets all leaderboard sprints.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>limit</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>0</code>
+                                            </td>
+
+                                            <td>
+                                                    <p>Max number of records to return; &lt;=0 for unlimited.</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/ISprint.html" target="_self" >Promise&lt;ISprint[]&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>An array of leaderboard sprints that exist.</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getTokenBalance"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getTokenBalance</b></span>
+                        <a href="#getTokenBalance"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getTokenBalance(wallet: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="265"
+                                    class="link-to-prism">src/sui.service.ts:265</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Retrieves the balance of BEATS token from the blockchain, for the given wallet address.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>wallet</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>GetTokenBalanceResponseDto</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getUserFromOAuth"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getUserFromOAuth</b></span>
+                        <a href="#getUserFromOAuth"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getUserFromOAuth(nonceToken: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="435"
+                                    class="link-to-prism">src/sui.service.ts:435</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>nonceToken</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mintBeatmapsNfts"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>mintBeatmapsNfts</b></span>
+                        <a href="#mintBeatmapsNfts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>mintBeatmapsNfts(recipient: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, username: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, title: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, artist: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, beatmapJson: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, imageUrl: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, quantity: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="171"
+                                    class="link-to-prism">src/sui.service.ts:171</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Mints NFTs with the given properties in the given quantity to the specified
+recipient wallet address.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>recipient</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>username</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>title</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>artist</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>beatmapJson</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>imageUrl</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>quantity</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>MintNftResponseDto</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mintBeatsNfts"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>mintBeatsNfts</b></span>
+                        <a href="#mintBeatsNfts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>mintBeatsNfts(recipient: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, name: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, description: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, imageUrl: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, quantity: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="116"
+                                    class="link-to-prism">src/sui.service.ts:116</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Mints NFTs with the given properties in the given quantity to the specified
+recipient wallet address.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>recipient</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>name</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>description</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>imageUrl</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>quantity</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>MintNftResponseDto</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="mintTokens"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>mintTokens</b></span>
+                        <a href="#mintTokens"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>mintTokens(recipient: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, amount: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="231"
+                                    class="link-to-prism">src/sui.service.ts:231</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Mints tokens in the given quantity to the specified recipient.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>recipient</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                        <tr>
+                                                <td>amount</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="startAuthSession"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>startAuthSession</b></span>
+                        <a href="#startAuthSession"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>startAuthSession(evmWallet: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="499"
+                                    class="link-to-prism">src/sui.service.ts:499</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>evmWallet</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateUserLevel"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>updateUserLevel</b></span>
+                        <a href="#updateUserLevel"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateUserLevel(authId: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, level: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="463"
+                                    class="link-to-prism">src/sui.service.ts:463</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Updates a user&#39;s game level.</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>authId</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>User&#39;s account id.</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>level</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;literal type&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="authManager"></a>
+                    <span class="name">
+                        <span ><b>authManager</b></span>
+                        <a href="#authManager"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/IAuthManager.html" target="_self" >IAuthManager</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="38" class="link-to-prism">src/sui.service.ts:38</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="beatmapsNftOwnerCap"></a>
+                    <span class="name">
+                        <span ><b>beatmapsNftOwnerCap</b></span>
+                        <a href="#beatmapsNftOwnerCap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/sui.service.ts:36</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="beatsNftOwnerCap"></a>
+                    <span class="name">
+                        <span ><b>beatsNftOwnerCap</b></span>
+                        <a href="#beatsNftOwnerCap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/sui.service.ts:35</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="keypair"></a>
+                    <span class="name">
+                        <span ><b>keypair</b></span>
+                        <a href="#keypair"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Keypair</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/sui.service.ts:33</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="leaderboard"></a>
+                    <span class="name">
+                        <span ><b>leaderboard</b></span>
+                        <a href="#leaderboard"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../interfaces/ILeaderboard.html" target="_self" >ILeaderboard</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/sui.service.ts:37</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="logger"></a>
+                    <span class="name">
+                        <span ><b>logger</b></span>
+                        <a href="#logger"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="../injectables/AppLogger.html" target="_self" >AppLogger</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="40" class="link-to-prism">src/sui.service.ts:40</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="network"></a>
+                    <span class="name">
+                        <span ><b>network</b></span>
+                        <a href="#network"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="39" class="link-to-prism">src/sui.service.ts:39</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="noncesToWallets"></a>
+                    <span class="name">
+                        <span ><b>noncesToWallets</b></span>
+                        <a href="#noncesToWallets"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="41" class="link-to-prism">src/sui.service.ts:41</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="provider"></a>
+                    <span class="name">
+                        <span ><b>provider</b></span>
+                        <a href="#provider"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>SuiClient</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/sui.service.ts:32</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="signer"></a>
+                    <span class="name">
+                        <span ><b>signer</b></span>
+                        <a href="#signer"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>RawSigner</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/sui.service.ts:31</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="treasuryCap"></a>
+                    <span class="name">
+                        <span ><b>treasuryCap</b></span>
+                        <a href="#treasuryCap"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="34" class="link-to-prism">src/sui.service.ts:34</a></div>
+                        </td>
+                    </tr>
+
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+    RawSigner, // use keypair
+} from &#x27;@mysten/sui.js&#x27;;
+import { SuiClient, getFullnodeUrl } from &#x27;@mysten/sui.js/client&#x27;;
+import { Ed25519Keypair, Ed25519PublicKey } from &#x27;@mysten/sui.js/keypairs/ed25519&#x27;;
+import { TransactionBlock } from &#x27;@mysten/sui.js/transactions&#x27;;
+import { Keypair, Signer } from &#x27;@mysten/sui.js/cryptography&#x27;;
+import { Injectable } from &#x27;@nestjs/common&#x27;;
+import { ILeaderboard, ISprint } from &#x27;./leaderboard/ILeaderboard&#x27;;
+import { getLeaderboardInstance } from &#x27;./leaderboard/leaderboard&#x27;;
+import { IAuthManager, IAuthRecord, IAuthSession } from &#x27;./auth/IAuthManager&#x27;;
+import { getAuthManagerInstance } from &#x27;./auth/auth&#x27;;
+import { Config } from &#x27;./config&#x27;;
+import { AppLogger } from &#x27;./app.logger&#x27;;
+const { ethers } &#x3D; require(&#x27;ethers&#x27;);
+
+//TODO: replace &#x27;success&#x27; with &#x27;completed&#x27;
+// - delete table
+// - rename 2 props &amp; create
+/// - rename in code
+// - retest
+//TODO: logging msgs
+
+export const strToByteArray &#x3D; (str: string): number[] &#x3D;&gt; {
+    const utf8Encode &#x3D; new TextEncoder();
+    return Array.from(utf8Encode.encode(str).values());
+};
+
+@Injectable()
+export class SuiService {
+    signer: RawSigner;
+    provider: SuiClient;
+    keypair: Keypair;
+    treasuryCap: string;
+    beatsNftOwnerCap: string;
+    beatmapsNftOwnerCap: string;
+    leaderboard: ILeaderboard;
+    authManager: IAuthManager;
+    network: string;
+    logger: AppLogger;
+    noncesToWallets: { [key: string]: string };
+
+    constructor() {
+        //derive keypair
+        this.keypair &#x3D; Ed25519Keypair.deriveKeypair(process.env.MNEMONIC_PHRASE);
+        this.noncesToWallets &#x3D; {};
+        this.logger &#x3D; new AppLogger(&#x27;sui.service&#x27;);
+
+        //create connect to the correct environment
+        this.network &#x3D; Config.suiNetwork;
+        this.logger.log(&#x60;network: ${this.network}&#x60;);
+        this.provider &#x3D; this._createRpcProvider(this.network);
+        this.signer &#x3D; new RawSigner(this.keypair, this.provider);
+
+        //leaderboard
+        this.leaderboard &#x3D; getLeaderboardInstance(this.network);
+        this.authManager &#x3D; getAuthManagerInstance();
+
+        //get initial addresses from config setting
+        this.treasuryCap &#x3D; Config.treasuryCap;
+        this.beatsNftOwnerCap &#x3D; Config.beatsNftOwnerCap;
+        this.beatmapsNftOwnerCap &#x3D; Config.beatmapsNftOwnerCap;
+
+        this.logger.log(&#x27;BEATS token package id: &#x27; + Config.beatsCoinPackageId);
+        this.logger.log(&#x27;BEATS NFT package id: &#x27; + Config.beatsNftPackageId);
+        this.logger.log(&#x27;BEATMAPS NFT package id: &#x27; + Config.beatmapsNftPackageId);
+        this.logger.log(&#x27;treasuryCap: &#x27; + this.treasuryCap);
+        this.logger.log(&#x27;beatsNftOwnerCap: &#x27; + this.beatsNftOwnerCap);
+        this.logger.log(&#x27;beatmapsNftOwnerCap: &#x27; + this.beatmapsNftOwnerCap);
+
+        //get admin address
+        const suiAddress &#x3D; this.keypair.getPublicKey().toSuiAddress();
+        this.logger.log(&#x27;admin address: &#x27; + suiAddress);
+
+        //detect token info from blockchain
+        /*if (Config.detectPackageInfo) {
+            this.logger.log(&#x27;detecting package data ...&#x27;);
+            this._detectTokenInfo(suiAddress, Config.beatsNftPackageId).then(async (response) &#x3D;&gt; {
+                this.logger.log(&#x27;parsing package data ...&#x27;);
+                if (response &amp;&amp; response.packageId &amp;&amp; response.treasuryCap) {
+                    this.treasuryCap &#x3D; response.treasuryCap;
+                    this.beatsNftOwnerCap &#x3D; response.beatsNftOwnerCap;
+                    this.beatmapsNftOwnerCap &#x3D; response.beatmapsNftOwnerCap;
+
+                    this.logger.log(&#x27;detected packageId: &#x27; + response.packageId);
+                    this.logger.log(&#x27;detected treasuryCap: &#x27; + this.treasuryCap);
+                    this.logger.log(&#x27;detected beatsNftOwnerCap: &#x27; + this.beatsNftOwnerCap);
+                    this.logger.log(&#x27;detected beatmapsNftOwnerCap: &#x27; + this.beatmapsNftOwnerCap);
+                }
+            });
+        }*/
+    }
+
+    createWallet(): { address: string; privateKey: string } {
+        const keypair &#x3D; new Ed25519Keypair();
+        const exported &#x3D; keypair.export();
+
+        return {
+            address: keypair.toSuiAddress(),
+            privateKey: exported.privateKey,
+        };
+    }
+
+    //TODO: refactor mintBeatsNfts and mintBeatmapsNfts into one method
+    /**
+     * Mints NFTs with the given properties in the given quantity to the specified
+     * recipient wallet address.
+     *
+     * @param recipient
+     * @param name
+     * @param description
+     * @param imageUrl
+     * @param quantity
+     * @returns MintNftResponseDto
+     */
+    async mintBeatsNfts(
+        recipient: string,
+        name: string,
+        description: string,
+        imageUrl: string,
+        quantity: number,
+    ): Promise&lt;{ signature: string; addresses: string[]; network: string }&gt; {
+        //mint nft to recipient
+        const tx &#x3D; new TransactionBlock();
+        tx.moveCall({
+            target: &#x60;${Config.beatsNftPackageId}::beats_nft::mint&#x60;,
+            arguments: [
+                tx.pure(this.beatsNftOwnerCap),
+                tx.pure(name),
+                tx.pure(description),
+                tx.pure(imageUrl),
+                tx.pure(recipient),
+                tx.pure(quantity),
+            ],
+        });
+
+        //execute tx
+        const result &#x3D; await this.signer.signAndExecuteTransactionBlock({
+            transactionBlock: tx,
+            options: {
+                showEffects: true,
+                showEvents: true,
+                showBalanceChanges: true,
+                showObjectChanges: true,
+                showInput: true,
+            },
+        });
+
+        //check results
+        if (result.effects &#x3D;&#x3D; null) {
+            throw new Error(&#x27;Fail&#x27;);
+        }
+
+        const signature &#x3D; result.effects.transactionDigest;
+        const addresses &#x3D; result.effects.created?.map((obj) &#x3D;&gt; obj.reference.objectId) ?? [];
+
+        return { signature, addresses, network: this.network };
+    }
+
+    /**
+     * Mints NFTs with the given properties in the given quantity to the specified
+     * recipient wallet address.
+     *
+     * @param recipient
+     * @param title
+     * @param username
+     * @param beatmapJson
+     * @param quantity
+     * @returns MintNftResponseDto
+     */
+    async mintBeatmapsNfts(
+        recipient: string,
+        username: string,
+        title: string,
+        artist: string,
+        beatmapJson: string,
+        imageUrl: string,
+        quantity: number,
+    ): Promise&lt;{ signature: string; addresses: string[]; network: string }&gt; {
+        //mint nft to recipient
+        const tx &#x3D; new TransactionBlock();
+
+        const metadata &#x3D; {
+            beatmap: beatmapJson,
+            username: username,
+            title: title,
+            artist: artist,
+        };
+
+        tx.moveCall({
+            target: &#x60;${Config.beatmapsNftPackageId}::beatmaps_nft::mint&#x60;,
+            arguments: [
+                tx.pure(this.beatmapsNftOwnerCap),
+                tx.pure(JSON.stringify(metadata)),
+                tx.pure(imageUrl),
+                tx.pure(recipient),
+                tx.pure(quantity),
+            ],
+        });
+
+        //execute tx
+        const result &#x3D; await this.signer.signAndExecuteTransactionBlock({
+            transactionBlock: tx,
+            options: {
+                showEffects: true,
+                showEvents: true,
+                showBalanceChanges: true,
+                showObjectChanges: true,
+                showInput: true,
+            },
+        });
+
+        //check results
+        if (result.effects &#x3D;&#x3D; null) {
+            throw new Error(&#x27;Fail&#x27;);
+        }
+
+        const signature &#x3D; result.effects.transactionDigest;
+        const addresses &#x3D; result.effects.created?.map((obj) &#x3D;&gt; obj.reference.objectId) ?? [];
+
+        return { signature, addresses, network: this.network };
+    }
+
+    /**
+     * Mints tokens in the given quantity to the specified recipient.
+     *
+     * @param recipient
+     * @param amount
+     * @returns
+     */
+    async mintTokens(recipient: string, amount: number): Promise&lt;{ signature: string; network: string }&gt; {
+        //mint token to recipient
+        const tx &#x3D; new TransactionBlock();
+        tx.moveCall({
+            target: &#x60;${Config.beatsCoinPackageId}::beats::mint&#x60;,
+            arguments: [tx.pure(this.treasuryCap), tx.pure(amount), tx.pure(recipient)],
+        });
+
+        //execute tx
+        const result &#x3D; await this.signer.signAndExecuteTransactionBlock({
+            transactionBlock: tx,
+            options: {
+                showEffects: true,
+                showEvents: true,
+                showBalanceChanges: true,
+                showObjectChanges: true,
+            },
+        });
+
+        //check results
+        if (result.effects &#x3D;&#x3D; null) {
+            throw new Error(&#x27;Move call Failed&#x27;);
+        }
+
+        const signature &#x3D; result.effects?.transactionDigest;
+        return { signature, network: this.network };
+    }
+
+    /**
+     * Retrieves the balance of BEATS token from the blockchain, for the given wallet address.
+     *
+     * @param wallet
+     * @returns GetTokenBalanceResponseDto
+     */
+    async getTokenBalance(wallet: string): Promise&lt;{ balance: number; network: string }&gt; {
+        const tokenType &#x3D; &#x60;${Config.beatsCoinPackageId}::beats::BEATS&#x60;;
+        const result &#x3D; await this.provider.getBalance({
+            owner: wallet,
+            coinType: tokenType,
+        });
+        return {
+            balance: parseInt(result.totalBalance),
+            network: this.network,
+        };
+    }
+
+    /**
+     * Examines all instances of BEATS NFTs owned by the given wallet address, and returns a list
+     * of the unique NFT types owned by the address.
+     *
+     * @param wallet
+     * @param nftType
+     * @returns GetBeatsNftsResponseDto
+     */
+    async getBeatsNfts(wallet: string): Promise&lt;{ nfts: any[]; network: string }&gt; {
+        const output: { nfts: { name: string; url: string }[]; network: string } &#x3D; { nfts: [], network: this.network };
+
+        const nfts &#x3D; await this._getUserNFTs(wallet);
+
+        //get list of unique names for all NFTs owned
+        for (let i &#x3D; 0; i &lt; nfts.length; i++) {
+            const nft &#x3D; nfts[i];
+            if (nft.data.content[&#x27;fields&#x27;] &amp;&amp; nft.data.content[&#x27;fields&#x27;][&#x27;name&#x27;] &amp;&amp; nft.data.content[&#x27;fields&#x27;][&#x27;url&#x27;]) {
+                const nftName &#x3D; nft.data.content[&#x27;fields&#x27;][&#x27;name&#x27;];
+                const nftUrl &#x3D; nft.data.content[&#x27;fields&#x27;][&#x27;url&#x27;];
+
+                //only add if name is unique
+                if (!output.nfts.some((nft) &#x3D;&gt; nft.name &#x3D;&#x3D; nftName)) {
+                    output.nfts.push({ name: nftName, url: nftUrl });
+                }
+            }
+        }
+        return output;
+    }
+
+    /**
+     * Examines all instances of BEATMAPS NFTs owned by the given wallet address, and returns a list
+     * of the unique NFT types owned by the address.
+     *
+     * @param wallet
+     * @param nftType
+     * @returns GetBeatsNftsResponseDto
+     */
+    async getBeatmapsNfts(wallet: string): Promise&lt;{ nfts: any[]; network: string }&gt; {
+        const output: {
+            nfts: { username: string; title: string; artist: string; beatmapJson: string }[];
+            network: string;
+        } &#x3D; { nfts: [], network: this.network };
+
+        const nfts &#x3D; await this._getUserNFTs(wallet, &#x27;BEATMAPS_NFT&#x27;);
+
+        //get list of unique names for all NFTs owned
+        for (let i &#x3D; 0; i &lt; nfts.length; i++) {
+            const nft &#x3D; nfts[i];
+            if (nft.data.content[&#x27;fields&#x27;] &amp;&amp; nft.data.content[&#x27;fields&#x27;][&#x27;metadata&#x27;]) {
+                let metadata: any &#x3D; {};
+                try {
+                    metadata &#x3D; JSON.parse(nft.data.content[&#x27;fields&#x27;][&#x27;metadata&#x27;]);
+                } catch {}
+                output.nfts.push({
+                    username: metadata.username ?? &#x27;&#x27;,
+                    artist: metadata.artist ?? &#x27;&#x27;,
+                    title: metadata.title ?? &#x27;&#x27;,
+                    beatmapJson: metadata.beatmap ?? &#x27;&#x27;,
+                });
+            }
+        }
+        return output;
+    }
+
+    /**
+     * Returns the leaderboard score of the given wallet (default 0).
+     *
+     * @param wallet the wallet address to query score
+     * @param sprint unique sprint id, or &quot;current&quot;, &quot;&quot;, or &quot;default&quot;
+     * @returns LeaderboardDto
+     */
+    async getLeaderboardScore(
+        wallet: string,
+        sprint: string | null | &#x27;current&#x27; | &#x27;&#x27; &#x3D; null,
+    ): Promise&lt;{ wallet: string; score: number; username: string; network: string }&gt; {
+        return await this.leaderboard.getLeaderboardScore(wallet, sprint);
+    }
+
+    /**
+     * Returns all leaderboard scores, or the leaderboard score of the given wallet only,
+     * if the wallet parameter is provided (i.e., if &#x27;wallet&#x27; is null or undefined, returns ALL scores)
+     *
+     * @param limit 0 means &#x27;unlimited&#x27;
+     * @param sprint unique sprint id, or &quot;current&quot;, &quot;&quot;, or &quot;default&quot;
+     * @returns GetLeaderboardResponseDto
+     */
+    async getLeaderboardScores(
+        limit: number &#x3D; 0,
+        sprint: string | null | &#x27;current&#x27; | &#x27;&#x27; &#x3D; null,
+    ): Promise&lt;{ scores: { wallet: string; username: string; score: number }[]; network: string }&gt; {
+        return await this.leaderboard.getLeaderboardScores(limit, sprint);
+    }
+
+    /**
+     * Adds a new leaderboard score for the given wallet address.
+     *
+     * @param wallet the wallet address to add score
+     * @param score the score to add for the given wallet
+     * @param sprint unique sprint id, or &quot;current&quot;, &quot;&quot;, or &quot;default&quot;
+     * @returns LeaderboardDto
+     */
+    async addLeaderboardScore(
+        authId: string,
+        score: number,
+        sprint: string | null | &#x27;current&#x27; | &#x27;&#x27; &#x3D; null,
+    ): Promise&lt;{ score: number; network: string }&gt; {
+        const user &#x3D; await this.getAccountFromLogin(authId);
+        let username &#x3D; authId;
+        if (user) {
+            username &#x3D; user.username;
+        }
+        return await this.leaderboard.addLeaderboardScore(authId, username, score, sprint);
+    }
+
+    /**
+     * Gets the specified leaderboard sprint configuration, if it exists.
+     *
+     * @param sprintId
+     * @returns The given sprint configuration, if found; otherwise null.
+     */
+    async getLeaderboardSprint(sprintId: string): Promise&lt;ISprint&gt; {
+        return await this.leaderboard.getSprint(sprintId);
+    }
+
+    /**
+     * Gets all leaderboard sprints.
+     *
+     * @param limit Max number of records to return; &lt;&#x3D;0 for unlimited.
+     * @returns An array of leaderboard sprints that exist.
+     */
+    async getLeaderboardSprints(limit: number &#x3D; 0): Promise&lt;ISprint[]&gt; {
+        return await this.leaderboard.getSprints(limit);
+    }
+
+    /**
+     * Tries to retrieve an existing SUI wallet address given the login information.
+     *
+     * @param authId
+     * @returns The status of the search and SUI wallet address (if found)
+     */
+    async getAccountFromLogin(
+        authId: string,
+    ): Promise&lt;{ suiWallet: string; username: string; level: number; status: string }&gt; {
+        const output &#x3D; { suiWallet: &#x27;&#x27;, status: &#x27;&#x27;, username: &#x27;&#x27;, level: 0 };
+        const authRecord: IAuthRecord &#x3D; await this.authManager.getAuthRecord(authId, &#x27;sui&#x27;);
+        if (authRecord &#x3D;&#x3D; null) {
+            output.status &#x3D; &#x27;notfound&#x27;;
+        } else {
+            output.suiWallet &#x3D; authRecord?.suiWallet;
+            output.username &#x3D; authRecord.username;
+            output.level &#x3D; authRecord.level;
+            output.status &#x3D; &#x27;success&#x27;;
+        }
+
+        return output;
+    }
+
+    //TODO: comment header
+    async getUserFromOAuth(
+        nonceToken: string,
+    ): Promise&lt;{ status: string; suiWallet: string; level: number; username: string }&gt; {
+        let output &#x3D; {
+            status: &#x27;&#x27;,
+            suiWallet: &#x27;&#x27;,
+            username: &#x27;&#x27;,
+            level: 0,
+        };
+
+        if (!this.noncesToWallets) {
+            output.status &#x3D; &#x27;notfound&#x27;;
+        } else {
+            output.suiWallet &#x3D; this.noncesToWallets[nonceToken];
+
+            output &#x3D; await this.getAccountFromLogin(output.suiWallet);
+            delete this.noncesToWallets[nonceToken];
+        }
+
+        return output;
+    }
+
+    /**
+     * Updates a user&#x27;s game level.
+     * @param authId User&#x27;s account id.
+     * @param level
+     * @returns
+     */
+    async updateUserLevel(
+        authId: string,
+        level: number,
+    ): Promise&lt;{ suiWallet: string; username: string; level: number; status: string }&gt; {
+        const output &#x3D; { suiWallet: &#x27;&#x27;, status: &#x27;&#x27;, username: &#x27;&#x27;, level: 0 };
+        const authRecord: IAuthRecord &#x3D; await this.authManager.getAuthRecord(authId, &#x27;sui&#x27;);
+        if (authRecord &#x3D;&#x3D; null) {
+            output.status &#x3D; &#x27;notfound&#x27;;
+        } else {
+            await this.authManager.updateAuthRecord(
+                authRecord.authId,
+                authRecord.authType,
+                authRecord.suiWallet,
+                level,
+            );
+
+            output.suiWallet &#x3D; authRecord?.suiWallet;
+            output.username &#x3D; authRecord.username;
+            output.level &#x3D; level;
+            output.status &#x3D; &#x27;success&#x27;;
+        }
+
+        return output;
+    }
+
+    /**
+     * Returns true if the username is already taken (in the database) by a user.
+     *
+     * @param username The username in question
+     * @returns boolean
+     */
+    async checkUsernameExists(username: string): Promise&lt;boolean&gt; {
+        return await this.authManager.usernameExists(username);
+    }
+
+    //TODO: comment header
+    async startAuthSession(evmWallet: string): Promise&lt;{ messageToSign: string; sessionId: string; username: string }&gt; {
+        const session &#x3D; await this.authManager.startAuthSession(evmWallet);
+        const account &#x3D; await this.authManager.getAuthRecord(evmWallet, &#x27;evm&#x27;);
+        const output &#x3D; {
+            username: &#x27;&#x27;,
+            ...session,
+        };
+        if (account) {
+            output.username &#x3D; account.username ?? &#x27;&#x27;;
+        }
+        return output;
+    }
+
+    /**
+     * From objects owned by the admin wallet, extracts the package id and object id of the
+     * BEATS token and NFT library.
+     *
+     * @param wallet
+     * @returns A package id and treasury cap id
+     */
+    async _detectTokenInfo(
+        wallet: string,
+        packageId: string &#x3D; null,
+    ): Promise&lt;{
+        packageId: string;
+        treasuryCap: string;
+        beatsNftOwnerCap: string;
+        beatmapsNftOwnerCap: string;
+    } | null&gt; {
+        let output &#x3D; null;
+
+        //get owned objects
+        const objects &#x3D; await this.provider.getOwnedObjects({
+            owner: wallet,
+            options: {
+                showType: true,
+                showContent: true,
+                showOwner: true,
+            },
+        });
+
+        for (let i in objects.data) {
+            const obj &#x3D; objects.data[i];
+        }
+
+        //parse the objects
+        if (objects &amp;&amp; objects.data &amp;&amp; objects.data.length) {
+            const tCaps &#x3D; objects.data.filter((o) &#x3D;&gt; {
+                return (
+                    o.data.type.startsWith(&#x60;0x2::coin::TreasuryCap&lt;${packageId ?? &#x27;&#x27;}&#x60;) &amp;&amp;
+                    o.data?.type?.endsWith(&#x27;::beats::BEATS&gt;&#x27;)
+                );
+            });
+
+            if (tCaps &amp;&amp; tCaps.length) {
+                const beatsObj &#x3D; tCaps[0];
+
+                //parse out the type to get the package id
+                if (!packageId) {
+                    let parts &#x3D; beatsObj.data.type.split(&#x27;::&#x27;);
+                    let tCap &#x3D; parts.filter((p) &#x3D;&gt; p.startsWith(&#x27;TreasuryCap&lt;&#x27;));
+                    if (tCap.length) {
+                        packageId &#x3D; tCap[tCap.length - 1].substring(&#x27;TreasuryCap&lt;&#x27;.length);
+                    }
+                }
+
+                if (packageId &amp;&amp; packageId.length) {
+                    //get BEATS nft owner object
+                    let beatsNftObj &#x3D; null;
+                    const beatsNftOwners &#x3D; objects.data.filter((o) &#x3D;&gt; {
+                        return (
+                            o.data.type &#x3D;&#x3D; &#x60;${packageId}::beats_nft::BeatsOwnerCap&lt;${packageId}::beats_nft::BEATS_NFT&gt;&#x60;
+                        );
+                    });
+                    if (beatsNftOwners &amp;&amp; beatsNftOwners.length) {
+                        beatsNftObj &#x3D; beatsNftOwners[beatsNftOwners.length - 1];
+                    }
+
+                    //get BEATMAPS nft owner object
+                    let beatmapsNftObj &#x3D; null;
+                    const beatmapsNftOwners &#x3D; objects.data.filter((o) &#x3D;&gt; {
+                        return (
+                            o.data.type &#x3D;&#x3D;
+                            &#x60;${packageId}::beatmaps_nft::BeatmapsOwnerCap&lt;${packageId}::beatmaps_nft::BEATMAPS_NFT&gt;&#x60;
+                        );
+                    });
+                    if (beatmapsNftOwners &amp;&amp; beatmapsNftOwners.length) {
+                        beatmapsNftObj &#x3D; beatmapsNftOwners[beatmapsNftOwners.length - 1];
+                    }
+
+                    //get coin cap object
+                    let coinObj &#x3D; null;
+                    const coinCaps &#x3D; objects.data.filter((o) &#x3D;&gt; {
+                        return o.data.type &#x3D;&#x3D; &#x60;0x2::coin::CoinMetadata&lt;${packageId}::beats::BEATS&gt;&#x60;;
+                    });
+                    if (coinCaps &amp;&amp; coinCaps.length) {
+                        coinObj &#x3D; coinCaps[coinCaps.length - 1];
+                    }
+
+                    //get package ID &amp; treasury cap
+                    if (packageId &amp;&amp; packageId.length) {
+                        output &#x3D; {
+                            packageId: packageId,
+                            treasuryCap: beatsObj.data?.objectId,
+                            beatsNftOwnerCap: beatsNftObj?.data?.objectId,
+                            beatmapsNftOwnerCap: beatmapsNftObj?.data?.objectId,
+                        };
+                    }
+                }
+            }
+        }
+
+        return output;
+    }
+
+    /**
+     * Creates a Json RPC provider for the given environment (default devnet)
+     *
+     * NOTE: it&#x27;s not about what you wear; it&#x27;s all about where you are
+     * @param environment
+     * @returns JsonRpcProvider
+     */
+    _createRpcProvider(environment: string): SuiClient {
+        if (!environment) environment &#x3D; &#x27;DEVNET&#x27;;
+
+        this.logger.log(&#x60;creating RPC provider for ${environment}&#x60;);
+
+        switch (environment.toUpperCase()) {
+            case &#x27;LOCALNET&#x27;:
+                return new SuiClient({
+                    url: getFullnodeUrl(&#x27;localnet&#x27;),
+                });
+            case &#x27;DEVNET&#x27;:
+                return new SuiClient({
+                    url: getFullnodeUrl(&#x27;devnet&#x27;),
+                });
+            case &#x27;TESTNET&#x27;:
+                return new SuiClient({
+                    url: getFullnodeUrl(&#x27;testnet&#x27;),
+                });
+            case &#x27;MAINNET&#x27;:
+                return new SuiClient({
+                    url: getFullnodeUrl(&#x27;mainnet&#x27;),
+                });
+        }
+
+        return new SuiClient({
+            url: getFullnodeUrl(&#x27;devnet&#x27;),
+        });
+    }
+
+    async _getUserNFTs(wallet: string, nftType: string &#x3D; &#x27;BEATS_NFT&#x27;): Promise&lt;any[]&gt; {
+        let output: any[] &#x3D; [];
+
+        //get objects owned by user
+        let response: any &#x3D; {
+            hasNextPage: true,
+            data: [],
+            nextCursor: null,
+        };
+
+        while (response.hasNextPage) {
+            //get objects owned by user
+            response &#x3D; await this.provider.getOwnedObjects({
+                owner: wallet,
+                options: {
+                    showType: true,
+                    showContent: true,
+                },
+                limit: 50,
+                cursor: response.nextCursor,
+            });
+
+            if (response &amp;&amp; response.data &amp;&amp; response.data.length) {
+                let packageId: string &#x3D; &#x27;&#x27;;
+                if (nftType.toLowerCase() &#x3D;&#x3D; &#x27;beats_nft&#x27;) packageId &#x3D; Config.beatsNftPackageId;
+                if (nftType.toLowerCase() &#x3D;&#x3D; &#x27;beatmaps_nft&#x27;) packageId &#x3D; Config.beatmapsNftPackageId;
+
+                //get objects which are the named NFTs
+                const beatsNfts &#x3D; response.data.filter((o) &#x3D;&gt; {
+                    return (
+                        o.data?.type?.startsWith(packageId) &amp;&amp;
+                        o.data?.type?.endsWith(&#x60;::${nftType.toLowerCase()}::${nftType.toUpperCase()}&gt;&#x60;)
+                    );
+                });
+
+                if (beatsNfts?.length) output &#x3D; beatsNfts;
+            }
+        }
+
+        return output;
+    }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'SuiService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>
