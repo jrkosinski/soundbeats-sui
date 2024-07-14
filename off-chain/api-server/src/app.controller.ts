@@ -47,6 +47,7 @@ import {
 } from './entity/req.entity';
 import { SuiService } from './sui.service';
 import { AppLogger } from './app.logger';
+import { deprecate } from 'util';
 
 const LEADERBOARD_DEFAULT_LIMIT: number = 100;
 const MAX_URL_LENGTH = 400;
@@ -93,7 +94,7 @@ export class AppController {
         return this.mintBeatsNfts(body);
     }
 
-    @ApiOperation({ summary: 'Mint BEATS NFT' })
+    @ApiOperation({ summary: 'Mint instances of BEATS NFT to a given recipient' })
     @Post('/api/v1/nfts/beats')
     @HttpCode(200)
     async mintBeatsNfts(@Body() body: MintBeatsNftDto): Promise<MintNftResponseDto> {
@@ -128,7 +129,7 @@ export class AppController {
         }
     }
 
-    @ApiOperation({ summary: 'Mint BEATMAPS NFT' })
+    @ApiOperation({ summary: 'Mint instances of BEATMAPS NFT to the given recipient' })
     @Post('/api/v1/nfts/beatmaps')
     @HttpCode(200)
     async mintBeatmapsNfts(@Body() body: MintBeatmapsNftDto): Promise<MintNftResponseDto> {
@@ -181,13 +182,13 @@ export class AppController {
         }
     }
 
-    @ApiOperation({ summary: 'Get list of user-owned NFTs' })
+    @ApiOperation({ summary: 'Gets list of user-owned NFTs. DEPRECATED: use getBeatsNft and getBeatmapsNft instead' })
     @Get('/api/v1/nfts')
     async getNfts(@Query() query: GetBeatsNftsDto): Promise<GetBeatsNftsResponseDto> {
         return this.getBeatsNfts(query);
     }
 
-    @ApiOperation({ summary: 'Get list of user-owned BEATS NFTs' })
+    @ApiOperation({ summary: 'Gets list of user-owned BEATS NFTs' })
     @Get('/api/v1/nfts/beats')
     async getBeatsNfts(@Query() query: GetBeatsNftsDto): Promise<GetBeatsNftsResponseDto> {
         const logString = `GET /api/v1/nfts/beats ${JSON.stringify(query)}`;
@@ -206,7 +207,7 @@ export class AppController {
         }
     }
 
-    @ApiOperation({ summary: 'Get list of user-owned BEATMAPS NFTs' })
+    @ApiOperation({ summary: 'Gets list of user-owned BEATMAPS NFTs' })
     @Get('/api/v1/nfts/beatmaps')
     async getBeatmapsNfts(@Query() query: GetBeatsNftsDto): Promise<GetBeatmapsNftsResponseDto> {
         const logString = `GET /api/v1/nfts/beatmaps ${JSON.stringify(query)}`;
@@ -225,10 +226,10 @@ export class AppController {
         }
     }
 
-    @ApiOperation({ summary: 'Request private token' })
+    @ApiOperation({ summary: 'Request BEATS token' })
     @Post('/api/v1/token')
     @HttpCode(200)
-    async mintToken(@Body() body: MintTokenDto): Promise<MintTokenResponseDto> {
+    async mintBeatsToken(@Body() body: MintTokenDto): Promise<MintTokenResponseDto> {
         const logString = `POST /api/v1/token ${JSON.stringify(body)}`;
         this.logger.log(logString);
         const { amount, recipient } = body;
@@ -248,9 +249,9 @@ export class AppController {
         }
     }
 
-    @ApiOperation({ summary: 'Get private token balance' })
+    @ApiOperation({ summary: 'Get BEATS token balance' })
     @Get('/api/v1/token')
-    async getTokenBalance(@Query() query: GetTokenBalanceDto): Promise<GetTokenBalanceResponseDto> {
+    async getBeatsTokenBalance(@Query() query: GetTokenBalanceDto): Promise<GetTokenBalanceResponseDto> {
         const logString = `GET /api/v1/token ${JSON.stringify(query)}`;
         this.logger.log(logString);
         const { wallet } = query;
@@ -267,7 +268,7 @@ export class AppController {
         }
     }
 
-    @ApiOperation({ summary: 'Verify a signed message' })
+    @ApiOperation({ summary: 'Verify a signed message. DEPRECATED.' })
     @Get('/api/v1/verify')
     async verifySignature(@Query() query: VerifySignatureDto): Promise<VerifySignatureResponseDto> {
         const logString = `GET /api/v1/verify ${JSON.stringify(query)}`;
@@ -397,7 +398,7 @@ export class AppController {
 
     // *** AUTH and REGISTRATION ***
 
-    @ApiOperation({ summary: 'Start an auth session' })
+    @ApiOperation({ summary: 'Start an auth session. DEPRECATED' })
     @Post('/api/v1/auth')
     @HttpCode(200)
     async startAuthSession(@Body() body: StartAuthSessionDto): Promise<StartAuthSessionResponseDto> {
@@ -418,7 +419,7 @@ export class AppController {
         }
     }
 
-    @ApiOperation({ summary: 'Verify a signed message' })
+    @ApiOperation({ summary: 'Verify a signed message. DEPRECATED' })
     @Post('/api/v1/verify')
     @HttpCode(200)
     async verifyAuthSession(@Body() body: AuthVerifyDto): Promise<AuthVerifyResponseDto> {
@@ -506,7 +507,7 @@ export class AppController {
         this.returnError(logString, 400, status);
     }
 
-    @ApiOperation({ summary: 'Get a SUI address given an associated login' })
+    @ApiOperation({ summary: 'Get a SUI address given an associated login.' })
     @Get('/api/v1/accounts')
     async getAccountFromLogin(@Query() query: GetAccountDto): Promise<GetAccountResponseDto> {
         const logString = `GET /api/v1/accounts ${JSON.stringify(query)}`;
@@ -532,7 +533,7 @@ export class AppController {
         this.returnError(logString, 400, output.status);
     }
 
-    @ApiOperation({ summary: "Update user's level" })
+    @ApiOperation({ summary: "Update user's level." })
     @Post('/api/v1/level')
     async updateUserLevel(@Body() body: UpdateUserLevelDto): Promise<GetAccountResponseDto> {
         const logString = `POST /api/v1/level ${JSON.stringify(body)}`;
@@ -562,7 +563,7 @@ export class AppController {
         this.returnError(logString, 400, output.status);
     }
 
-    @ApiOperation({ summary: 'Create new user account from OAuth login' })
+    @ApiOperation({ summary: 'Create new user account from OAuth login.' })
     @Post('/api/v1/oauth')
     async updateUserOAuth(@Body() body: UpdateUserOAuthDto): Promise<UpdateUserOAuthResponseDto> {
         const logString = `POST /api/v1/oauth ${JSON.stringify(body)}`;
@@ -605,7 +606,7 @@ export class AppController {
         this.returnError(logString, 400, status);
     }
 
-    @ApiOperation({ summary: 'Get new user account created from OAuth login' })
+    @ApiOperation({ summary: 'Get new user account created from OAuth login.' })
     @Get('/api/v1/oauth')
     async getUserOAuth(@Query() query: GetUserOAuthDto): Promise<GetUserOAuthResponseDto> {
         const logString = `GET /api/v1/oauth ${JSON.stringify(query)}`;
