@@ -101,7 +101,7 @@ export class SuiService {
         };
     }
 
-    //TODO: refactor mintBeatsNfts and mintBeatmapsNfts into one method
+    //TODO: (LOW) refactor mintBeatsNfts and mintBeatmapsNfts into one method
     /**
      * Mints NFTs with the given properties in the given quantity to the specified
      * recipient wallet address.
@@ -431,7 +431,12 @@ export class SuiService {
         return output;
     }
 
-    //TODO: comment header
+    /**
+     * Retrieves a newly created user, given their oauth token. For user accounts authenticated
+     * with zklogin.
+     * @param nonceToken
+     * @returns a user account
+     */
     async getUserFromOAuth(
         nonceToken: string,
     ): Promise<{ status: string; suiWallet: string; level: number; username: string }> {
@@ -442,11 +447,13 @@ export class SuiService {
             level: 0,
         };
 
+        //check cache first
         if (!this.noncesToWallets) {
             output.status = 'notfound';
         } else {
             output.suiWallet = this.noncesToWallets[nonceToken];
 
+            //get from database
             output = await this.getAccountFromLogin(output.suiWallet);
             delete this.noncesToWallets[nonceToken];
         }
@@ -457,7 +464,7 @@ export class SuiService {
     /**
      * Updates a user's game level.
      * @param authId User's account id.
-     * @param level
+     * @param level The value to set
      * @returns
      */
     async updateUserLevel(
@@ -495,7 +502,13 @@ export class SuiService {
         return await this.authManager.usernameExists(username);
     }
 
-    //TODO: comment header
+    /**
+     * Starts an auth session by creating & returning an auth token.
+     * @deprecated This is for use with EVM login mainly. It may be used in the future for
+     * other things.
+     * @param evmWallet
+     * @returns
+     */
     async startAuthSession(evmWallet: string): Promise<{ messageToSign: string; sessionId: string; username: string }> {
         const session = await this.authManager.startAuthSession(evmWallet);
         const account = await this.authManager.getAuthRecord(evmWallet, 'evm');
@@ -647,6 +660,12 @@ export class SuiService {
         });
     }
 
+    /**
+     * Generically used to get NFTs of a given kind, belonging to a specific owner.
+     * @param wallet The NFT owner
+     * @param nftType NFT package id string
+     * @returns
+     */
     async _getUserNFTs(wallet: string, nftType: string = 'BEATS_NFT'): Promise<any[]> {
         let output: any[] = [];
 
