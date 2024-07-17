@@ -1,7 +1,6 @@
 module.exports = {
   moduleFileExtensions: ["js", "json", "ts"],
-  rootDir:
-    "/Users/taralgurung/Desktop/Soundbeats/soundbeats-sui/off-chain/api-server/src",
+  rootDir: "./src",
   testRegex: ".*\\.spec\\.ts$",
   transform: {
     "^.+\\.(t|j)s$": "ts-jest",
