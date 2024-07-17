@@ -101,7 +101,7 @@ export class SuiService {
         };
     }
 
-    //TODO: refactor mintBeatsNfts and mintBeatmapsNfts into one method
+    //TODO: (LOW) refactor mintBeatsNfts and mintBeatmapsNfts into one method
     /**
      * Mints NFTs with the given properties in the given quantity to the specified
      * recipient wallet address.
@@ -275,160 +275,6 @@ export class SuiService {
     }
 
     /**
-     * Verifies that the signature of the given message originated from the given wallet.
-     *
-     * @param walletPubKey The wallet public key as a base64 string
-     * @param signature The signed message as a base64 string
-     * @param message The original message, as a plain string
-     * @returns VerifySignatureResponseDto
-     */
-    async verifySignature(
-        walletPubKey: string,
-        signature: string,
-        message: string,
-    ): Promise<{
-        verified: boolean;
-        failureReason: string;
-        address: string;
-        network: string;
-    }> {
-        const output = {
-            verified: false,
-            address: '',
-            failureReason: '',
-            network: this.network,
-        };
-
-        try {
-            const { address, verified } = await this._verifySuiSignature(walletPubKey, signature, message);
-            output.address = address;
-            output.verified = verified;
-            output.network = this.network;
-
-            if (!output.verified) {
-                output.failureReason = 'unknown';
-                output.verified = true;
-                output.failureReason = '';
-            }
-        } catch (e) {
-            this.logger.error(e);
-            output.failureReason = `${e}`;
-            output.verified = true;
-            output.failureReason = '';
-        }
-
-        return output;
-    }
-
-    //TODO: comment & rename
-    async verifySignature2(
-        sessionId: string,
-        walletType: 'evm' | 'sui',
-        walletAddress: string,
-        action: 'update' | 'verify',
-        signature: string,
-        message: string,
-        username: string,
-    ): Promise<{
-        completed: boolean;
-        failureReason: string;
-        wallet: string;
-        network: string;
-        verified: boolean;
-        suiWallet: string;
-        username: string;
-    }> {
-        const output = {
-            completed: false,
-            failureReason: '',
-            wallet: '',
-            network: '',
-            verified: false,
-            suiWallet: '',
-            username: '',
-        };
-
-        //first verify session id, if any
-        if (sessionId && sessionId.length) {
-            this.logger.log(`verify session id ${sessionId}`);
-            const sessionResponse = await this._verifySessionId(sessionId, walletAddress, message);
-            if (!sessionResponse.success) {
-                output.failureReason = sessionResponse.reason;
-                return output;
-            }
-        }
-
-        //SUI verification
-        if (walletType == 'sui') {
-            const { verified, address } = await this._verifySuiSignature(walletAddress, signature, message);
-            output.completed = verified;
-            output.wallet = address;
-            output.verified = verified;
-
-            if (!verified) {
-                output.failureReason = 'unknown';
-            }
-        }
-
-        //EVM verification
-        if (walletType == 'evm') {
-            const { verified, address } = await this._verifyEvmSignature(walletAddress, signature, message);
-            output.verified = verified;
-            output.wallet = address;
-
-            if (!verified) {
-                output.failureReason = 'signatureNotVerified';
-            }
-        }
-
-        //update the auth session record
-        let evmWallet: string = walletType == 'evm' ? output.wallet : null;
-        let suiWallet: string = walletType == 'sui' ? output.wallet : null;
-
-        this.logger.log(`getting auth record for ${walletType} ${output.wallet}`);
-        const authRecord: IAuthRecord = await this.authManager.getAuthRecord(evmWallet, 'evm');
-
-        if (authRecord) {
-            output.suiWallet = authRecord?.suiWallet ?? '';
-            output.username = authRecord?.username ?? '';
-        }
-
-        //update the auth record if the action is 'update'
-        if (action == 'update' && walletType == 'evm') {
-            //if record exists, update it
-            if (authRecord) {
-                this.logger.log(`updating authRecord for ${output.wallet}`);
-                if (suiWallet && authRecord.suiWallet != suiWallet) {
-                    await this.authManager.updateAuthRecord(evmWallet, 'evm', suiWallet, authRecord.level);
-                }
-
-                output.completed = true;
-                this.authManager.updateAuthSession(sessionId, evmWallet, suiWallet, true);
-            }
-            //otherwise, register it
-            else {
-                this.logger.log(`registering new account for ${output.wallet}`);
-                const regOutput = await this.registerAccountEvm(evmWallet, username);
-                output.completed = true;
-
-                if (regOutput.status == 'success') {
-                    suiWallet = regOutput.suiWallet;
-                    this.authManager.updateAuthSession(sessionId, evmWallet, suiWallet, true);
-                    output.suiWallet = suiWallet ?? '';
-                    output.username = username ?? '';
-                } else {
-                    output.failureReason = regOutput.status;
-                }
-            }
-        } else {
-            output.completed = true;
-            this.authManager.updateAuthSession(sessionId, evmWallet, suiWallet, true);
-        }
-
-        return output;
-    }
-
-    /**
      * Examines all instances of BEATS NFTs owned by the given wallet address, and returns a list
      * of the unique NFT types owned by the address.
      *
@@ -550,12 +396,10 @@ export class SuiService {
      */
     async addLeaderboardScore(
         authId: string,
-        authType: string,
         score: number,
         sprint: string | null | 'current' | '' = null,
     ): Promise<{ score: number; network: string }> {
-        const aType: 'evm' | 'sui' = authType != 'sui' ? 'evm' : 'sui';
-        const user = await this.getAccountFromLogin(authId, aType);
+        const user = await this.getAccountFromLogin(authId);
         let username = authId;
         if (user) {
             username = user.username;
@@ -583,80 +427,17 @@ export class SuiService {
         return await this.leaderboard.getSprints(limit);
     }
 
-    //TODO: comment header
-    //TODO: make more generic
-    /**
-     *
-     * @param evmWallet
-     * @returns
-     */
-    async registerAccountEvm(
-        evmWallet: string,
-        username: string,
-    ): Promise<{
-        authId: string;
-        authType: string;
-        suiWallet: string;
-        status: string;
-    }> {
-        const output = {
-            authId: evmWallet,
-            authType: 'evm',
-            suiWallet: '',
-            status: '',
-        };
-
-        //make sure first that the login doesn't already exist
-        const authRecord = await this.authManager.getAuthRecord(evmWallet, 'evm');
-        if (authRecord != null) {
-            output.status = 'duplicate';
-            output.suiWallet = authRecord.authId;
-            this.logger.log(`account for ${evmWallet} already exists`);
-        } else {
-            //create a new wallet
-            const suiWallet = this.createWallet();
-            output.suiWallet = suiWallet.address;
-
-            let success: boolean = false;
-
-            //check first for existing username
-            if (await this.authManager.usernameExists(username)) {
-                success = false;
-                output.status = 'duplicate';
-                this.logger.log(`duplicate username ${username}`);
-            } else {
-                //store the info in the database
-                success = await this.authManager.register(evmWallet, 'evm', suiWallet.address, username, {
-                    privateKey: suiWallet.privateKey,
-                });
-            }
-
-            if (success) {
-                output.status = 'success';
-            }
-        }
-
-        return output;
-    }
-
     /**
      * Tries to retrieve an existing SUI wallet address given the login information.
      *
      * @param authId
-     * @param authType
      * @returns The status of the search and SUI wallet address (if found)
      */
     async getAccountFromLogin(
         authId: string,
-        authType: 'evm' | 'sui',
-    ): Promise<{
-        suiWallet: string;
-        username: string;
-        level: number;
-        status: string;
-    }> {
+    ): Promise<{ suiWallet: string; username: string; level: number; status: string }> {
         const output = { suiWallet: '', status: '', username: '', level: 0 };
-        const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, authType);
+        const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, 'sui');
         if (authRecord == null) {
             output.status = 'notfound';
         } else {
@@ -669,10 +450,44 @@ export class SuiService {
         return output;
     }
 
-    //TODO: comment header
+    /**
+     * Retrieves a newly created user, given their oauth token. For user accounts authenticated
+     * with zklogin.
+     * @param nonceToken
+     * @returns a user account
+     */
+    async getUserFromOAuth(
+        nonceToken: string,
+    ): Promise<{ status: string; suiWallet: string; level: number; username: string }> {
+        let output = {
+            status: '',
+            suiWallet: '',
+            username: '',
+            level: 0,
+        };
+
+        //check cache first
+        if (!this.noncesToWallets) {
+            output.status = 'notfound';
+        } else {
+            output.suiWallet = this.noncesToWallets[nonceToken];
+
+            //get from database
+            output = await this.getAccountFromLogin(output.suiWallet);
+            delete this.noncesToWallets[nonceToken];
+        }
+
+        return output;
+    }
+
+    /**
+     * Updates a user's game level.
+     * @param authId User's account id.
+     * @param level The value to set
+     * @returns
+     */
     async updateUserLevel(
         authId: string,
-        authType: 'evm' | 'sui',
         level: number,
     ): Promise<{
         suiWallet: string;
@@ -681,7 +496,7 @@ export class SuiService {
         status: string;
     }> {
         const output = { suiWallet: '', status: '', username: '', level: 0 };
-        const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, authType);
+        const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, 'sui');
         if (authRecord == null) {
             output.status = 'notfound';
         } else {
@@ -711,48 +526,13 @@ export class SuiService {
         return await this.authManager.usernameExists(username);
     }
 
-    //TODO: comment header
     /**
-     *
-     * @param authId
-     * @param authType
-     * @param newSuiWallet
+     * Starts an auth session by creating & returning an auth token.
+     * @deprecated This is for use with EVM login mainly. It may be used in the future for
+     * other things.
+     * @param evmWallet
      * @returns
      */
-    async changeSuiWalletAddress(
-        authId: string,
-        authType: 'evm' | 'sui',
-        newSuiWallet: string,
-    ): Promise<{ status: string }> {
-        const output = { status: '' };
-
-        //get existing auth record
-        const authRecord = await this.authManager.getAuthRecord(authId, authType);
-        if (authRecord == null) {
-            output.status = 'notfound';
-        } else {
-            newSuiWallet = newSuiWallet.trim();
-
-            //check that the new wallet doesn't match the old
-            if (newSuiWallet != authRecord.authId.trim()) {
-                output.status = 'duplicate';
-            } else {
-                //move assets from old wallet to new one
-                if (authRecord.extraData && authRecord.extraData.privateKey) {
-                    await this._moveAssets(authRecord, newSuiWallet);
-                }
-
-                //update the database
-                this.authManager.setSuiWalletAddress(authRecord.authId, authRecord.authType, newSuiWallet);
-
-                output.status = 'success';
-            }
-        }
-
-        return output;
-    }
-
-    //TODO: comment header
     async startAuthSession(evmWallet: string): Promise<{ messageToSign: string; sessionId: string; username: string }> {
         const session = await this.authManager.startAuthSession(evmWallet);
         const account = await this.authManager.getAuthRecord(evmWallet, 'evm');
@@ -764,98 +544,6 @@ export class SuiService {
             output.username = account.username ?? '';
         }
         return output;
-    }
-
-    //TODO: comment header
-    async updateUserFromOAuth(
-        suiAddress: string,
-        username: string,
-        oauthToken: string,
-        nonceToken: string,
-    ): Promise<{ username: string; authId: string; status: string }> {
-        const output = { username: '', authId: '', status: '' };
-        const authRecord = await this.authManager.getAuthRecord(suiAddress, 'sui');
-
-        if (!authRecord) {
-            if (
-                await this.authManager.register(suiAddress, 'sui', suiAddress, username, {
-                    source: 'oauth',
-                    nonce: nonceToken,
-                })
-            ) {
-                output.username = username;
-                output.authId = suiAddress;
-                output.status = 'created';
-            } else {
-                //TODO: else?
-            }
-        } else {
-            output.username = authRecord.username;
-            output.authId = authRecord.suiWallet;
-            output.status = 'exists';
-        }
-
-        //add nonce token
-        if (output.authId && output.authId.length) this.noncesToWallets[nonceToken] = output.authId;
-
-        return output;
-    }
-
-    //TODO: comment header
-    async getUserFromOAuth(nonceToken: string): Promise<{
-        status: string;
-        suiWallet: string;
-        level: number;
-        username: string;
-    }> {
-        let output = {
-            status: '',
-            suiWallet: '',
-            username: '',
-            level: 0,
-        };
-
-        if (!this.noncesToWallets) {
-            output.status = 'notfound';
-        } else {
-            output.suiWallet = this.noncesToWallets[nonceToken];
-
-            output = await this.getAccountFromLogin(output.suiWallet, 'sui');
-            delete this.noncesToWallets[nonceToken];
-        }
-
-        return output;
-    }
-
-    //TODO: comment header
-    /**
-     *
-     * @param source
-     * @param dest
-     */
-    async _moveAssets(source: IAuthRecord, dest: string) {
-        const privateKey = source.extraData.privateKey;
-        const walletAddr = source.authId;
-        const keypair: Ed25519Keypair = Ed25519Keypair.fromSecretKey(privateKey);
-
-        //TODO: check that the address of the keypair matches the stored address
-
-        const tokenBalance = await this.getTokenBalance(walletAddr);
-        const beatsNftBalances = await this.getBeatsNfts(walletAddr);
-        const beatmapsNftBalances = await this.getBeatmapsNfts(walletAddr);
-
-        //mint equal number of token to new address
-        await this.mintTokens(dest, tokenBalance.balance);
-
-        //for each NFT owned
-        beatsNftBalances.nfts.forEach(async (nft) => {
-            await this.mintBeatsNfts(dest, nft.name, 'Soundbeats NFT', nft.url, 1);
-        });
-
-        //for each NFT owned
-        beatmapsNftBalances.nfts.forEach(async (nft) => {
-            await this.mintBeatmapsNfts(dest, nft.username, nft.title, nft.artist, nft.beatmapJson, nft.imageUrl, 1);
-        });
     }
 
     /**
@@ -996,68 +684,12 @@ export class SuiService {
         });
     }
 
-    async _verifySuiSignature(
-        walletPubKey: string,
-        signature: string,
-        message: string,
-    ): Promise<{ address: string; verified: boolean }> {
-        const publicKey = new Ed25519PublicKey(walletPubKey);
-        const msgBytes = new TextEncoder().encode(message);
-
-        const address = publicKey.toSuiAddress();
-        const verified = await publicKey.verifyPersonalMessage(msgBytes, signature);
-
-        return { address, verified };
-    }
-
-    async _verifyEvmSignature(
-        expectedAddress: string,
-        signature: string,
-        message: string,
-    ): Promise<{ address: string; verified: boolean }> {
-        if (process.env.REAL_EVM_VERIFY) {
-            try {
-                const decodedSignature = ethers.getBytes(signature);
-                const hashedMessage = ethers.hashMessage(message);
-                const signingAddress = ethers.recoverAddress(hashedMessage, signature);
-                return {
-                    address: signingAddress,
-                    verified: signingAddress == expectedAddress,
-                };
-            } catch (e) {
-                this.logger.error(e);
-            }
-
-            return { address: '', verified: false };
-        }
-
-        return { address: expectedAddress, verified: true };
-    }
-
-    async _verifySessionId(
-        sessionId: string,
-        wallet: string,
-        message: string,
-    ): Promise<{ success: boolean; reason: string }> {
-        const session: IAuthSession = await this.authManager.getAuthSession(sessionId);
-
-        if (session == null) return { success: false, reason: 'sessionInvalid' };
-
-        //make sure session is not expired
-        const age = Math.floor(Date.now() / 1000) - session.startTimestamp;
-
-        if (session.success) return { success: false, reason: 'sessionComplete' };
-
-        if (age > parseInt(process.env.SESSION_EXPIRATION_SECONDS ?? '180'))
-            return { success: false, reason: 'sessionExpired' };
-
-        if (wallet != session.evmWallet) return { success: false, reason: 'walletMismatch' };
-
-        if (message != session.message) return { success: false, reason: 'messageMismatch' };
-
-        return { success: true, reason: '' };
-    }
-
+    /**
+     * Generically used to get NFTs of a given kind, belonging to a specific owner.
+     * @param wallet The NFT owner
+     * @param nftType NFT package id string
+     * @returns
+     */
     async _getUserNFTs(wallet: string, nftType: string = 'BEATS_NFT'): Promise<any[]> {
         let output: any[] = [];
 

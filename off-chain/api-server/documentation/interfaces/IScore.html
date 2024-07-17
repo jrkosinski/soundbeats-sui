@@ -1,0 +1,824 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>sui-game-server documentation</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avaoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+
+               if ($darkModeToggles.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
+            <a href="../" class="navbar-brand">sui-game-server documentation</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content interface">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Interfaces</li>
+  <li class="breadcrumb-item"
+  >
+  IScore</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/leaderboard/LeaderboardDynamoDb.ts</code>
+        </p>
+
+
+
+
+        <section data-compodoc="block-index">
+            <h3 id="index">Index</h3>
+            <table class="table table-sm table-bordered index-table">
+                <tbody>
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Properties</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                        <a href="#score" 
+>
+                                            score
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#username" 
+>
+                                            username
+                                        </a>
+                                </li>
+                                <li>
+                                        <a href="#wallet" 
+>
+                                            wallet
+                                        </a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+
+
+            <section data-compodoc="block-properties">
+                <h3 id="inputs">Properties</h3>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="score"></a>
+                                        <span class="name "><b>score</b>
+                                            <a href="#score">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>score:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="username"></a>
+                                        <span class="name "><b>username</b>
+                                            <a href="#username">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>username:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+                    <table class="table table-sm table-bordered">
+                        <tbody>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <a name="wallet"></a>
+                                        <span class="name "><b>wallet</b>
+                                            <a href="#wallet">
+                                                <span class="icon ion-ios-link"></span>
+                                            </a>
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="col-md-4">
+                                        <code>wallet:         <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+</code>
+                                    </td>
+                                </tr>
+
+
+                                    <tr>
+                                        <td class="col-md-4">
+                                            <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                                        </td>
+                                    </tr>
+
+
+
+
+
+                        </tbody>
+                    </table>
+            </section>
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { ILeaderboard, ISprint } from &#x27;./ILeaderboard&#x27;;
+import { IDynamoResult } from &#x27;../dataAccess/IDynamoResult&#x27;;
+import { Config } from &#x27;../config&#x27;;
+import { DynamoDbAccess } from &#x27;../dataAccess/DynamoDbAccess&#x27;;
+import { String } from &#x27;aws-sdk/clients/batch&#x27;;
+
+const DEFAULT_SPRINT_KEY &#x3D; &quot;default&quot;;
+const GSI_SPRINT_NAME &#x3D; &quot;GSI_SPRINT&quot;;
+const GSI_ACTIVE_NAME &#x3D; &quot;GSI_ACTIVE&quot;;
+const DEFAULT_SPRINT_LENGTH &#x3D; 86400 * 14; 
+
+//TODO: add logging 
+//TODO: exception handling 
+//TODO: log warning or error if any data access call is not successful 
+
+function unixDate() {
+    return Math.floor(Date.now()/1000);
+}
+
+interface IScore {
+    wallet: string; 
+    username: string;
+    score: number;
+}
+
+class LocalScoreCache {
+    expirationSeconds: number; 
+    lastRefresh: number; 
+    count: number; 
+    data: { [wallet: string]: IScore };
+
+    constructor(expirationSeconds: number &#x3D; 600) {
+        this.expirationSeconds &#x3D; expirationSeconds;
+        this.count &#x3D; 0;
+        this.lastRefresh &#x3D; 0;
+        this.data &#x3D; {};
+    }
+    
+    getAsArray(limit: number &#x3D; 0, sort: boolean &#x3D; false): IScore[] {
+        const output &#x3D; Object.values(this.data).slice(0, limit);
+        if (sort)
+            output.sort((a, b) &#x3D;&gt; b.score - a.score);
+        return output;
+    }
+    
+    ageSeconds(): number {
+        return Math.floor(Date.now()/1000) - this.lastRefresh;
+    }
+    
+    isExpired(): boolean {
+        return this.ageSeconds() &gt; this.expirationSeconds;
+    }
+    
+    update(wallet: string, username: string, score: number) {
+        if (this.data[wallet]) {
+            this.data[wallet].score &#x3D; score;
+            this.data[wallet].username &#x3D; username
+        }
+        else {
+            this.data[wallet] &#x3D; { wallet, score, username}
+        }
+    }
+    
+    refresh(scores: IScore[]) {
+        this.lastRefresh &#x3D; unixDate();
+        for(let n&#x3D;0; n&lt;scores.length; n++) {
+            this.update(scores[n].wallet, scores[n].username, scores[n].score);
+        }
+    }
+    
+    clear() {
+        this.lastRefresh &#x3D; 0;
+        this.data &#x3D; {};
+    }
+}
+
+//TODO: cache expiration seconds should come from .env
+const localScoreCache_default &#x3D; new LocalScoreCache(300); 
+
+const localScoreCache_sprint &#x3D; new LocalScoreCache(300); 
+   
+
+export class LeaderboardDynamoDb implements ILeaderboard {
+    network: string;
+    dynamoDb: DynamoDbAccess;
+
+    constructor(network: string) {
+        this.network &#x3D; network;
+        
+        const n &#x3D; process.env.AWS_ACCESS_KEY;
+        
+        this.dynamoDb &#x3D; new DynamoDbAccess();
+    }
+
+    async getLeaderboardScore(wallet: string, sprintId: string &#x3D; &quot;&quot;): Promise&lt;{ wallet: string, score: number, username: string, network: string }&gt; {
+        if (!sprintId || !sprintId.length) 
+            sprintId &#x3D; DEFAULT_SPRINT_KEY;
+        if (sprintId &#x3D;&#x3D; &quot;current&quot;) 
+            sprintId &#x3D; await this._getActiveSprintName(); 
+            
+        
+        const output &#x3D; {
+            wallet: wallet, 
+            score: 0, 
+            username: &#x27;&#x27;,
+            network: this.network
+        };
+        
+        const result &#x3D; await this._dataAccess_getScore(wallet, sprintId);
+        
+        if (result.success &amp;&amp; result.data) {
+            output.score &#x3D; parseInt(result.data.score.N);
+            output.username &#x3D; result.data.username.S;
+        }
+        
+        return output;
+    }
+
+    async getLeaderboardScores(limit: number &#x3D; 100, sprintId: string &#x3D; &quot;&quot;): Promise&lt;{ scores: IScore[], network: string, fromCache: boolean }&gt; {
+        if (!sprintId || !sprintId.length) 
+            sprintId &#x3D; DEFAULT_SPRINT_KEY;
+        if (sprintId &#x3D;&#x3D; &quot;current&quot;)
+            sprintId &#x3D; await this._getActiveSprintName(); 
+
+        let output &#x3D; { scores: [], network: this.network, fromCache: false };
+        
+        //if default, get from local cache 
+        if (sprintId &#x3D;&#x3D; DEFAULT_SPRINT_KEY) {
+            const cache &#x3D; await this._getScoresFromCache(localScoreCache_default, DEFAULT_SPRINT_KEY, limit); 
+            output.scores &#x3D; cache.scores;
+            output.fromCache &#x3D; cache.fromCache;
+        }
+        else {
+            output.fromCache &#x3D; false; 
+            
+            //check: is it current sprint? 
+            if (await this._isCurrentSprint(sprintId)) {
+                const cache &#x3D; await this._getScoresFromCache(localScoreCache_sprint, sprintId, limit); 
+                output.scores &#x3D; cache.scores;
+                output.fromCache &#x3D; cache.fromCache;
+            }
+            else {
+                //default: scan table for scores 
+                output.scores &#x3D; await this._scanForScores(sprintId);
+                
+                //sort and limit
+                output.scores.sort((a, b) &#x3D;&gt; parseInt(b.score.N) - parseInt(a.score.N)).slice(0, limit);
+            }
+        }
+
+        return output;
+    }
+
+    async addLeaderboardScore(wallet: string, username: string, score: number, sprintId: string &#x3D; &quot;&quot;): Promise&lt;{ score: number, username: string, network: string }&gt; {
+        if (!sprintId || !sprintId.length) 
+            sprintId &#x3D; DEFAULT_SPRINT_KEY;
+        if (sprintId &#x3D;&#x3D; &quot;current&quot;)
+            sprintId &#x3D; await this._getActiveSprintName(); 
+            
+        score &#x3D; parseInt(score.toString());
+            
+        const output &#x3D; { score: score, username: username, network: this.network }
+        
+        //get current score first 
+        const result &#x3D; await this._dataAccess_getScore(wallet, sprintId); 
+        if (result.success &amp;&amp; result.data) {
+            output.score &#x3D; parseInt(result.data.score.N) + score;
+            output.username &#x3D; result.data.username?.S ?? &#x27;&#x27;;
+        }
+        
+        //write accumulated score 
+        await this._dataAccess_putScore(wallet, username, output.score, sprintId) 
+        
+        //add to default too, if adding to sprint 
+        if (sprintId !&#x3D; DEFAULT_SPRINT_KEY) {
+            await this.addLeaderboardScore(wallet, username, score, sprintId); 
+        }
+        
+        //update the cache 
+        await this._updateCacheItem(wallet, username, output.score, sprintId)
+        
+        return output; 
+    }
+
+    //admin methods 
+    async createSprint(sprintId: string, startDate: number &#x3D; 0): Promise&lt;boolean&gt; {
+        if (startDate &#x3D;&#x3D; 0) 
+            startDate &#x3D; unixDate();
+
+        //disallow values &#x27;default&#x27; and &#x27;current&#x27;
+        if (sprintId.trim().toLowerCase() &#x3D;&#x3D; &quot;default&quot; || sprintId.trim().toLowerCase() &#x3D;&#x3D; &quot;current&quot;)
+            throw new Error(&#x60;Invalid sprintId identifier: ${sprintId}&#x60;); 
+
+        //validation: check that date is ok 
+        if (startDate &lt; unixDate() - 1000) {
+            throw new Error(&quot;Start date cannot be in the past&quot;);
+        }
+            
+        //validation: check that sprint name is not taken 
+        const exists &#x3D; await this._sprintExists(sprintId); 
+        if (exists) {
+            //TODO: log warning
+            return false;
+        }
+        
+        //create sprint record 
+        await this._dataAccess_putSprint(sprintId, startDate);
+
+        //check that sprint is created 
+        const created &#x3D; await this._sprintExists(sprintId); 
+        
+        //if start date is now, set active 
+        if (created &amp;&amp; startDate &lt;&#x3D; unixDate()) {
+            await this.setActiveSprint(sprintId);
+        }
+        
+        return created;
+    }
+
+    async endSprint(sprintId: string): Promise&lt;boolean&gt; {
+        //validation: check that sprint exists 
+        const sprint &#x3D; await this.getSprint(sprintId);
+        if (!sprint) {
+            //TODO: log warning
+            return false;
+        }
+        
+        //validation: check that sprint not already ended 
+        if (!sprint.active) {
+            //TODO: log warning
+            return false;
+        }
+        
+        //write record: set active&#x3D;false and endDate &#x3D; now
+        sprint.endDate &#x3D; unixDate(); 
+        await this._dataAccess_putSprint(sprintId, sprint.startDate, sprint.endDate, 0);
+        
+        return !(await this._isCurrentSprint(sprintId));
+    }
+    
+    async getSprint(sprintId: string): Promise&lt;ISprint&gt; {
+        let output: ISprint &#x3D; null;
+        const sprint &#x3D; await this._dataAccess_getSprint(sprintId); 
+        if (sprint.success &amp;&amp; sprint.data) {
+            output &#x3D; {
+                sprintId : sprintId,
+                active: parseInt(sprint.data.active.N) &gt; 0,
+                startDate: parseInt(sprint.data.startDate.N),
+                endDate: parseInt(sprint.data.endDate.N)
+            }
+        }
+        
+        return output; 
+    }
+    
+    async getSprints(limit: number) : Promise&lt;ISprint[]&gt; {
+        const result &#x3D; await this._dataAccess_scanSprints();
+        const items &#x3D; result.success ? result.data : [];
+        const sprints &#x3D; [];
+        
+        items.forEach(s &#x3D;&gt; {
+            sprints.push({
+                sprintId: s.sprintId.S,
+                startDate: parseInt(s.startDate.N),
+                endDate: parseInt(s.endDate.N),
+                active: parseInt(s.active.N) &gt; 0
+            });
+        });
+        
+        return sprints;
+    }
+    
+    async setActiveSprint(sprintId: string) : Promise&lt;boolean&gt; {
+        const sprint &#x3D; await this._dataAccess_getSprint(sprintId); 
+        
+        //if sprint not found, return false 
+        if (!sprint.success || !sprint.data) 
+            return false; 
+            
+        //if sprint not active, set active 
+        if (parseInt(sprint.data.active.N) &lt; 1) {
+
+            //deactivate any active sprint 
+            await this.endActiveSprint();
+            
+            let endDate &#x3D; sprint.data.endDate.N; 
+            if (endDate &lt; unixDate())
+                endDate &#x3D; unixDate() + DEFAULT_SPRINT_LENGTH;
+            await this._dataAccess_putSprint(sprintId, sprint.data.startDate.N, endDate, 1);
+            
+            //clear score cache for current sprint 
+            localScoreCache_sprint.clear();
+        }
+    }
+    
+    async endActiveSprint(): Promise&lt;boolean&gt; {
+        const activeSprintId &#x3D; await this._getActiveSprintName(); 
+        if (activeSprintId &#x3D;&#x3D; &quot;default&quot;)
+            return false; 
+            
+        const activeSprint &#x3D; await this.getSprint(activeSprintId); 
+        if (activeSprint) {
+            await this._dataAccess_putSprint(
+                activeSprintId, 
+                activeSprint.startDate, 
+                unixDate(),
+                0
+            )
+        }
+    }
+    
+    //private methods 
+    async _sprintExists(sprintId: string): Promise&lt;boolean&gt; {
+        const result &#x3D; await this._dataAccess_getSprint(sprintId);
+        return (result.success &amp;&amp; result.data) ? true: false;
+    }
+    
+    async _getActiveSprintName(): Promise&lt;string&gt; {
+        const activeSprints &#x3D; await this._dataAccess_getActiveSprints(); 
+        if (activeSprints.success &amp;&amp; activeSprints.data &amp;&amp; activeSprints.data.length) {
+            const sprint &#x3D; activeSprints.data[0]; 
+            
+            //if no end date, or end date is in future, it&#x27;s ok
+            if (sprint.endDate &amp;&amp; sprint.endDate.N) {
+                const endDate &#x3D; parseInt(sprint.endDate.N);
+                if (!endDate || endDate &gt; unixDate())
+                    return sprint.sprintId.S;
+            } else {
+                return sprint.sprintId.S;
+            }
+        }
+        
+        return &#x27;default&#x27;;
+    }
+    
+    async _isCurrentSprint(sprintId: string): Promise&lt;boolean&gt; {
+        const result &#x3D; await this._dataAccess_getSprint(sprintId); 
+        return result.success &amp;&amp; result.data &amp;&amp; (result.data.active.N &gt; 0);
+    }
+    
+    async _getScoresFromCache(cache: LocalScoreCache, sprintId: string, limit: number &#x3D; 100): Promise&lt;{fromCache: boolean, scores: IScore[]}&gt; {
+        if (!cache.isExpired()) {
+            return {
+                fromCache: true,
+                scores: cache.getAsArray(limit, true)
+            };
+        }
+        
+        //TODO: if refreshing the cache, do it in separate thread 
+        const data &#x3D; await this._scanForScores(sprintId);
+        
+        //cache entire table
+        cache.refresh(data);
+
+        return {
+            fromCache: false,
+            scores: cache.getAsArray(limit, true)
+        };
+    }
+    
+    async _updateCacheItem(wallet: string, username: string, score:number, sprintId: string) {
+        let cache: LocalScoreCache &#x3D; null;
+        if (sprintId &#x3D;&#x3D; DEFAULT_SPRINT_KEY) {
+            cache &#x3D; localScoreCache_default;
+        }
+        else {
+            if (await this._isCurrentSprint(sprintId)) {
+                cache &#x3D; localScoreCache_sprint; 
+            }
+        }
+        
+        if (cache) {
+            cache.update(wallet, username, score); 
+        }
+    }
+    
+    async _scanForScores(sprintId: string): Promise&lt;IScore[]&gt; {
+        const params &#x3D; {
+            TableName: Config.scoresTableName,
+            IndexName: GSI_SPRINT_NAME,
+            KeyConditionExpression: &quot;sprintId &#x3D; :sprintid_val&quot;,
+            ExpressionAttributeValues: {
+                &quot;:sprintid_val&quot;: {&#x27;S&#x27;: sprintId}
+            }
+        };
+        
+        const result &#x3D; await this.dynamoDb.query(params); 
+        if (result.success) {
+            const sortedItems &#x3D; result.data.sort((a, b) &#x3D;&gt; parseInt(b.score.N) - parseInt(a.score.N));
+            return sortedItems.map((i) &#x3D;&gt; { return { wallet: i.wallet.S, username: i.username?.S ?? &#x27;&#x27;, score: parseInt(i.score.N) } });
+        }
+
+        return [];
+    }
+    
+    //data access methods 
+    
+    //TODO: not used
+    async _dataAccess_scanSprints(): Promise&lt;IDynamoResult&gt; {
+        return await this.dynamoDb.scanTable(Config.sprintsTableName);
+    }
+
+    async _dataAccess_getScore(wallet: string, sprintId: string): Promise&lt;IDynamoResult&gt; {
+        return await this.dynamoDb.getItem({
+            TableName: Config.scoresTableName,
+            Key: {
+                &#x27;wallet&#x27;: { S: wallet },
+                &#x27;sprintId&#x27;: { S: sprintId }
+            }
+        });
+    }
+
+    async _dataAccess_putScore(wallet: string, username: string, score: number, sprintId: string): Promise&lt;IDynamoResult&gt; {
+        return await this.dynamoDb.putItem({
+            TableName: Config.scoresTableName,
+            Item: {
+                wallet: {&#x27;S&#x27;: wallet },
+                username: {&#x27;S&#x27;: username },
+                sprintId: { &#x27;S&#x27;: sprintId },
+                score: { &#x27;N&#x27;: score.toString() }
+            }
+        }); 
+    }
+
+    async _dataAccess_getSprint(sprintId: string): Promise&lt;IDynamoResult&gt; {
+        return await this.dynamoDb.getItem({
+            TableName: Config.sprintsTableName,
+            Key: {
+                &#x27;sprintId&#x27;: { S: sprintId }
+            }
+        });
+    }
+
+    async _dataAccess_getActiveSprints(): Promise&lt;IDynamoResult&gt; {
+        const params &#x3D; {
+            TableName: Config.sprintsTableName,
+            IndexName: GSI_ACTIVE_NAME,
+            KeyConditionExpression: &quot;active &#x3D; :active_val&quot;,
+            ExpressionAttributeValues: {
+                &quot;:active_val&quot;: { &#x27;N&#x27;: &quot;1&quot; }
+            }
+        };
+        
+        return await this.dynamoDb.query(params);
+    }
+
+    async _dataAccess_putSprint(sprintId: string, startDate: number, endDate: number &#x3D; 0, active: number &#x3D; 0): Promise&lt;IDynamoResult&gt; {
+        if (endDate &#x3D;&#x3D; 0) 
+            endDate &#x3D; startDate + 365 * 3.154e+7;   //one year 
+            
+        return await this.dynamoDb.putItem({ 
+            TableName: Config.sprintsTableName,
+            Item: {
+                &#x27;sprintId&#x27;: { &#x27;S&#x27;: sprintId },
+                &#x27;startDate&#x27;: { &#x27;N&#x27;: startDate.toString() },
+                &#x27;endDate&#x27;: { &#x27;N&#x27;: endDate.toString() },
+                &#x27;active&#x27;: { &#x27;N&#x27;: active.toString() }
+            }
+        });
+    }
+    
+    async _dataAccess_deleteSprint(sprintId: string): Promise&lt;IDynamoResult&gt; {
+        const params &#x3D; {
+            TableName: Config.sprintsTableName,
+            Key: {
+                &#x27;sprintId&#x27;: { S: sprintId }
+            }
+        }; 
+
+        return await this.dynamoDb.deleteItem(params);
+    }
+}
+</code></pre>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'interface';
+            var COMPODOC_CURRENT_PAGE_URL = 'IScore.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

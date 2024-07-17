@@ -185,7 +185,6 @@ export class CheckUsernameResponseDto {
     exists: boolean;
 }
 
-//TODO: need this?
 export class GetAccountDto {
     @ApiProperty({ description: 'Auth ID, e.g. EVM wallet address or username' })
     authId: string;

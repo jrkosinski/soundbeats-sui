@@ -47,6 +47,7 @@ import {
 } from './entity/req.entity';
 import { SuiService } from './sui.service';
 import { AppLogger } from './app.logger';
+import { deprecate } from 'util';
 
 const LEADERBOARD_DEFAULT_LIMIT: number = 100;
 const MAX_URL_LENGTH = 400;
@@ -98,7 +99,7 @@ export class AppController {
         return this.mintBeatsNfts(body);
     }
 
-    @ApiOperation({ summary: 'Mint BEATS NFT' })
+    @ApiOperation({ summary: 'Mint instances of BEATS NFT to a given recipient' })
     @Post('/api/v1/nfts/beats')
     @HttpCode(200)
     async mintBeatsNfts(@Body() body: MintBeatsNftDto): Promise<MintNftResponseDto> {
@@ -133,7 +134,7 @@ export class AppController {
         }
     }
 
-    @ApiOperation({ summary: 'Mint BEATMAPS NFT' })
+    @ApiOperation({ summary: 'Mint instances of BEATMAPS NFT to the given recipient' })
     @Post('/api/v1/nfts/beatmaps')
     @HttpCode(200)
     async mintBeatmapsNfts(@Body() body: MintBeatmapsNftDto): Promise<MintNftResponseDto> {
@@ -186,13 +187,13 @@ export class AppController {
         }
     }
 
-    @ApiOperation({ summary: 'Get list of user-owned NFTs' })
+    @ApiOperation({ summary: 'Gets list of user-owned NFTs. DEPRECATED: use getBeatsNft and getBeatmapsNft instead' })
     @Get('/api/v1/nfts')
     async getNfts(@Query() query: GetBeatsNftsDto): Promise<GetBeatsNftsResponseDto> {
         return this.getBeatsNfts(query);
     }
 
-    @ApiOperation({ summary: 'Get list of user-owned BEATS NFTs' })
+    @ApiOperation({ summary: 'Gets list of user-owned BEATS NFTs' })
     @Get('/api/v1/nfts/beats')
     async getBeatsNfts(@Query() query: GetBeatsNftsDto): Promise<GetBeatsNftsResponseDto> {
         const logString = `GET /api/v1/nfts/beats ${JSON.stringify(query)}`;
@@ -211,7 +212,7 @@ export class AppController {
         }
     }
 
-    @ApiOperation({ summary: 'Get list of user-owned BEATMAPS NFTs' })
+    @ApiOperation({ summary: 'Gets list of user-owned BEATMAPS NFTs' })
     @Get('/api/v1/nfts/beatmaps')
     async getBeatmapsNfts(@Query() query: GetBeatsNftsDto): Promise<GetBeatmapsNftsResponseDto> {
         const logString = `GET /api/v1/nfts/beatmaps ${JSON.stringify(query)}`;
@@ -230,10 +231,10 @@ export class AppController {
         }
     }
 
-    @ApiOperation({ summary: 'Request private token' })
+    @ApiOperation({ summary: 'Request BEATS token' })
     @Post('/api/v1/token')
     @HttpCode(200)
-    async mintToken(@Body() body: MintTokenDto): Promise<MintTokenResponseDto> {
+    async mintBeatsToken(@Body() body: MintTokenDto): Promise<MintTokenResponseDto> {
         const logString = `POST /api/v1/token ${JSON.stringify(body)}`;
         this.logger.log(logString);
         const { amount, recipient } = body;
@@ -253,9 +254,9 @@ export class AppController {
         }
     }
 
-    @ApiOperation({ summary: 'Get private token balance' })
+    @ApiOperation({ summary: 'Get BEATS token balance' })
     @Get('/api/v1/token')
-    async getTokenBalance(@Query() query: GetTokenBalanceDto): Promise<GetTokenBalanceResponseDto> {
+    async getBeatsTokenBalance(@Query() query: GetTokenBalanceDto): Promise<GetTokenBalanceResponseDto> {
         const logString = `GET /api/v1/token ${JSON.stringify(query)}`;
         this.logger.log(logString);
         const { wallet } = query;
@@ -265,31 +266,6 @@ export class AppController {
 
         try {
             const output = await this.suiService.getTokenBalance(wallet);
-            this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
-            return output;
-        } catch (e) {
-            this.returnError(logString, 500, e);
-        }
-    }
-
-    @ApiOperation({ summary: 'Verify a signed message' })
-    @Get('/api/v1/verify')
-    async verifySignature(@Query() query: VerifySignatureDto): Promise<VerifySignatureResponseDto> {
-        const logString = `GET /api/v1/verify ${JSON.stringify(query)}`;
-        this.logger.log(logString);
-        let { address, signature, message } = query;
-        if (!address || address == '') {
-            this.returnError(logString, 400, 'address cannot be null or empty');
-        }
-        if (!signature || signature == '') {
-            this.returnError(logString, 400, 'signature cannot be null or empty');
-        }
-        if (!message || message == '') {
-            this.returnError(logString, 400, 'message cannot be null or empty');
-        }
-
-        try {
-            const output = await this.suiService.verifySignature(address, signature, message);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
@@ -353,7 +329,7 @@ export class AppController {
     async addLeaderboardScore(@Body() body: AddLeaderboardDto): Promise<AddLeaderboardResponseDto> {
         const logString = `POST /api/v1/leaderboard ${JSON.stringify(body)}`;
         this.logger.log(logString);
-        const { score, authId, authType } = body;
+        const { score, authId } = body;
 
         if (!score || score <= 0) {
             this.returnError(logString, 400, 'score cannot be null, zero or negative');
@@ -364,15 +340,9 @@ export class AppController {
         if (authId.length > MAX_WALLET_LENGTH) {
             this.returnError(logString, 400, `wallet exceeded max length of ${MAX_WALLET_LENGTH}`);
         }
-        if (!authType || authType == '') {
-            this.returnError(logString, 400, 'authType cannot be null or empty');
-        }
-        if (authType.length > MAX_USERNAME_LENGTH) {
-            this.returnError(logString, 400, `authType exceeded max length of ${MAX_USERNAME_LENGTH}`);
-        }
 
         try {
-            const output = await this.suiService.addLeaderboardScore(authId, authId, score);
+            const output = await this.suiService.addLeaderboardScore(authId, score);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
@@ -402,7 +372,7 @@ export class AppController {
 
     // *** AUTH and REGISTRATION ***
 
-    @ApiOperation({ summary: 'Start an auth session' })
+    @ApiOperation({ summary: 'Start an auth session. DEPRECATED' })
     @Post('/api/v1/auth')
     @HttpCode(200)
     async startAuthSession(@Body() body: StartAuthSessionDto): Promise<StartAuthSessionResponseDto> {
@@ -423,109 +393,18 @@ export class AppController {
         }
     }
 
-    @ApiOperation({ summary: 'Verify a signed message' })
-    @Post('/api/v1/verify')
-    @HttpCode(200)
-    async verifyAuthSession(@Body() body: AuthVerifyDto): Promise<AuthVerifyResponseDto> {
-        const logString = `POST /api/v1/verify ${JSON.stringify(body)}`;
-        this.logger.log(logString);
-        let status = '';
-
-        let { wallet, walletType, sessionId, messageToSign, action, signature, username } = body;
-        if (!wallet || wallet == '') {
-            this.returnError(logString, 400, 'wallet cannot be null or empty');
-        }
-        if (wallet.length > MAX_WALLET_LENGTH) {
-            this.returnError(logString, 400, `wallet exceeds max length of ${MAX_WALLET_LENGTH}`);
-        }
-        if (!walletType) {
-            this.returnError(logString, 400, 'walletType cannot be null or empty');
-        }
-        if (!sessionId) {
-            this.returnError(logString, 400, 'sessionId cannot be null or empty');
-        }
-        if (!messageToSign) {
-            this.returnError(logString, 400, 'messageToSign cannot be null or empty');
-        }
-        if (!signature || signature == '') {
-            this.returnError(logString, 400, 'signature cannot be null or empty');
-        }
-        if (signature.length > MAX_SIGNATURE_LENGTH) {
-            this.returnError(logString, 400, `signature exceeds max length of ${MAX_SIGNATURE_LENGTH}`);
-        }
-        if (!username || username == '') {
-            this.returnError(logString, 400, 'username cannot be null or empty');
-        }
-        if (username.length > MAX_USERNAME_LENGTH) {
-            this.returnError(logString, 400, `username exceeds max length of ${MAX_USERNAME_LENGTH}`);
-        }
-
-        try {
-            if (!action) {
-                action = 'verify';
-            }
-
-            const output = await this.suiService.verifySignature2(
-                sessionId,
-                walletType,
-                wallet,
-                action,
-                signature,
-                messageToSign,
-                username,
-            );
-            this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
-
-            status = output.failureReason;
-            if (output.verified) {
-                return output;
-            }
-        } catch (e) {
-            this.returnError(logString, 500, e);
-        }
-
-        console.log(status);
-        console.log(
-            [
-                'sessionInvalid',
-                'sessionIdInvalid',
-                'sessionComplete',
-                'sessionExpired',
-                'walletMismatch',
-                'messageMismatch',
-            ].indexOf(status),
-        );
-        if (
-            [
-                'sessionInvalid',
-                'sessionIdInvalid',
-                'sessionComplete',
-                'sessionExpired',
-                'walletMismatch',
-                'messageMismatch',
-            ].indexOf(status) >= 0
-        ) {
-            this.returnError(logString, 401, status);
-        }
-
-        this.returnError(logString, 400, status);
-    }
-
-    @ApiOperation({ summary: 'Get a SUI address given an associated login' })
+    @ApiOperation({ summary: 'Get a SUI address given an associated login.' })
     @Get('/api/v1/accounts')
     async getAccountFromLogin(@Query() query: GetAccountDto): Promise<GetAccountResponseDto> {
         const logString = `GET /api/v1/accounts ${JSON.stringify(query)}`;
         let output = { suiWallet: '', status: '', username: '', level: 0 };
         this.logger.log(logString);
-        let { authId, authType } = query;
+        let { authId } = query;
         if (!authId || authId == '') {
             this.returnError(logString, 400, 'Auth Id cannot be null or empty');
         }
-        if (!authType) {
-            this.returnError(logString, 400, 'Auth type cannot be null or empty');
-        }
         try {
-            output = await this.suiService.getAccountFromLogin(authId, authType);
+            output = await this.suiService.getAccountFromLogin(authId);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             if (output.status === 'success') {
                 return output;
@@ -537,25 +416,22 @@ export class AppController {
         this.returnError(logString, 400, output.status);
     }
 
-    @ApiOperation({ summary: "Update user's level" })
+    @ApiOperation({ summary: "Update user's level." })
     @Post('/api/v1/level')
     async updateUserLevel(@Body() body: UpdateUserLevelDto): Promise<GetAccountResponseDto> {
         const logString = `POST /api/v1/level ${JSON.stringify(body)}`;
         let output = { suiWallet: '', status: '', username: '', level: 0 };
         this.logger.log(logString);
-        let { authId, authType, level } = body;
+        let { authId, level } = body;
         if (!authId || authId == '') {
             this.returnError(logString, 400, 'Auth Id cannot be null or empty');
-        }
-        if (!authType) {
-            this.returnError(logString, 400, 'Auth type cannot be null or empty');
         }
         if (isNaN(level) || level < 0) {
             this.returnError(logString, 400, 'Level must be a positive number, and is required');
         }
 
         try {
-            output = await this.suiService.updateUserLevel(authId, authType, level);
+            output = await this.suiService.updateUserLevel(authId, level);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             if (output.status === 'success') {
                 return output;
@@ -567,7 +443,7 @@ export class AppController {
         this.returnError(logString, 400, output.status);
     }
 
-    @ApiOperation({ summary: 'Create new user account from OAuth login' })
+    @ApiOperation({ summary: 'Create new user account from OAuth login.' })
     @Post('/api/v1/oauth')
     async updateUserOAuth(@Body() body: UpdateUserOAuthDto): Promise<UpdateUserOAuthResponseDto> {
         const logString = `POST /api/v1/oauth ${JSON.stringify(body)}`;
@@ -610,7 +486,7 @@ export class AppController {
         this.returnError(logString, 400, status);
     }
 
-    @ApiOperation({ summary: 'Get new user account created from OAuth login' })
+    @ApiOperation({ summary: 'Get new user account created from OAuth login.' })
     @Get('/api/v1/oauth')
     async getUserOAuth(@Query() query: GetUserOAuthDto): Promise<GetUserOAuthResponseDto> {
         const logString = `GET /api/v1/oauth ${JSON.stringify(query)}`;
