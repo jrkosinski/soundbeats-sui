@@ -1,42 +1,49 @@
-import { Test, TestingModule } from '@nestjs/testing'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
-import { SuiService } from '../src/sui.service';
-import { RootTestModule } from '../test/root-test.module';
+import { Test, TestingModule } from "@nestjs/testing";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { SuiService } from "./sui.service";
+import { RootTestModule } from "../test/root-test.module";
 
-
-
-describe('AppController', () => {
+describe("AppController", () => {
     let appController: AppController;
     let suiService: SuiService;
 
-
     beforeEach(async () => {
-
         const module: TestingModule = await Test.createTestingModule({
             imports: [RootTestModule],
-          }).compile();
-
+        }).compile();
 
         appController = module.get<AppController>(AppController);
         suiService = module.get<SuiService>(SuiService);
-
     });
 
-    describe('root', () => {
+    describe("root", () => {
         it('should return "Hello World!"', () => {
-          expect(appController.getHello()).toBe('Hello World!');
+            expect(appController.getHello()).toBe("Hello World!");
         });
-      });
+    });
+});
 
-    
-    // describe('Tokens', () => {
-    //     it('get empty wallet balance', async () => {
-    //         const request = {
-    //             wallet: "0x5b6b984e9325541535b189efc78b3df9e08c1b964255d7a96fa2f1801e60554e"
-    //         }
-    //         const response = await appController.getTokenBalance(request);
-    //         expect(response.balance).toEqual(0);
-    //     })
-    // });
-})
+describe("SuiService", () => {
+    let service: SuiService;
+
+    beforeEach(async () => {
+        process.env.MNEMONIC_PHRASE =
+            "gossip pause play insect dog spray rose rally flavor foster excess vanish";
+
+        const module: TestingModule = await Test.createTestingModule({
+            providers: [SuiService],
+        }).compile();
+        service = module.get<SuiService>(SuiService);
+    });
+
+    it("should be defined", () => {
+        expect(service).toBeDefined();
+    });
+
+    it("should call createWallet", async () => {
+        const createWalletSpy = jest.spyOn(service, "createWallet");
+        await service.createWallet();
+        expect(createWalletSpy).toHaveBeenCalled();
+    });
+});

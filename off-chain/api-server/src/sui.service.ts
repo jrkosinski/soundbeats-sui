@@ -546,6 +546,41 @@ export class SuiService {
         return output;
     }
 
+    //TODO: comment header
+    async updateUserFromOAuth(
+        suiAddress: string,
+        username: string,
+        oauthToken: string,
+        nonceToken: string,
+    ): Promise<{ username: string; authId: string; status: string }> {
+        const output = { username: '', authId: '', status: '' };
+        const authRecord = await this.authManager.getAuthRecord(suiAddress, 'sui');
+
+        if (!authRecord) {
+            if (
+                await this.authManager.register(suiAddress, 'sui', suiAddress, username, {
+                    source: 'oauth',
+                    nonce: nonceToken,
+                })
+            ) {
+                output.username = username;
+                output.authId = suiAddress;
+                output.status = 'created';
+            } else {
+                //TODO: else?
+            }
+        } else {
+            output.username = authRecord.username;
+            output.authId = authRecord.suiWallet;
+            output.status = 'exists';
+        }
+
+        //add nonce token
+        if (output.authId && output.authId.length) this.noncesToWallets[nonceToken] = output.authId;
+
+        return output;
+    }
+
     /**
      * From objects owned by the admin wallet, extracts the package id and object id of the
      * BEATS token and NFT library.
