@@ -286,7 +286,12 @@ export class SuiService {
         walletPubKey: string,
         signature: string,
         message: string,
-    ): Promise<{ verified: boolean; failureReason: string; address: string; network: string }> {
+    ): Promise<{
+        verified: boolean;
+        failureReason: string;
+        address: string;
+        network: string;
+    }> {
         const output = {
             verified: false,
             address: '',
@@ -432,7 +437,13 @@ export class SuiService {
      * @returns GetBeatsNftsResponseDto
      */
     async getBeatsNfts(wallet: string): Promise<{ nfts: any[]; network: string }> {
-        const output: { nfts: { name: string; url: string }[]; network: string } = { nfts: [], network: this.network };
+        const output: {
+            nfts: { name: string; url: string }[];
+            network: string;
+        } = {
+            nfts: [],
+            network: this.network,
+        };
 
         const nfts = await this._getUserNFTs(wallet);
 
@@ -462,7 +473,12 @@ export class SuiService {
      */
     async getBeatmapsNfts(wallet: string): Promise<{ nfts: any[]; network: string }> {
         const output: {
-            nfts: { username: string; title: string; artist: string; beatmapJson: string }[];
+            nfts: {
+                username: string;
+                title: string;
+                artist: string;
+                beatmapJson: string;
+            }[];
             network: string;
         } = { nfts: [], network: this.network };
 
@@ -497,7 +513,12 @@ export class SuiService {
     async getLeaderboardScore(
         wallet: string,
         sprint: string | null | 'current' | '' = null,
-    ): Promise<{ wallet: string; score: number; username: string; network: string }> {
+    ): Promise<{
+        wallet: string;
+        score: number;
+        username: string;
+        network: string;
+    }> {
         return await this.leaderboard.getLeaderboardScore(wallet, sprint);
     }
 
@@ -512,7 +533,10 @@ export class SuiService {
     async getLeaderboardScores(
         limit: number = 0,
         sprint: string | null | 'current' | '' = null,
-    ): Promise<{ scores: { wallet: string; username: string; score: number }[]; network: string }> {
+    ): Promise<{
+        scores: { wallet: string; username: string; score: number }[];
+        network: string;
+    }> {
         return await this.leaderboard.getLeaderboardScores(limit, sprint);
     }
 
@@ -569,7 +593,12 @@ export class SuiService {
     async registerAccountEvm(
         evmWallet: string,
         username: string,
-    ): Promise<{ authId: string; authType: string; suiWallet: string; status: string }> {
+    ): Promise<{
+        authId: string;
+        authType: string;
+        suiWallet: string;
+        status: string;
+    }> {
         const output = {
             authId: evmWallet,
             authType: 'evm',
@@ -620,7 +649,12 @@ export class SuiService {
     async getAccountFromLogin(
         authId: string,
         authType: 'evm' | 'sui',
-    ): Promise<{ suiWallet: string; username: string; level: number; status: string }> {
+    ): Promise<{
+        suiWallet: string;
+        username: string;
+        level: number;
+        status: string;
+    }> {
         const output = { suiWallet: '', status: '', username: '', level: 0 };
         const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, authType);
         if (authRecord == null) {
@@ -640,7 +674,12 @@ export class SuiService {
         authId: string,
         authType: 'evm' | 'sui',
         level: number,
-    ): Promise<{ suiWallet: string; username: string; level: number; status: string }> {
+    ): Promise<{
+        suiWallet: string;
+        username: string;
+        level: number;
+        status: string;
+    }> {
         const output = { suiWallet: '', status: '', username: '', level: 0 };
         const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, authType);
         if (authRecord == null) {
@@ -763,9 +802,12 @@ export class SuiService {
     }
 
     //TODO: comment header
-    async getUserFromOAuth(
-        nonceToken: string,
-    ): Promise<{ status: string; suiWallet: string; level: number; username: string }> {
+    async getUserFromOAuth(nonceToken: string): Promise<{
+        status: string;
+        suiWallet: string;
+        level: number;
+        username: string;
+    }> {
         let output = {
             status: '',
             suiWallet: '',
@@ -978,7 +1020,10 @@ export class SuiService {
                 const decodedSignature = ethers.getBytes(signature);
                 const hashedMessage = ethers.hashMessage(message);
                 const signingAddress = ethers.recoverAddress(hashedMessage, signature);
-                return { address: signingAddress, verified: signingAddress == expectedAddress };
+                return {
+                    address: signingAddress,
+                    verified: signingAddress == expectedAddress,
+                };
             } catch (e) {
                 this.logger.error(e);
             }
