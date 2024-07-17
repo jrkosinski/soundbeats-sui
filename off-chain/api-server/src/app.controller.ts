@@ -70,6 +70,11 @@ export class AppController {
         return 'ok';
     }
 
+    @Get()
+    getHello(): string {
+        return this.appService.getHello();
+    }
+
     // *** NFTS and TOKENS ***
 
     returnError(apiCall: string, errorCode: number, message: any) {
