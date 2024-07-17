@@ -1,3 +1,5 @@
+import { Module } from '@nestjs/common';
+
 export interface IAuthRecord {
     authId: string;
     authType: 'evm' | 'sui';
@@ -27,7 +29,7 @@ export interface IAuthManager {
      * @param username
      * @param extraData
      */
-    register(
+    registerUser(
         authId: string,
         authType: 'evm' | 'sui',
         suiWallet: string,

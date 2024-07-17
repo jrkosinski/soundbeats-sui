@@ -5,7 +5,7 @@ import { SuiClient, getFullnodeUrl } from '@mysten/sui.js/client';
 import { Ed25519Keypair, Ed25519PublicKey } from '@mysten/sui.js/keypairs/ed25519';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { Keypair, Signer } from '@mysten/sui.js/cryptography';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ILeaderboard, ISprint } from './leaderboard/ILeaderboard';
 import { getLeaderboardInstance } from './leaderboard/leaderboard';
 import { IAuthManager, IAuthRecord, IAuthSession } from './auth/IAuthManager';
@@ -35,12 +35,11 @@ export class SuiService {
     beatsNftOwnerCap: string;
     beatmapsNftOwnerCap: string;
     leaderboard: ILeaderboard;
-    authManager: IAuthManager;
     network: string;
     logger: AppLogger;
     noncesToWallets: { [key: string]: string };
 
-    constructor() {
+    constructor(@Inject('IAuthManager') private readonly authManager: IAuthManager) {
         //derive keypair
         this.keypair = Ed25519Keypair.deriveKeypair(process.env.MNEMONIC_PHRASE);
         this.noncesToWallets = {};
@@ -54,7 +53,9 @@ export class SuiService {
 
         //leaderboard
         this.leaderboard = getLeaderboardInstance(this.network);
-        this.authManager = getAuthManagerInstance();
+        this.authManager = authManager;
+
+        console.log(this.authManager);
 
         //get initial addresses from config setting
         this.treasuryCap = Config.treasuryCap;
@@ -558,7 +559,7 @@ export class SuiService {
 
         if (!authRecord) {
             if (
-                await this.authManager.register(suiAddress, 'sui', suiAddress, username, {
+                await this.authManager.registerUser(suiAddress, 'sui', suiAddress, username, {
                     source: 'oauth',
                     nonce: nonceToken,
                 })

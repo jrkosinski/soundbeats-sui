@@ -2,6 +2,7 @@ import { Config } from '../config';
 import { IAuthRecord, IAuthManager, IAuthSession } from './IAuthManager';
 import { IDynamoResult } from '../dataAccess/IDynamoResult';
 import { DynamoDbAccess } from '../dataAccess/DynamoDbAccess';
+import { Injectable } from '@nestjs/common';
 
 const GSI_USERNAME_NAME = 'GSI_USERNAME';
 
@@ -9,6 +10,7 @@ function unixTimestamp(): number {
     return Math.floor(Date.now() / 1000);
 }
 
+@Injectable()
 export class AuthManagerDynamoDb implements IAuthManager {
     dynamoDb: DynamoDbAccess;
 
@@ -16,7 +18,7 @@ export class AuthManagerDynamoDb implements IAuthManager {
         this.dynamoDb = new DynamoDbAccess();
     }
 
-    async register(
+    async registerUser(
         authId: string,
         authType: 'evm' | 'sui',
         suiWallet: string,
