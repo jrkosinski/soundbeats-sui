@@ -19,11 +19,13 @@ apply plugin: 'com.android.library'
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 // Android Resolver Dependencies Start
+implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.72'
     implementation 'com.google.android.gms:play-services-base:18.4.0' // Assets/Firebase/Editor/AppDependencies.xml:17
     implementation 'com.google.firebase:firebase-analytics:21.6.2' // Assets/Firebase/Editor/AppDependencies.xml:15
     implementation 'com.google.firebase:firebase-analytics-unity:11.9.0' // Assets/Firebase/Editor/AnalyticsDependencies.xml:18
     implementation 'com.google.firebase:firebase-app-unity:11.9.0' // Assets/Firebase/Editor/AppDependencies.xml:22
     implementation 'com.google.firebase:firebase-common:20.4.3' // Assets/Firebase/Editor/AppDependencies.xml:13
+implementation 'androidx.browser:browser:1.3.0'
 // Android Resolver Dependencies End
 **DEPS**}
 

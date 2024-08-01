@@ -17,20 +17,27 @@ public class GPMWebViewManager : Singleton<GPMWebViewManager>
             URLtoOpen,
             new GpmWebViewRequest.Configuration()
             {
-                style = GpmWebViewStyle.FULLSCREEN,
+                style = GpmWebViewStyle.POPUP,
                 orientation = GpmOrientation.LANDSCAPE_LEFT,
-                isClearCookie = false,
+                isClearCookie = true,
                 isClearCache = true,
                 backgroundColor = "#FFFFFF",
                 isNavigationBarVisible = false,
-                navigationBarColor = "#96289F",
-                title = "Soundbeats",
                 isBackButtonVisible = false,
                 isForwardButtonVisible = false,
                 isCloseButtonVisible = false,
-                supportMultipleWindows = false,
+                supportMultipleWindows = true,
+                margins = new GpmWebViewRequest.Margins
+                {
+                    hasValue = true,
+                    left = (int)(Screen.width * 0.05f),
+                    top = (int)(Screen.height * 0.05f),
+                    right = (int)(Screen.width * 0.05f),
+                    bottom = (int)(Screen.height * 0.05f)
+                },
 #if UNITY_IOS
                 contentMode = GpmWebViewContentMode.MOBILE,
+                isMaskViewVisible = true,
 #endif
                 userAgentString = "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/34.0.1847.116 Safari/537.36 Mozilla/5.0(iPad; U;CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10(KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.10",
             },
@@ -77,7 +84,6 @@ public class GPMWebViewManager : Singleton<GPMWebViewManager>
                 {
                     Debug.Log(string.Format("close WebView."));
                 }
-                //LoginManager.instance.startGame();
                 break;
             case GpmWebViewCallback.CallbackType.PageStarted:
                 if (string.IsNullOrEmpty(data) == false)
@@ -120,9 +126,9 @@ public class GPMWebViewManager : Singleton<GPMWebViewManager>
                         LoginManager.instance.startGame();
                         if (GpmWebView.IsActive() == true)
                         {
-                            GpmWebView.Close();
+                            GpmWebView.SetSize(0, 0);
+                            //GpmWebView.Close();
                         }
-
                     }
                 }
                 else
