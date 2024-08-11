@@ -1,6 +1,7 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
+import { LeaderboardController } from './controllers/leaderboard';
 import { AppService } from './app.service';
 import { AuthManagerDynamoDb } from './auth/AuthManagerDynamoDb';
 import { IAuthManager } from './auth/IAuthManager';
@@ -10,6 +11,7 @@ import { ConfigSettings, IConfigSettings } from './config';
 import { ILeaderboard } from './leaderboard/ILeaderboard';
 import { LeaderboardDynamoDb } from './leaderboard/LeaderboardDynamoDb';
 import { LeaderboardMock } from './leaderboard/LeaderboardMock';
+import { LeaderboardService } from './services/leaderboard';
 
 @Module({})
 export class AuthManagerModule {
@@ -78,8 +80,8 @@ export class ConfigSettingsModule {
         ConfigSettingsModule.register(),
         LeaderboardModule.register()
     ],
-    controllers: [AppController],
-    providers: [AppService, SuiService],
+    controllers: [AppController, LeaderboardController],
+    providers: [AppService, SuiService, LeaderboardService],
 })
 
 export class AppModule { }

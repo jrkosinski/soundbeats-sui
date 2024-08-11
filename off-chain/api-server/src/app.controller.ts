@@ -58,6 +58,7 @@ const MAX_JSON_LENGTH = 1000;
 const MAX_SIGNATURE_LENGTH = 500;
 const MAX_STRING_LENGTH = 1000;
 
+//TODO: break into different controllers
 @Controller()
 export class AppController {
     logger: AppLogger;
@@ -76,7 +77,7 @@ export class AppController {
         return this.appService.getHello();
     }
 
-    // *** NFTS and TOKENS ***
+    // *** NFTS and TOKENS CONTROLLER ***
 
     returnError(apiCall: string, errorCode: number, message: any) {
         this.logger.error(`${apiCall} returning ${errorCode}: ${message}`);
@@ -295,7 +296,7 @@ export class AppController {
         }
     }
 
-    // *** LEADERBOARD ***
+    // *** LEADERBOARD CONTROLLER ***
 
     @ApiOperation({ summary: 'Get a user score from the leaderboard' })
     @Get('/api/v1/leaderboard')
