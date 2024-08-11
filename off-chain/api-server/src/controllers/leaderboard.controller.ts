@@ -21,7 +21,7 @@ import {
     GetLeaderboardSprintResponseDto,
 } from '../entity/req.entity';
 import { AppLogger } from '../app.logger';
-import { LeaderboardService } from 'src/services/leaderboard';
+import { LeaderboardService } from 'src/services/leaderboard.service';
 
 
 //TODO: possible repeated code
@@ -33,7 +33,7 @@ export class LeaderboardController {
     logger: AppLogger;
 
     constructor(private readonly appService: AppService, private readonly leaderboardService: LeaderboardService) {
-        this.logger = new AppLogger('app.controller');
+        this.logger = new AppLogger('leaderboard.controller');
     }
 
     @Get('/')
