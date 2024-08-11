@@ -10,7 +10,7 @@ import { IAuthManager, IAuthRecord } from '../repositories/auth/IAuthManager';
 import { ConfigSettings } from '../config';
 import { AppLogger } from '../app.logger';
 import { AuthManagerModule, ConfigSettingsModule } from '../app.module';
-const { ethers } = require('ethers');
+import { AuthService } from './auth.service';
 
 //TODO: replace 'success' with 'completed'
 // - delete table
@@ -290,7 +290,9 @@ export class TokenService {
             network: this.network,
         };
 
-        const nfts = await this._getUserNFTs(wallet);
+        const nfts = wallet ?
+            await this._getUserNFTs(wallet) :
+            await this._getAllUserNFTs();
 
         //get list of unique names for all NFTs owned
         for (let i = 0; i < nfts.length; i++) {
@@ -327,7 +329,9 @@ export class TokenService {
             network: string;
         } = { nfts: [], network: this.network };
 
-        const nfts = await this._getUserNFTs(wallet, 'BEATMAPS_NFT');
+        const nfts = wallet ?
+            await this._getUserNFTs(wallet, 'BEATMAPS_NFT') :
+            await this._getAllUserNFTs('BEATMAPS_NFT');
 
         //get list of unique names for all NFTs owned
         for (let i = 0; i < nfts.length; i++) {
@@ -408,7 +412,7 @@ export class TokenService {
      * @param wallet
      * @returns A package id and treasury cap id
      */
-    async _detectTokenInfo(
+    private async _detectTokenInfo(
         wallet: string,
         packageId: string = null,
     ): Promise<{
@@ -510,7 +514,7 @@ export class TokenService {
      * @param environment
      * @returns JsonRpcProvider
      */
-    _createRpcProvider(environment: string): SuiClient {
+    private _createRpcProvider(environment: string): SuiClient {
         if (!environment) environment = 'DEVNET';
 
         this.logger.log(`creating RPC provider for ${environment}`);
@@ -545,7 +549,28 @@ export class TokenService {
      * @param nftType NFT package id string
      * @returns
      */
-    async _getUserNFTs(wallet: string, nftType: string = 'BEATS_NFT'): Promise<any[]> {
+    private async _getAllUserNFTs(nftType: string = 'BEATS_NFT'): Promise<any[]> {
+        let output: any[] = [];
+
+        try {
+            const wallets = await this.authManager.getUniqueWalletAddresses();
+            const results = await Promise.all(wallets.map(a => this._getUserNFTs(a, nftType)));
+            output = results.flat();
+        }
+        catch (e) {
+            this.logger.error(e.toString());
+        }
+
+        return output;
+    }
+
+    /**
+     * Generically used to get NFTs of a given kind, belonging to a specific owner.
+     * @param wallet The NFT owner
+     * @param nftType NFT package id string
+     * @returns
+     */
+    private async _getUserNFTs(wallet: string, nftType: string = 'BEATS_NFT'): Promise<any[]> {
         let output: any[] = [];
 
         //get objects owned by user

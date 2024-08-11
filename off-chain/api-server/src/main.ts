@@ -33,7 +33,7 @@ async function bootstrap() {
         app.enableCors(corsConfig);
     } else {
         console.log('CORS OPTIONS');
-        app.enableCors({ origin: 'http://localhost:8080', methods: 'POST,GET,PUT,HEAD' });
+        //app.enableCors({ origin: 'http://localhost:8080', methods: 'POST,GET,PUT,HEAD' });
     }
 
     //basic config

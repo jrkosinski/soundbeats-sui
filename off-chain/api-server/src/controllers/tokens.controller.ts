@@ -48,21 +48,20 @@ import {
 import { TokenService } from '../services/tokens.service';
 import { AppLogger } from '../app.logger';
 
-const LEADERBOARD_DEFAULT_LIMIT: number = 100;
 const MAX_URL_LENGTH = 400;
 const MAX_NFT_NAME_LENGTH = 100;
 const MAX_USERNAME_LENGTH = 100;
-const MAX_WALLET_LENGTH = 100;
 const MAX_JSON_LENGTH = 1000;
-const MAX_SIGNATURE_LENGTH = 500;
-const MAX_STRING_LENGTH = 1000;
 
 //TODO: break into different controllers
 @Controller()
 export class TokenController {
     logger: AppLogger;
 
-    constructor(private readonly appService: AppService, private readonly tokenService: TokenService) {
+    constructor(
+        private readonly appService: AppService,
+        private readonly tokenService: TokenService
+    ) {
         this.logger = new AppLogger('tokens.controller');
     }
 
@@ -193,9 +192,6 @@ export class TokenController {
         const logString = `GET /api/v2/nfts/beats ${JSON.stringify(query)}`;
         this.logger.log(logString);
         const { wallet } = query;
-        if (!wallet || wallet == '') {
-            this.returnError(logString, 400, 'wallet cannot be null or empty');
-        }
 
         try {
             const output = await this.tokenService.getBeatsNfts(wallet);
@@ -212,9 +208,6 @@ export class TokenController {
         const logString = `GET /api/v2/nfts/beatmaps ${JSON.stringify(query)}`;
         this.logger.log(logString);
         const { wallet } = query;
-        if (!wallet || wallet == '') {
-            this.returnError(logString, 400, 'wallet cannot be null or empty');
-        }
 
         try {
             const output = await this.tokenService.getBeatmapsNfts(wallet);

@@ -97,4 +97,6 @@ export interface IAuthManager {
 
     //TODO: comment
     getAuthSession(sessionId: string): Promise<IAuthSession>;
+
+    getUniqueWalletAddresses(): Promise<string[]>;
 }

@@ -201,6 +201,19 @@ export class AuthManagerDynamoDb implements IAuthManager {
         return response.success;
     }
 
+    //TODO: comment header
+    async getUniqueWalletAddresses(): Promise<string[]> {
+        const authRecords: IAuthRecord[] = await this.getAuthRecords();
+        const output: string[] = [];
+
+        for (let auth of authRecords) {
+            if (auth.suiWallet?.length) {
+                output.push(auth.suiWallet);
+            }
+        }
+        return output;
+    }
+
     //private methods
 
     async _dataAccess_putAuthSession(session: IAuthSession): Promise<IDynamoResult> {

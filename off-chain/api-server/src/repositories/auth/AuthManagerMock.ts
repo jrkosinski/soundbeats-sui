@@ -61,7 +61,6 @@ export class AuthManagerMock implements IAuthManager {
     }
 
     async updateAuthSession(sessionId: string, evmWallet: string, suiWallet: string, success: boolean): Promise<void> {
-
     }
 
     async getAuthSession(sessionId: string): Promise<IAuthSession> {
@@ -74,5 +73,17 @@ export class AuthManagerMock implements IAuthManager {
             startTimestamp: 0,
             updateTimestamp: 0,
         };
+    }
+
+    async getUniqueWalletAddresses(): Promise<string[]> {
+        const authRecords: IAuthRecord[] = await this.getAuthRecords();
+        const output: string[] = [];
+
+        for (let auth of authRecords) {
+            if (auth.suiWallet?.length) {
+                output.push(auth.suiWallet);
+            }
+        }
+        return output;
     }
 }
