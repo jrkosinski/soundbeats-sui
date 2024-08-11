@@ -1,0 +1,41 @@
+
+GET http://localhost:3000/api/v2/leaderboard?wallet=0x2ff4d0ff4645e89e88c5ed78ad825956ea02832d5416bd6f5e7592205c934acc
+
+
+GET http://localhost:3000/api/v1/leaderboard
+Content-Type: application/json
+
+POST http://localhost:3000/api/v2/leaderboard
+Content-Type: application/json
+{
+    wallet: "",
+    score: 100,
+    username: ""
+}
+
+POST http://localhost:3000/api/v1/leaderboard
+Content-Type: application/json
+{
+    authId: "",
+    authType: "",
+    score: 100,
+    username: ""
+}
+
+GET http://localhost:3000/api/v2/sprint
+
+GET http://localhost:3000/api/v1/sprint
+
+POST /api/v2/nfts/beats
+
+POST /api/v2/nfts/beatmaps
+
+GET /api/v2/nfts 
+
+GET /api/v2/nfts/beats
+
+GET /api/v2/nfts/beatmaps
+
+
+
+

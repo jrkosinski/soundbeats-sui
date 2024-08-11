@@ -150,6 +150,15 @@ export class AddLeaderboardDto {
     username: string;
 }
 
+export class AddLeaderboardV2Dto {
+    @ApiProperty({ description: 'The address of the wallet of the user' })
+    wallet: string;
+    @ApiProperty({ description: 'The score to add' })
+    score: number;
+    @ApiProperty({ description: 'The present username of the user being added' })
+    username: string;
+}
+
 export class AddLeaderboardResponseDto extends ResponseDtoBase {
     @ApiProperty({ description: 'The total score of the user' })
     score: number;
@@ -281,4 +290,4 @@ export class GetUserOAuthDto {
     nonceToken: string;
 }
 
-export class GetUserOAuthResponseDto extends GetAccountResponseDto {}
+export class GetUserOAuthResponseDto extends GetAccountResponseDto { }

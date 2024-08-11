@@ -15,7 +15,7 @@ import { AppService } from '../app.service';
 import {
     GetLeaderboardDto,
     GetLeaderboardResponseDto,
-    AddLeaderboardDto,
+    AddLeaderboardV2Dto,
     AddLeaderboardResponseDto,
     GetLeaderboardSprintDto,
     GetLeaderboardSprintResponseDto,
@@ -85,23 +85,23 @@ export class LeaderboardController {
     @ApiOperation({ summary: 'Add to a user score on the leaderboard' })
     @Post('/api/v2/leaderboard')
     @HttpCode(200)
-    async addLeaderboardScore(@Body() body: AddLeaderboardDto): Promise<AddLeaderboardResponseDto> {
+    async addLeaderboardScore(@Body() body: AddLeaderboardV2Dto): Promise<AddLeaderboardResponseDto> {
         const logString = `POST /api/v2/leaderboard ${JSON.stringify(body)}`;
         this.logger.log(logString);
-        const { score, authId } = body;
+        const { score, wallet } = body;
 
         if (!score || score <= 0) {
             this.returnError(logString, 400, 'score cannot be null, zero or negative');
         }
-        if (!authId || authId == '') {
+        if (!wallet || wallet == '') {
             this.returnError(logString, 400, 'wallet cannot be null or empty');
         }
-        if (authId.length > MAX_WALLET_LENGTH) {
+        if (wallet.length > MAX_WALLET_LENGTH) {
             this.returnError(logString, 400, `wallet exceeded max length of ${MAX_WALLET_LENGTH}`);
         }
 
         try {
-            const output = await this.leaderboardService.addLeaderboardScore(authId, score);
+            const output = await this.leaderboardService.addLeaderboardScore(wallet, score);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
