@@ -1,21 +1,22 @@
 import * as fs from 'fs';
 import { ILeaderboard, ISprint } from './ILeaderboard';
+import { IConfigSettings } from 'src/config';
 
 /***
  * Implementation of ILeaderboard that just stores the data in memory (which is wiped out when 
  * the application is restarted; so this is more used for testing)
  */
-export class LeaderboardMemory implements ILeaderboard {
+export class LeaderboardMock implements ILeaderboard {
     leaderboardMap: Map<string, number>;
-    network: string;
+    config: IConfigSettings;
 
-    constructor(network: string) {
+    constructor(configSettings: IConfigSettings) {
         this.leaderboardMap = new Map();
-        this.network = network;
+        this.config = configSettings;
     }
 
     async getLeaderboardScore(wallet: string, sprintId: string = ""): Promise<{ wallet: string, username: string, score: number, network: string }> {
-        const output = { wallet, score: 0, username: '', network: this.network };
+        const output = { wallet, score: 0, username: '', network: this.config.suiNetwork };
 
         if (this.leaderboardMap.has(wallet))
             output.score = this.leaderboardMap.get(wallet);
@@ -24,7 +25,7 @@ export class LeaderboardMemory implements ILeaderboard {
     }
 
     async getLeaderboardScores(limit: number = 100, sprintId: string = ""): Promise<{ scores: { wallet: string, username: string, score: number }[], network: string }> {
-        let output = { scores: [], network: this.network };
+        let output = { scores: [], network: this.config.suiNetwork };
 
         this.leaderboardMap.forEach((value: number, key: string) => {
             output.scores.push({ wallet: key, score: value });
@@ -41,7 +42,7 @@ export class LeaderboardMemory implements ILeaderboard {
     }
 
     async addLeaderboardScore(wallet: string, username: string, score: number, sprintId: string = ""): Promise<{ score: number, network: string }> {
-        const output = { score: 0, network: this.network, username: '' };
+        const output = { score: 0, network: this.config.suiNetwork, username: '' };
 
         if (this.leaderboardMap.has(wallet))
             output.score = this.leaderboardMap.get(wallet);
@@ -57,12 +58,12 @@ export class LeaderboardMemory implements ILeaderboard {
         throw "Not implemented";
         return false;
     }
-    
+
     async endSprint(sprintName: string): Promise<boolean> {
         throw "Not implemented";
         return false;
     }
-    
+
     async getSprint(sprintId: string): Promise<ISprint> {
         return null;
     }

@@ -1,4 +1,4 @@
-import { Config } from '../config';
+import { IConfigSettings } from '../config';
 import { IAuthRecord, IAuthManager, IAuthSession } from './IAuthManager';
 import { IDynamoResult } from '../dataAccess/IDynamoResult';
 import { DynamoDbAccess } from '../dataAccess/DynamoDbAccess';
@@ -13,9 +13,11 @@ function unixTimestamp(): number {
 @Injectable()
 export class AuthManagerDynamoDb implements IAuthManager {
     dynamoDb: DynamoDbAccess;
+    config: IConfigSettings;
 
-    constructor() {
+    constructor(configSettings: IConfigSettings) {
         this.dynamoDb = new DynamoDbAccess();
+        this.config = configSettings;
     }
 
     async registerUser(
@@ -69,7 +71,7 @@ export class AuthManagerDynamoDb implements IAuthManager {
     }
 
     async getAuthRecords(): Promise<IAuthRecord[]> {
-        const result = await this.dynamoDb.scanTable(Config.authTableName);
+        const result = await this.dynamoDb.scanTable(this.config.authTableName);
         const items = result.success ? result.data : [];
         const output = [];
 
@@ -114,7 +116,7 @@ export class AuthManagerDynamoDb implements IAuthManager {
     async usernameExists(username: string): Promise<boolean> {
         if (username && username.length) {
             const params = {
-                TableName: Config.authTableName,
+                TableName: this.config.authTableName,
                 IndexName: GSI_USERNAME_NAME,
                 KeyConditionExpression: 'username = :username_val',
                 ExpressionAttributeValues: {

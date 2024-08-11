@@ -7,11 +7,10 @@ import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { Keypair, Signer } from '@mysten/sui.js/cryptography';
 import { Inject, Injectable } from '@nestjs/common';
 import { ILeaderboard, ISprint } from './leaderboard/ILeaderboard';
-import { getLeaderboardInstance } from './leaderboard/leaderboard';
 import { IAuthManager, IAuthRecord, IAuthSession } from './auth/IAuthManager';
-import { getAuthManagerInstance } from './auth/auth';
-import { Config } from './config';
+import { ConfigSettings } from './config';
 import { AppLogger } from './app.logger';
+import { AuthManagerModule, ConfigSettingsModule, LeaderboardModule } from './app.module';
 const { ethers } = require('ethers');
 
 //TODO: replace 'success' with 'completed'
@@ -37,34 +36,42 @@ export class SuiService {
     leaderboard: ILeaderboard;
     network: string;
     logger: AppLogger;
+    authManager: IAuthManager;
+    config: ConfigSettings;
     noncesToWallets: { [key: string]: string };
 
-    constructor(@Inject('IAuthManager') private readonly authManager: IAuthManager) {
+    constructor(
+        @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
+        @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
+        @Inject('LeaderboardModule') leaderboardModule: LeaderboardModule
+    ) {
+        this.config = configSettingsModule.get();
+
         //derive keypair
-        this.keypair = Ed25519Keypair.deriveKeypair(process.env.MNEMONIC_PHRASE);
+        this.keypair = Ed25519Keypair.deriveKeypair(this.config.mnemonicPhrase);
         this.noncesToWallets = {};
         this.logger = new AppLogger('sui.service');
 
         //create connect to the correct environment
-        this.network = Config.suiNetwork;
+        this.network = this.config.suiNetwork;
         this.logger.log(`network: ${this.network}`);
         this.provider = this._createRpcProvider(this.network);
         this.signer = new RawSigner(this.keypair, this.provider);
 
         //leaderboard
-        this.leaderboard = getLeaderboardInstance(this.network);
-        this.authManager = authManager;
+        this.leaderboard = leaderboardModule.get(this.config);
+        this.authManager = authManagerModule.get(this.config);
 
         console.log(this.authManager);
 
         //get initial addresses from config setting
-        this.treasuryCap = Config.treasuryCap;
-        this.beatsNftOwnerCap = Config.beatsNftOwnerCap;
-        this.beatmapsNftOwnerCap = Config.beatmapsNftOwnerCap;
+        this.treasuryCap = this.config.treasuryCap;
+        this.beatsNftOwnerCap = this.config.beatsNftOwnerCap;
+        this.beatmapsNftOwnerCap = this.config.beatmapsNftOwnerCap;
 
-        this.logger.log('BEATS token package id: ' + Config.beatsCoinPackageId);
-        this.logger.log('BEATS NFT package id: ' + Config.beatsNftPackageId);
-        this.logger.log('BEATMAPS NFT package id: ' + Config.beatmapsNftPackageId);
+        this.logger.log('BEATS token package id: ' + this.config.beatsCoinPackageId);
+        this.logger.log('BEATS NFT package id: ' + this.config.beatsNftPackageId);
+        this.logger.log('BEATMAPS NFT package id: ' + this.config.beatmapsNftPackageId);
         this.logger.log('treasuryCap: ' + this.treasuryCap);
         this.logger.log('beatsNftOwnerCap: ' + this.beatsNftOwnerCap);
         this.logger.log('beatmapsNftOwnerCap: ' + this.beatmapsNftOwnerCap);
@@ -74,9 +81,9 @@ export class SuiService {
         this.logger.log('admin address: ' + suiAddress);
 
         //detect token info from blockchain
-        /*if (Config.detectPackageInfo) {
+        /*if (this.config.detectPackageInfo) {
             this.logger.log('detecting package data ...');
-            this._detectTokenInfo(suiAddress, Config.beatsNftPackageId).then(async (response) => {
+            this._detectTokenInfo(suiAddress, this.config.beatsNftPackageId).then(async (response) => {
                 this.logger.log('parsing package data ...');
                 if (response && response.packageId && response.treasuryCap) {
                     this.treasuryCap = response.treasuryCap;
@@ -124,7 +131,7 @@ export class SuiService {
         //mint nft to recipient
         const tx = new TransactionBlock();
         tx.moveCall({
-            target: `${Config.beatsNftPackageId}::beats_nft::mint`,
+            target: `${this.config.beatsNftPackageId}::beats_nft::mint`,
             arguments: [
                 tx.pure(this.beatsNftOwnerCap),
                 tx.pure(name),
@@ -189,7 +196,7 @@ export class SuiService {
         };
 
         tx.moveCall({
-            target: `${Config.beatmapsNftPackageId}::beatmaps_nft::mint`,
+            target: `${this.config.beatmapsNftPackageId}::beatmaps_nft::mint`,
             arguments: [
                 tx.pure(this.beatmapsNftOwnerCap),
                 tx.pure(JSON.stringify(metadata)),
@@ -233,7 +240,7 @@ export class SuiService {
         //mint token to recipient
         const tx = new TransactionBlock();
         tx.moveCall({
-            target: `${Config.beatsCoinPackageId}::beats::mint`,
+            target: `${this.config.beatsCoinPackageId}::beats::mint`,
             arguments: [tx.pure(this.treasuryCap), tx.pure(amount), tx.pure(recipient)],
         });
 
@@ -264,7 +271,7 @@ export class SuiService {
      * @returns GetTokenBalanceResponseDto
      */
     async getTokenBalance(wallet: string): Promise<{ balance: number; network: string }> {
-        const tokenType = `${Config.beatsCoinPackageId}::beats::BEATS`;
+        const tokenType = `${this.config.beatsCoinPackageId}::beats::BEATS`;
         const result = await this.provider.getBalance({
             owner: wallet,
             coinType: tokenType,
@@ -338,7 +345,7 @@ export class SuiService {
                 let metadata: any = {};
                 try {
                     metadata = JSON.parse(nft.data.content['fields']['metadata']);
-                } catch {}
+                } catch { }
                 output.nfts.push({
                     username: metadata.username ?? '',
                     artist: metadata.artist ?? '',
@@ -750,8 +757,8 @@ export class SuiService {
 
             if (response && response.data && response.data.length) {
                 let packageId: string = '';
-                if (nftType.toLowerCase() == 'beats_nft') packageId = Config.beatsNftPackageId;
-                if (nftType.toLowerCase() == 'beatmaps_nft') packageId = Config.beatmapsNftPackageId;
+                if (nftType.toLowerCase() == 'beats_nft') packageId = this.config.beatsNftPackageId;
+                if (nftType.toLowerCase() == 'beatmaps_nft') packageId = this.config.beatmapsNftPackageId;
 
                 //get objects which are the named NFTs
                 const beatsNfts = response.data.filter((o) => {

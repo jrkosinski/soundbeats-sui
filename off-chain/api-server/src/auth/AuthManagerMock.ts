@@ -1,8 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { IAuthManager, IAuthRecord, IAuthSession } from './IAuthManager';
+import { IConfigSettings } from 'src/config';
 
 @Injectable()
 export class AuthManagerMock implements IAuthManager {
+    config: IConfigSettings;
+    accountMap: Map<string, any>;
+    sessionMap: Map<string, any>;
+    usernameMap: Map<string, string>;
+
+    constructor(configSettings: IConfigSettings) {
+        this.config = configSettings;
+    }
+
     async registerUser(
         authId: string,
         authType: 'evm' | 'sui',
@@ -13,32 +23,36 @@ export class AuthManagerMock implements IAuthManager {
         return true;
     }
 
+    private getId(authId: string, authType: 'evm' | 'sui') { return `${authId}|${authType}`; }
+
     async exists(authId: string, authType: 'evm' | 'sui'): Promise<boolean> {
-        return true;
+        return this.accountMap.has(this.getId(authId, authType));
     }
 
     async usernameExists(username: string): Promise<boolean> {
-        return true;
+        return this.usernameMap.has(username);
     }
 
     async getAuthRecord(authId: string, authType: 'evm' | 'sui'): Promise<IAuthRecord> {
-        return {
-            authId: '',
-            authType: 'sui',
-            suiWallet: '',
-            level: 0,
-            username: '',
-            extraData: {},
-        };
+        return (this.exists(authId, authType)) ?
+            this.accountMap[this.getId(authId, authType)]
+            : null;
     }
 
     async getAuthRecords(): Promise<IAuthRecord[]> {
         return [];
     }
 
-    async updateAuthRecord(authId: string, authType: 'evm' | 'sui', suiWallet: string, level: number): Promise<void> {}
+    async updateAuthRecord(authId: string, authType: 'evm' | 'sui', suiWallet: string, level: number): Promise<void> {
+        if (this.exists(authId, authType)) {
+
+        }
+    }
 
     async setSuiWalletAddress(authId: string, authType: 'evm' | 'sui', suiAddress: string): Promise<boolean> {
+        if (this.exists(authId, authType)) {
+
+        }
         return true;
     }
 
@@ -46,7 +60,9 @@ export class AuthManagerMock implements IAuthManager {
         return { sessionId: '', messageToSign: '' };
     }
 
-    async updateAuthSession(sessionId: string, evmWallet: string, suiWallet: string, success: boolean): Promise<void> {}
+    async updateAuthSession(sessionId: string, evmWallet: string, suiWallet: string, success: boolean): Promise<void> {
+
+    }
 
     async getAuthSession(sessionId: string): Promise<IAuthSession> {
         return {

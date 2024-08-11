@@ -1,16 +1,17 @@
 import * as fs from 'fs';
 import { ILeaderboard } from './ILeaderboard';
-import { LeaderboardMemory } from './LeaderboardMemory';
+import { LeaderboardMock } from './LeaderboardMock';
+import { IConfigSettings } from 'src/config';
 
 /**
  * Implementation of ILeaderboard that stores data in local JSON files. 
  * While this is still used for testing, it's a step beyond LeaderboardMemory, as it persists 
  * the data. 
  */
-export class LeaderboardJsonFile extends LeaderboardMemory {
+export class LeaderboardJsonFile extends LeaderboardMock {
 
-    constructor(network: string) {
-        super(network);
+    constructor(configSettings: IConfigSettings) {
+        super(configSettings);
         this._readFromFiles();
     }
 
