@@ -544,8 +544,7 @@ export class TokenService {
     }
 
     /**
-     * Generically used to get NFTs of a given kind, belonging to a specific owner.
-     * @param wallet The NFT owner
+     * Generically used to get NFTs of a given kind, belonging to all owners.
      * @param nftType NFT package id string
      * @returns
      */

@@ -83,6 +83,9 @@ export class AuthManagerMock implements IAuthManager {
             if (auth.suiWallet?.length) {
                 output.push(auth.suiWallet);
             }
+            else if (auth.authType === 'sui' && auth.authId?.length) {
+                output.push(auth.authId);
+            }
         }
         return output;
     }
