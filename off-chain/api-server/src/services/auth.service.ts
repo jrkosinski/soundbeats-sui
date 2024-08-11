@@ -3,7 +3,7 @@ import {
 } from '@mysten/sui.js';
 import { Keypair, Signer } from '@mysten/sui.js/cryptography';
 import { Inject, Injectable } from '@nestjs/common';
-import { IAuthManager, IAuthRecord, IAuthSession } from '../auth/IAuthManager';
+import { IAuthManager, IAuthRecord, IAuthSession } from '../repositories/auth/IAuthManager';
 import { ConfigSettings } from '../config';
 import { AppLogger } from '../app.logger';
 import { AuthManagerModule, ConfigSettingsModule, LeaderboardModule } from '../app.module';

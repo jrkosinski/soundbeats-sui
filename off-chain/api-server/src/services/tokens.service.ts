@@ -6,10 +6,10 @@ import { Ed25519Keypair, Ed25519PublicKey } from '@mysten/sui.js/keypairs/ed2551
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { Keypair, Signer } from '@mysten/sui.js/cryptography';
 import { Inject, Injectable } from '@nestjs/common';
-import { IAuthManager, IAuthRecord, IAuthSession } from '../auth/IAuthManager';
+import { IAuthManager, IAuthRecord } from '../repositories/auth/IAuthManager';
 import { ConfigSettings } from '../config';
 import { AppLogger } from '../app.logger';
-import { AuthManagerModule, ConfigSettingsModule, LeaderboardModule } from '../app.module';
+import { AuthManagerModule, ConfigSettingsModule } from '../app.module';
 const { ethers } = require('ethers');
 
 //TODO: replace 'success' with 'completed'

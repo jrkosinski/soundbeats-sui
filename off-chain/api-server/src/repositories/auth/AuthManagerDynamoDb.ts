@@ -1,4 +1,4 @@
-import { IConfigSettings } from '../config';
+import { IConfigSettings } from 'src/config';
 import { IAuthRecord, IAuthManager, IAuthSession } from './IAuthManager';
 import { IDynamoResult } from '../dataAccess/IDynamoResult';
 import { DynamoDbAccess } from '../dataAccess/DynamoDbAccess';

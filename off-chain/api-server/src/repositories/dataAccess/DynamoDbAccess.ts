@@ -1,8 +1,8 @@
-import { Config } from '../config';
+import { Config } from 'src/config';
 import { IDynamoResult } from './IDynamoResult';
 const AWS = require("aws-sdk");
 
-export class DynamoDbAccess  {
+export class DynamoDbAccess {
     dynamoDb: any;
 
     constructor() {
@@ -85,7 +85,7 @@ export class DynamoDbAccess  {
 
         return results;
     }
-    
+
     async query(params: any): Promise<IDynamoResult> {
         const results: any = await new Promise((resolve, reject) => {
             this.dynamoDb.query(params, (error, data) => {
@@ -108,7 +108,7 @@ export class DynamoDbAccess  {
 
         return results;
     }
-    
+
     async deleteItem(params: any): Promise<IDynamoResult> {
         const result: IDynamoResult = await new Promise((resolve, reject) => {
             this.dynamoDb.deleteItem(params, (err, data) => {

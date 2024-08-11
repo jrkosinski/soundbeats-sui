@@ -1,8 +1,7 @@
 import { ILeaderboard, ISprint } from './ILeaderboard';
 import { IDynamoResult } from '../dataAccess/IDynamoResult';
-import { Config } from '../config';
+import { Config, IConfigSettings } from 'src/config';
 import { DynamoDbAccess } from '../dataAccess/DynamoDbAccess';
-import { IConfigSettings } from '../config';
 
 const DEFAULT_SPRINT_KEY = 'default';
 const GSI_SPRINT_NAME = 'GSI_SPRINT';

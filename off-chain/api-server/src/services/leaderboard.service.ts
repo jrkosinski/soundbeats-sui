@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { ILeaderboard, ISprint } from '../leaderboard/ILeaderboard';
+import { ILeaderboard, ISprint } from '../repositories/leaderboard/ILeaderboard';
 import { ConfigSettings } from '../config';
 import { AppLogger } from '../app.logger';
 import { AuthManagerModule, ConfigSettingsModule, LeaderboardModule } from '../app.module';
-import { IAuthManager, IAuthRecord } from 'src/auth/IAuthManager';
+import { IAuthManager, IAuthRecord } from 'src/repositories/auth/IAuthManager';
 
 //TODO: replace 'success' with 'completed'
 // - delete table

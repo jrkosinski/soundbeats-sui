@@ -6,8 +6,8 @@ import { Ed25519Keypair, Ed25519PublicKey } from '@mysten/sui.js/keypairs/ed2551
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { Keypair, Signer } from '@mysten/sui.js/cryptography';
 import { Inject, Injectable } from '@nestjs/common';
-import { ILeaderboard, ISprint } from './leaderboard/ILeaderboard';
-import { IAuthManager, IAuthRecord, IAuthSession } from './auth/IAuthManager';
+import { ILeaderboard, ISprint } from './repositories/leaderboard/ILeaderboard';
+import { IAuthManager, IAuthRecord, IAuthSession } from './repositories/auth/IAuthManager';
 import { ConfigSettings } from './config';
 import { AppLogger } from './app.logger';
 import { AuthManagerModule, ConfigSettingsModule, LeaderboardModule } from './app.module';
