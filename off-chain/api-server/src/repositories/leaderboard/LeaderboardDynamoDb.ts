@@ -88,6 +88,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
 
     async getLeaderboardScore(
         wallet: string,
+        beatmap: string = '',
         sprintId: string = '',
     ): Promise<{ wallet: string; score: number; username: string; network: string }> {
         if (!sprintId || !sprintId.length) sprintId = DEFAULT_SPRINT_KEY;
@@ -112,6 +113,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
 
     async getLeaderboardScores(
         limit: number = 100,
+        beatmap: string = '',
         sprintId: string = '',
     ): Promise<{ scores: IScore[]; network: string; fromCache: boolean }> {
         if (!sprintId || !sprintId.length) sprintId = DEFAULT_SPRINT_KEY;
@@ -148,6 +150,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         wallet: string,
         username: string,
         score: number,
+        beatmap: string = '',
         sprintId: string = '',
     ): Promise<{ score: number; username: string; network: string }> {
         if (!sprintId || !sprintId.length) sprintId = DEFAULT_SPRINT_KEY;

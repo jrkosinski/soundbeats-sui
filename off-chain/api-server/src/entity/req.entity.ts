@@ -121,9 +121,11 @@ export class GetLeaderboardDto {
     limit: number;
     @ApiProperty({ description: 'Optional unique id of sprint' })
     sprint: string;
+    @ApiProperty({ description: 'Optional address of a beatmap' })
+    beatmap: string;
 }
 
-export class LeaderboardDto {
+export class LeaderboardScoreDto {
     @ApiProperty({ description: 'The address of the wallet of the user' })
     wallet: string;
     @ApiProperty({ description: 'The total score of the users' })
@@ -131,12 +133,14 @@ export class LeaderboardDto {
     @ApiProperty({ description: 'The username of the user' })
     username: number;
     @ApiProperty({ description: 'Optional unique id of sprint' })
-    sprint: string;
+    sprint?: string;
+    @ApiProperty({ description: 'Optional address of a beatmap' })
+    beatmap?: string;
 }
 
 export class GetLeaderboardResponseDto extends ResponseDtoBase {
     @ApiProperty({ description: 'The total score of each user' })
-    scores: LeaderboardDto[];
+    scores: LeaderboardScoreDto[];
 }
 
 export class AddLeaderboardDto {
@@ -157,6 +161,10 @@ export class AddLeaderboardV2Dto {
     score: number;
     @ApiProperty({ description: 'The present username of the user being added' })
     username: string;
+    @ApiProperty({ description: 'Optional unique id of sprint' })
+    sprint: string;
+    @ApiProperty({ description: 'Optional address of a beatmap' })
+    beatmap: string;
 }
 
 export class AddLeaderboardResponseDto extends ResponseDtoBase {

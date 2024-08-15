@@ -62,7 +62,7 @@ export class LeaderboardController {
         const logString = `GET /api/v2/leaderboard ${JSON.stringify(query)}`;
         this.logger.log(logString);
         try {
-            let { wallet, limit, sprint } = query;
+            let { wallet, limit, sprint, beatmap } = query;
             if (!wallet || wallet == '') {
                 wallet = null;
             }
@@ -71,9 +71,9 @@ export class LeaderboardController {
             }
             let output = null;
             if (wallet && wallet.length) {
-                output = await this.leaderboardService.getLeaderboardScore(wallet, sprint);
+                output = await this.leaderboardService.getLeaderboardScore(wallet, beatmap, sprint);
             } else {
-                output = await this.leaderboardService.getLeaderboardScores(limit, sprint);
+                output = await this.leaderboardService.getLeaderboardScores(limit, beatmap, sprint);
             }
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
@@ -88,7 +88,7 @@ export class LeaderboardController {
     async addLeaderboardScore(@Body() body: AddLeaderboardV2Dto): Promise<AddLeaderboardResponseDto> {
         const logString = `POST /api/v2/leaderboard ${JSON.stringify(body)}`;
         this.logger.log(logString);
-        const { score, wallet } = body;
+        const { score, wallet, beatmap } = body;
 
         if (!score || score <= 0) {
             this.returnError(logString, 400, 'score cannot be null, zero or negative');
@@ -101,7 +101,7 @@ export class LeaderboardController {
         }
 
         try {
-            const output = await this.leaderboardService.addLeaderboardScore(wallet, score);
+            const output = await this.leaderboardService.addLeaderboardScore(wallet, score, beatmap);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
@@ -109,7 +109,7 @@ export class LeaderboardController {
         }
     }
 
-    @ApiOperation({ summary: 'Add to a user score on the leaderboard' })
+    @ApiOperation({ summary: 'Get leaderboard data for a specific sprint' })
     @Get('/api/v2/sprint')
     async getLeaderboardSprint(@Body() query: GetLeaderboardSprintDto): Promise<GetLeaderboardSprintResponseDto> {
         const logString = `GET /api/v2/sprint ${JSON.stringify(query)}`;

@@ -15,7 +15,11 @@ export class LeaderboardMock implements ILeaderboard {
         this.config = configSettings;
     }
 
-    async getLeaderboardScore(wallet: string, sprintId: string = ""): Promise<{ wallet: string, username: string, score: number, network: string }> {
+    async getLeaderboardScore(
+        wallet: string,
+        beatmap: string = '',
+        sprintId: string = ''
+    ): Promise<{ wallet: string, username: string, score: number, network: string }> {
         const output = { wallet, score: 0, username: '', network: this.config.suiNetwork };
 
         if (this.leaderboardMap.has(wallet))
@@ -24,7 +28,11 @@ export class LeaderboardMock implements ILeaderboard {
         return output;
     }
 
-    async getLeaderboardScores(limit: number = 100, sprintId: string = ""): Promise<{ scores: { wallet: string, username: string, score: number }[], network: string }> {
+    async getLeaderboardScores(
+        limit: number = 100,
+        beatmap: string = '',
+        sprintId: string = ''
+    ): Promise<{ scores: { wallet: string, username: string, score: number }[], network: string }> {
         let output = { scores: [], network: this.config.suiNetwork };
 
         this.leaderboardMap.forEach((value: number, key: string) => {
@@ -41,7 +49,13 @@ export class LeaderboardMock implements ILeaderboard {
         return output;
     }
 
-    async addLeaderboardScore(wallet: string, username: string, score: number, sprintId: string = ""): Promise<{ score: number, network: string }> {
+    async addLeaderboardScore(
+        wallet: string,
+        username: string,
+        score: number,
+        beatmap: string = '',
+        sprintId: string = ''
+    ): Promise<{ score: number, network: string }> {
         const output = { score: 0, network: this.config.suiNetwork, username: '' };
 
         if (this.leaderboardMap.has(wallet))

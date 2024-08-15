@@ -45,6 +45,7 @@ export class LeaderboardService {
      */
     async getLeaderboardScore(
         wallet: string,
+        beatmap?: string,
         sprint: string | null | 'current' | '' = null,
     ): Promise<{
         wallet: string;
@@ -52,7 +53,7 @@ export class LeaderboardService {
         username: string;
         network: string;
     }> {
-        return await this.leaderboard.getLeaderboardScore(wallet, sprint);
+        return await this.leaderboard.getLeaderboardScore(wallet, beatmap, sprint);
     }
 
     /**
@@ -65,12 +66,13 @@ export class LeaderboardService {
      */
     async getLeaderboardScores(
         limit: number = 0,
+        beatmap?: string,
         sprint: string | null | 'current' | '' = null,
     ): Promise<{
         scores: { wallet: string; username: string; score: number }[];
         network: string;
     }> {
-        return await this.leaderboard.getLeaderboardScores(limit, sprint);
+        return await this.leaderboard.getLeaderboardScores(limit, beatmap, sprint);
     }
 
     /**
@@ -84,6 +86,7 @@ export class LeaderboardService {
     async addLeaderboardScore(
         authId: string,
         score: number,
+        beatmap: string,
         sprint: string | null | 'current' | '' = null,
     ): Promise<{ score: number; network: string }> {
         const user = await this.getAccountFromLogin(authId);
@@ -91,7 +94,7 @@ export class LeaderboardService {
         if (user) {
             username = user.username;
         }
-        return await this.leaderboard.addLeaderboardScore(authId, username, score, sprint);
+        return await this.leaderboard.addLeaderboardScore(authId, username, score, beatmap, sprint);
     }
 
     /**

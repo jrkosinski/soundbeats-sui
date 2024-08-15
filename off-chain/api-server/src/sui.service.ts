@@ -373,7 +373,7 @@ export class SuiService {
         username: string;
         network: string;
     }> {
-        return await this.leaderboard.getLeaderboardScore(wallet, sprint);
+        return await this.leaderboard.getLeaderboardScore(wallet, '', sprint);
     }
 
     /**
@@ -391,7 +391,7 @@ export class SuiService {
         scores: { wallet: string; username: string; score: number }[];
         network: string;
     }> {
-        return await this.leaderboard.getLeaderboardScores(limit, sprint);
+        return await this.leaderboard.getLeaderboardScores(limit, '', sprint);
     }
 
     /**
@@ -412,7 +412,7 @@ export class SuiService {
         if (user) {
             username = user.username;
         }
-        return await this.leaderboard.addLeaderboardScore(authId, username, score, sprint);
+        return await this.leaderboard.addLeaderboardScore(authId, username, score, null, sprint);
     }
 
     /**
