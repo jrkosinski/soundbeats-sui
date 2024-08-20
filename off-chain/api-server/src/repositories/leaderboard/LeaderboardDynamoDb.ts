@@ -2,6 +2,7 @@ import { ILeaderboard, ISprint } from './ILeaderboard';
 import { IDynamoResult } from '../dataAccess/IDynamoResult';
 import { Config, IConfigSettings } from 'src/config';
 import { DynamoDbAccess } from '../dataAccess/DynamoDbAccess';
+import { raw } from 'express';
 
 const DEFAULT_SPRINT_KEY = 'default';
 const GSI_SPRINT_NAME = 'GSI_SPRINT';
@@ -172,10 +173,6 @@ export class LeaderboardDynamoDb implements ILeaderboard {
     }
 
     async getLeaderboardUniqueIds(): Promise<string[]> {
-        const rawValues = await this._scanForScores();
-        const filtered = rawValues.map(r => r.identifier);
-        const unique = filtered.filter((e, i, arr) => arr.indexOf(e) == i);
-
         return (await this._scanForScores()).map(
             r => r.identifier
         ).filter((e, i, arr) => arr.indexOf(e) == i);
@@ -185,6 +182,19 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         return (await this.getLeaderboardUniqueIds(
         )).filter(e => e.startsWith('beatmap:')
         ).map(e => e.substring('beatmap:'.length));
+    }
+
+    async getBeatmapUniqueUsers(): Promise<{ [key: string]: number }> {
+        const rawValues = await this._scanForScores();
+        const uniqueIds = rawValues.map(r => r.identifier)
+            .filter(e => e.startsWith('beatmap:'))
+            .map(e => e.substring('beatmap:'.length));
+
+        const output: { [key: string]: number } = {};
+        for (const id of uniqueIds) {
+            output[id] = (rawValues.filter(r => r.identifier === `beatmap:${id}`)).length;
+        }
+        return output;
     }
 
     async addLeaderboardScore(
