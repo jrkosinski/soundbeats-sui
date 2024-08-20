@@ -19,7 +19,7 @@ export interface ILeaderboard {
         wallet: string,
         beatmap: string,
         sprintId: string
-    ): Promise<{ user: string, username: string, score: number, network: string }>;
+    ): Promise<{ wallet: string, username: string, score: number, network: string }>;
 
     /**
      * Gets a list of scores for the given leaderboard. If no sprint is specified, gets
@@ -32,7 +32,7 @@ export interface ILeaderboard {
     getLeaderboardScores(
         beatmap: string,
         limit: number,
-    ): Promise<{ scores: { user: string, username: string, score: number }[], network: string }>
+    ): Promise<{ scores: { wallet: string, username: string, score: number }[], network: string }>
 
     /**
      * Accumulates the given score to the specified wallet.

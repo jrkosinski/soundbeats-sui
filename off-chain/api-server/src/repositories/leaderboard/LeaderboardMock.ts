@@ -19,8 +19,8 @@ export class LeaderboardMock implements ILeaderboard {
         wallet: string,
         beatmap: string = '',
         sprintId: string = ''
-    ): Promise<{ user: string, username: string, score: number, network: string }> {
-        const output = { user: wallet, score: 0, username: '', network: this.config.suiNetwork };
+    ): Promise<{ wallet: string, username: string, score: number, network: string }> {
+        const output = { wallet: wallet, score: 0, username: '', network: this.config.suiNetwork };
 
         if (this.leaderboardMap.has(wallet))
             output.score = this.leaderboardMap.get(wallet);
@@ -31,11 +31,11 @@ export class LeaderboardMock implements ILeaderboard {
     async getLeaderboardScores(
         beatmap: string = '',
         limit: number = 100,
-    ): Promise<{ scores: { user: string, username: string, score: number }[], network: string }> {
+    ): Promise<{ scores: { wallet: string, username: string, score: number }[], network: string }> {
         let output = { scores: [], network: this.config.suiNetwork };
 
         this.leaderboardMap.forEach((value: number, key: string) => {
-            output.scores.push({ user: key, score: value });
+            output.scores.push({ wallet: key, score: value });
         });
 
         //sort 

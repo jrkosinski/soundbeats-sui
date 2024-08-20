@@ -48,7 +48,7 @@ export class LeaderboardService {
         beatmap?: string,
         sprint: string | null | 'current' | '' = null,
     ): Promise<{
-        user: string;
+        wallet: string;
         score: number;
         username: string;
         network: string;

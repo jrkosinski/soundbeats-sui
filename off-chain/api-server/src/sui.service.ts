@@ -368,7 +368,7 @@ export class SuiService {
         wallet: string,
         sprint: string | null | 'current' | '' = null,
     ): Promise<{
-        user: string;
+        wallet: string;
         score: number;
         username: string;
         network: string;
@@ -391,7 +391,7 @@ export class SuiService {
         scores: { wallet: string; username: string; score: number }[];
         network: string;
     }> {
-        return await this.leaderboard.getLeaderboardScores(limit, '', sprint);
+        return await this.leaderboard.getLeaderboardScores('', 10);
     }
 
     /**

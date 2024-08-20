@@ -18,7 +18,8 @@ function unixDate() {
 }
 
 interface IScore {
-    user: string;
+    wallet: string;
+    identifier: string;
     username: string;
     score: number;
 }
@@ -27,12 +28,14 @@ class LocalScoreCache {
     expirationSeconds: number;
     lastRefresh: number;
     count: number;
+    identifier: string;
     data: { [wallet: string]: IScore };
 
-    constructor(expirationSeconds: number = 600) {
+    constructor(identifier: string, expirationSeconds: number = 600) {
         this.expirationSeconds = expirationSeconds;
         this.count = 0;
         this.lastRefresh = 0;
+        this.identifier = identifier;
         this.data = {};
     }
 
@@ -54,15 +57,16 @@ class LocalScoreCache {
         if (this.data[wallet]) {
             this.data[wallet].score = score;
             this.data[wallet].username = username;
+            this.data[wallet].identifier = this.identifier;
         } else {
-            this.data[wallet] = { user: wallet, score, username };
+            this.data[wallet] = { wallet: wallet, score, username, identifier: this.identifier };
         }
     }
 
     refresh(scores: IScore[]) {
         this.lastRefresh = unixDate();
         for (let n = 0; n < scores.length; n++) {
-            this.update(scores[n].user, scores[n].username, scores[n].score);
+            this.update(scores[n].wallet, scores[n].username, scores[n].score);
         }
     }
 
@@ -73,8 +77,8 @@ class LocalScoreCache {
 }
 
 //TODO: (LOW) cache expiration seconds should come from .env
-const localScoreCache_default = new LocalScoreCache(300);
-const localScoreCache_sprint = new LocalScoreCache(300);
+const localScoreCache_default = new LocalScoreCache('', 300);
+const localScoreCache_sprint = new LocalScoreCache('sprint', 300);
 const localScoreCache_beatmaps: { [key: string]: LocalScoreCache } = {};
 
 export class LeaderboardDynamoDb implements ILeaderboard {
@@ -91,12 +95,12 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         wallet: string,
         beatmap: string = '',
         sprintId: string = '',
-    ): Promise<{ user: string; score: number; username: string; network: string }> {
+    ): Promise<{ wallet: string; score: number; username: string; network: string }> {
         if (!sprintId || !sprintId.length) sprintId = DEFAULT_SPRINT_KEY;
         if (sprintId == 'current') sprintId = await this._getActiveSprintName();
 
         const output = {
-            user: wallet,
+            wallet,
             score: 0,
             username: '',
             network: this.config.suiNetwork,
@@ -165,6 +169,22 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         }
 
         return output;
+    }
+
+    async getLeaderboardUniqueIds(): Promise<string[]> {
+        const rawValues = await this._scanForScores();
+        const filtered = rawValues.map(r => r.identifier);
+        const unique = filtered.filter((e, i, arr) => arr.indexOf(e) == i);
+
+        return (await this._scanForScores()).map(
+            r => r.identifier
+        ).filter((e, i, arr) => arr.indexOf(e) == i);
+    }
+
+    async getLeaderboardUniqueBeatmaps(): Promise<string[]> {
+        return (await this.getLeaderboardUniqueIds(
+        )).filter(e => e.startsWith('beatmap:')
+        ).map(e => e.substring('beatmap:'.length));
     }
 
     async addLeaderboardScore(
@@ -398,7 +418,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         if (beatmap?.length) {
             beatmap = beatmap.trim().toLowerCase();
             if (!localScoreCache_beatmaps[beatmap]) {
-                localScoreCache_beatmaps[beatmap] = new LocalScoreCache(300);
+                localScoreCache_beatmaps[beatmap] = new LocalScoreCache(`beatmap:${beatmap}`, 300);
             }
             cache = localScoreCache_beatmaps[beatmap];
         }
@@ -407,6 +427,8 @@ export class LeaderboardDynamoDb implements ILeaderboard {
             cache.update(wallet, username, score);
         }
     }
+
+    //data access methods
 
     async _scanForScoresBySprint(sprintId: string): Promise<IScore[]> {
         const params = {
@@ -422,7 +444,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         if (result.success) {
             const sortedItems = result.data.sort((a, b) => parseInt(b.score.N) - parseInt(a.score.N));
             return sortedItems.map((i) => {
-                return { user: i.user.S, username: i.username?.S ?? '', score: parseInt(i.score.N) };
+                return { identifier: i.identifier.S, wallet: i.user.S, username: i.username?.S ?? '', score: parseInt(i.score.N) };
             });
         }
 
@@ -444,14 +466,24 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         if (result.success) {
             const sortedItems = result.data.sort((a, b) => parseInt(b.score.N) - parseInt(a.score.N));
             return sortedItems.map((i) => {
-                return { user: i.user.S, username: i.username?.S ?? '', score: parseInt(i.score.N) };
+                return { identifier: i.identifier.S, wallet: i.user.S, username: i.username?.S ?? '', score: parseInt(i.score.N) };
             });
         }
 
         return [];
     }
 
-    //data access methods
+    async _scanForScores(): Promise<IScore[]> {
+        const result = await this.dynamoDb.scanTable(this.config.scoresTableName);
+        if (result.success) {
+            const sortedItems = result.data.sort((a, b) => parseInt(b.score.N) - parseInt(a.score.N));
+            return sortedItems.map((i) => {
+                return { identifier: i.identifier.S, wallet: i.user.S, username: i.username?.S ?? '', score: parseInt(i.score.N) };
+            });
+        }
+
+        return [];
+    }
 
     async _dataAccess_scanSprints(): Promise<IDynamoResult> {
         return await this.dynamoDb.scanTable(this.config.sprintsTableName);
