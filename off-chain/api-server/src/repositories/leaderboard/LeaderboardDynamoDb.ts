@@ -18,7 +18,7 @@ function unixDate() {
 }
 
 interface IScore {
-    wallet: string;
+    user: string;
     username: string;
     score: number;
 }
@@ -55,14 +55,14 @@ class LocalScoreCache {
             this.data[wallet].score = score;
             this.data[wallet].username = username;
         } else {
-            this.data[wallet] = { wallet, score, username };
+            this.data[wallet] = { user: wallet, score, username };
         }
     }
 
     refresh(scores: IScore[]) {
         this.lastRefresh = unixDate();
         for (let n = 0; n < scores.length; n++) {
-            this.update(scores[n].wallet, scores[n].username, scores[n].score);
+            this.update(scores[n].user, scores[n].username, scores[n].score);
         }
     }
 
@@ -91,12 +91,12 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         wallet: string,
         beatmap: string = '',
         sprintId: string = '',
-    ): Promise<{ wallet: string; score: number; username: string; network: string }> {
+    ): Promise<{ user: string; score: number; username: string; network: string }> {
         if (!sprintId || !sprintId.length) sprintId = DEFAULT_SPRINT_KEY;
         if (sprintId == 'current') sprintId = await this._getActiveSprintName();
 
         const output = {
-            wallet: wallet,
+            user: wallet,
             score: 0,
             username: '',
             network: this.config.suiNetwork,
@@ -113,12 +113,11 @@ export class LeaderboardDynamoDb implements ILeaderboard {
     }
 
     async getLeaderboardScores(
+        beatmap: string = '-',
         limit: number = 100,
-        beatmap: string = '',
-        sprintId: string = '',
     ): Promise<{ scores: IScore[]; network: string; fromCache: boolean }> {
-        if (!sprintId || !sprintId.length) sprintId = DEFAULT_SPRINT_KEY;
-        if (sprintId == 'current') sprintId = await this._getActiveSprintName();
+        //if (!sprintId || !sprintId.length) sprintId = DEFAULT_SPRINT_KEY;
+        //if (sprintId == 'current') sprintId = await this._getActiveSprintName();
 
         let output = { scores: [], network: this.config.suiNetwork, fromCache: false };
 
@@ -177,6 +176,8 @@ export class LeaderboardDynamoDb implements ILeaderboard {
     ): Promise<{ score: number; username: string; network: string }> {
         if (!sprintId || !sprintId.length) sprintId = DEFAULT_SPRINT_KEY;
         if (sprintId == 'current') sprintId = await this._getActiveSprintName();
+        if (!beatmap?.trim()?.length)
+            beatmap = '-';
 
         score = parseInt(score.toString());
 
@@ -381,6 +382,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         sprintId: string
     ) {
         let cache: LocalScoreCache = null;
+        /*
         if (sprintId == DEFAULT_SPRINT_KEY) {
             cache = localScoreCache_default;
             if (beatmap?.length) {
@@ -391,6 +393,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
                 cache = localScoreCache_sprint;
             }
         }
+        */
 
         if (beatmap?.length) {
             beatmap = beatmap.trim().toLowerCase();
@@ -419,7 +422,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         if (result.success) {
             const sortedItems = result.data.sort((a, b) => parseInt(b.score.N) - parseInt(a.score.N));
             return sortedItems.map((i) => {
-                return { wallet: i.wallet.S, username: i.username?.S ?? '', score: parseInt(i.score.N) };
+                return { user: i.user.S, username: i.username?.S ?? '', score: parseInt(i.score.N) };
             });
         }
 
@@ -427,10 +430,11 @@ export class LeaderboardDynamoDb implements ILeaderboard {
     }
 
     async _scanForScoresByBeatmap(beatmap: string): Promise<IScore[]> {
+        beatmap = `beatmap:${beatmap}`;
         const params = {
             TableName: this.config.scoresTableName,
             IndexName: GSI_BEATMAP_NAME,
-            KeyConditionExpression: 'beatmap = :beatmap_val',
+            KeyConditionExpression: 'identifier = :beatmap_val',
             ExpressionAttributeValues: {
                 ':beatmap_val': { S: beatmap },
             },
@@ -440,7 +444,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         if (result.success) {
             const sortedItems = result.data.sort((a, b) => parseInt(b.score.N) - parseInt(a.score.N));
             return sortedItems.map((i) => {
-                return { wallet: i.wallet.S, username: i.username?.S ?? '', score: parseInt(i.score.N) };
+                return { user: i.user.S, username: i.username?.S ?? '', score: parseInt(i.score.N) };
             });
         }
 
@@ -457,8 +461,8 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         return await this.dynamoDb.getItem({
             TableName: this.config.scoresTableName,
             Key: {
-                wallet: { S: wallet },
-                beatmap: { S: beatmap },
+                user: { S: wallet },
+                identifier: { S: `beatmap:${beatmap}` },
                 //sprintId: { S: sprintId },
             },
         });
@@ -474,9 +478,9 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         return await this.dynamoDb.putItem({
             TableName: this.config.scoresTableName,
             Item: {
-                wallet: { S: wallet },
+                user: { S: wallet },
                 username: { S: username },
-                beatmap: { S: beatmap },
+                identifier: { S: `beatmap:${beatmap}` },
                 sprintId: { S: sprintId },
                 score: { N: score.toString() },
             },

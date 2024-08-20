@@ -368,7 +368,7 @@ export class SuiService {
         wallet: string,
         sprint: string | null | 'current' | '' = null,
     ): Promise<{
-        wallet: string;
+        user: string;
         score: number;
         username: string;
         network: string;

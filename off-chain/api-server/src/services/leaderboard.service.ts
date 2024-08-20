@@ -48,7 +48,7 @@ export class LeaderboardService {
         beatmap?: string,
         sprint: string | null | 'current' | '' = null,
     ): Promise<{
-        wallet: string;
+        user: string;
         score: number;
         username: string;
         network: string;
@@ -65,14 +65,13 @@ export class LeaderboardService {
      * @returns GetLeaderboardResponseDto
      */
     async getLeaderboardScores(
-        limit: number = 0,
         beatmap?: string,
-        sprint: string | null | 'current' | '' = null,
+        limit: number = 0,
     ): Promise<{
         scores: { wallet: string; username: string; score: number }[];
         network: string;
     }> {
-        return await this.leaderboard.getLeaderboardScores(limit, beatmap, sprint);
+        return await this.leaderboard.getLeaderboardScores(beatmap, limit);
     }
 
     /**

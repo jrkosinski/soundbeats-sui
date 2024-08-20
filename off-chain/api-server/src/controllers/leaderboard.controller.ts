@@ -71,9 +71,9 @@ export class LeaderboardController {
             }
             let output = null;
             if (wallet && wallet.length) {
-                output = await this.leaderboardService.getLeaderboardScore(wallet, beatmap, sprint);
+                output = await this.leaderboardService.getLeaderboardScore(wallet, beatmap);
             } else {
-                output = await this.leaderboardService.getLeaderboardScores(limit, beatmap, sprint);
+                output = await this.leaderboardService.getLeaderboardScores(beatmap, limit);
             }
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
