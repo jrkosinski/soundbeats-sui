@@ -53,7 +53,11 @@ export class LeaderboardService {
         username: string;
         network: string;
     }> {
-        return await this.leaderboard.getLeaderboardScore(wallet, beatmap, sprint);
+        if (beatmap)
+            return await this.leaderboard.getLeaderboardScore(wallet, beatmap, sprint);
+        else {
+
+        }
     }
 
     /**
@@ -72,6 +76,16 @@ export class LeaderboardService {
         network: string;
     }> {
         return await this.leaderboard.getLeaderboardScores(beatmap, limit);
+    }
+
+    //TODO: comment
+    async getLeaderboardUniqueUsers(
+        limit: number = 0
+    ): Promise<{
+        items: { identifier: string; count: number }[];
+        network: string;
+    }> {
+        return await this.leaderboard.getLeaderboardUniqueUsers();
     }
 
     /**

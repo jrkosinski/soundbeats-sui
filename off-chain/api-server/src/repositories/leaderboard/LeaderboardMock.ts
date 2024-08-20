@@ -48,6 +48,10 @@ export class LeaderboardMock implements ILeaderboard {
         return output;
     }
 
+    async getLeaderboardUniqueUsers(): Promise<{ items: { identifier: string, count: number }[]; network: string; }> {
+        return null;
+    }
+
     async addLeaderboardScore(
         wallet: string,
         username: string,

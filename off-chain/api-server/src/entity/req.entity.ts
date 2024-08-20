@@ -125,6 +125,11 @@ export class GetLeaderboardDto {
     beatmap: string;
 }
 
+export class LimitDto {
+    @ApiProperty({ description: 'The max number of records to include in the response' })
+    limit: number;
+}
+
 export class LeaderboardScoreDto {
     @ApiProperty({ description: 'The address of the wallet of the user' })
     wallet: string;
@@ -141,6 +146,11 @@ export class LeaderboardScoreDto {
 export class GetLeaderboardResponseDto extends ResponseDtoBase {
     @ApiProperty({ description: 'The total score of each user' })
     scores: LeaderboardScoreDto[];
+}
+
+export class GetLeaderboardBeatmapsResponseDto extends ResponseDtoBase {
+    @ApiProperty({ description: 'The number of unique users for each beatmap' })
+    items: { identifier: string; count: number }[];
 }
 
 export class AddLeaderboardDto {

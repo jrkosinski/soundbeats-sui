@@ -19,6 +19,8 @@ import {
     AddLeaderboardResponseDto,
     GetLeaderboardSprintDto,
     GetLeaderboardSprintResponseDto,
+    LimitDto,
+    GetLeaderboardBeatmapsResponseDto,
 } from '../entity/req.entity';
 import { AppLogger } from '../app.logger';
 import { LeaderboardService } from 'src/services/leaderboard.service';
@@ -75,6 +77,24 @@ export class LeaderboardController {
             } else {
                 output = await this.leaderboardService.getLeaderboardScores(beatmap, limit);
             }
+            this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+    }
+
+    @ApiOperation({ summary: 'Get the number of unique users for each beatmap leaderboard' })
+    @Get('/api/v2/leaderboard/beatmaps')
+    async getLeaderboardBeatmaps(@Query() query: LimitDto): Promise<GetLeaderboardBeatmapsResponseDto> {
+        const logString = `GET /api/v2/leaderboard/beatmaps ${JSON.stringify(query)}`;
+        this.logger.log(logString);
+        try {
+            let { limit } = query;
+            if (!limit) {
+                limit = LEADERBOARD_DEFAULT_LIMIT;
+            }
+            let output = await this.leaderboardService.getLeaderboardUniqueUsers();
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {

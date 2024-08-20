@@ -118,7 +118,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
     }
 
     async getLeaderboardScores(
-        beatmap: string = '-',
+        beatmap: string = null,
         limit: number = 100,
     ): Promise<{ scores: IScore[]; network: string; fromCache: boolean }> {
         //if (!sprintId || !sprintId.length) sprintId = DEFAULT_SPRINT_KEY;
@@ -126,47 +126,76 @@ export class LeaderboardDynamoDb implements ILeaderboard {
 
         let output = { scores: [], network: this.config.suiNetwork, fromCache: false };
 
-        /*
-        //if default, get from local cache
-        if (sprintId == DEFAULT_SPRINT_KEY) {
-            const cache = await this._getScoresFromCache(localScoreCache_default, beatmap, DEFAULT_SPRINT_KEY, limit);
-            output.scores = cache.scores;
-            output.fromCache = cache.fromCache;
-        } else {
-            output.fromCache = false;
-
-            //check: is it current sprint?
-            if (await this._isCurrentSprint(sprintId)) {
-                const cache = await this._getScoresFromCache(localScoreCache_sprint, beatmap, sprintId, limit);
+        if (!beatmap) {
+            output.scores = await this.getUsersTotalScores();
+        }
+        else {
+            /*
+            //if default, get from local cache
+            if (sprintId == DEFAULT_SPRINT_KEY) {
+                const cache = await this._getScoresFromCache(localScoreCache_default, beatmap, DEFAULT_SPRINT_KEY, limit);
                 output.scores = cache.scores;
                 output.fromCache = cache.fromCache;
             } else {
+                output.fromCache = false;
+    
+                //check: is it current sprint?
+                if (await this._isCurrentSprint(sprintId)) {
+                    const cache = await this._getScoresFromCache(localScoreCache_sprint, beatmap, sprintId, limit);
+                    output.scores = cache.scores;
+                    output.fromCache = cache.fromCache;
+                } else {
+                    //default: scan table for scores
+                    output.scores = await this._scanForScoresBySprint(sprintId);
+    
+                    //sort and limit
+                    output.scores.sort((a, b) => parseInt(b.score.N) - parseInt(a.score.N)).slice(0, limit);
+                }
+            }
+            */
+
+            const found: boolean = false;
+            const cache: LocalScoreCache = beatmap?.length ?
+                localScoreCache_beatmaps[beatmap] :
+                localScoreCache_default;
+
+            if (cache) {
+                const cacheData = await this._getScoresFromCache(cache, beatmap, DEFAULT_SPRINT_KEY, limit);
+                output.scores = cacheData.scores;
+                output.fromCache = cacheData.fromCache;
+            }
+
+            if (!cache) {
                 //default: scan table for scores
-                output.scores = await this._scanForScoresBySprint(sprintId);
+                output.scores = await this._scanForScoresByBeatmap(beatmap);
 
                 //sort and limit
                 output.scores.sort((a, b) => parseInt(b.score.N) - parseInt(a.score.N)).slice(0, limit);
             }
         }
-        */
 
-        const found: boolean = false;
-        const cache: LocalScoreCache = beatmap?.length ?
-            localScoreCache_beatmaps[beatmap] :
-            localScoreCache_default;
-
-        if (cache) {
-            const cacheData = await this._getScoresFromCache(cache, beatmap, DEFAULT_SPRINT_KEY, limit);
-            output.scores = cacheData.scores;
-            output.fromCache = cacheData.fromCache;
+        if (limit && output.scores.length > limit) {
+            output.scores = output.scores.slice(0, limit);
         }
 
-        if (!cache) {
-            //default: scan table for scores
-            output.scores = await this._scanForScoresByBeatmap(beatmap);
+        return output;
+    }
 
-            //sort and limit
-            output.scores.sort((a, b) => parseInt(b.score.N) - parseInt(a.score.N)).slice(0, limit);
+    async getLeaderboardUniqueUsers(): Promise<{ items: { identifier: string, count: number }[]; network: string; }> {
+        const rawValues = await this._scanForScores();
+        const uniqueIds = rawValues.map(r => r.identifier)
+            .filter(e => e.startsWith('beatmap:'))
+            .map(e => e.substring('beatmap:'.length)
+            ).filter((e, i, arr) => arr.indexOf(e) == i);
+
+        const output: { items: { identifier: string, count: number }[], network: string } =
+            { items: [], network: this.network };
+
+        for (const id of uniqueIds) {
+            output.items.push({
+                identifier: id,
+                count: (rawValues.filter(r => r.identifier === `beatmap:${id}`)).length
+            });
         }
 
         return output;
@@ -181,20 +210,23 @@ export class LeaderboardDynamoDb implements ILeaderboard {
     async getLeaderboardUniqueBeatmaps(): Promise<string[]> {
         return (await this.getLeaderboardUniqueIds(
         )).filter(e => e.startsWith('beatmap:')
-        ).map(e => e.substring('beatmap:'.length));
+        ).map(e => e.substring('beatmap:'.length)
+        ).filter((e, i, arr) => arr.indexOf(e) == i);
     }
 
-    async getBeatmapUniqueUsers(): Promise<{ [key: string]: number }> {
+    async getUsersTotalScores(): Promise<{ wallet: string, username: string, score: number }[]> {
         const rawValues = await this._scanForScores();
-        const uniqueIds = rawValues.map(r => r.identifier)
-            .filter(e => e.startsWith('beatmap:'))
-            .map(e => e.substring('beatmap:'.length));
+        const uniqueUserIds = rawValues.map(r => r.wallet)
+            .filter((e, i, arr) => arr.indexOf(e) == i);
 
-        const output: { [key: string]: number } = {};
-        for (const id of uniqueIds) {
-            output[id] = (rawValues.filter(r => r.identifier === `beatmap:${id}`)).length;
-        }
-        return output;
+        return uniqueUserIds.map(id => {
+            return {
+                wallet: id,
+                username: rawValues.find(i => i.wallet === id).username,
+                score: rawValues.filter(item => item.wallet === id)
+                    .reduce((sum, current) => sum + current.score, 0)
+            }
+        });
     }
 
     async addLeaderboardScore(

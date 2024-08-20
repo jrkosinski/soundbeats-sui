@@ -81,4 +81,7 @@ export interface ILeaderboard {
      * @param limit Max number of records to return; <= 0 for unlimited
      */
     getSprints(limit: number): Promise<ISprint[]>;
+
+    //TODO: comment
+    getLeaderboardUniqueUsers(): Promise<{ items: { identifier: string, count: number }[]; network: string; }>;
 }
