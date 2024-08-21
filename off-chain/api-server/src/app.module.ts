@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { LeaderboardController } from './controllers/leaderboard.controller';
 import { TokenController } from './controllers/tokens.controller';
+import { SettingsController } from './controllers/settings.controller';
 import { AppService } from './app.service';
 import { AuthManagerDynamoDb } from './repositories/auth/AuthManagerDynamoDb';
 import { IAuthManager } from './repositories/auth/IAuthManager';
@@ -84,7 +85,7 @@ export class ConfigSettingsModule {
         ConfigSettingsModule.register(),
         LeaderboardModule.register()
     ],
-    controllers: [AppController, LeaderboardController, TokenController, AuthController],
+    controllers: [AppController, LeaderboardController, TokenController, AuthController, SettingsController],
     providers: [AppService, SuiService, LeaderboardService, TokenService, AuthService],
 })
 
