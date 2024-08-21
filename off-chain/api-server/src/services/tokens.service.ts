@@ -283,7 +283,7 @@ export class TokenService {
      */
     async getBeatsNfts(wallet: string): Promise<{ nfts: any[]; network: string }> {
         const output: {
-            nfts: { name: string; url: string }[];
+            nfts: { name: string; url: string, address: string }[];
             network: string;
         } = {
             nfts: [],
@@ -303,7 +303,10 @@ export class TokenService {
 
                 //only add if name is unique
                 if (!output.nfts.some((nft) => nft.name == nftName)) {
-                    output.nfts.push({ name: nftName, url: nftUrl });
+                    output.nfts.push({
+                        name: nftName, url: nftUrl,
+                        address: nft.data.objectId
+                    });
                 }
             }
         }
@@ -325,6 +328,7 @@ export class TokenService {
                 title: string;
                 artist: string;
                 beatmapJson: string;
+                address: string;
             }[];
             network: string;
         } = { nfts: [], network: this.network };
@@ -346,6 +350,7 @@ export class TokenService {
                     artist: metadata.artist ?? '',
                     title: metadata.title ?? '',
                     beatmapJson: metadata.beatmap ?? '',
+                    address: nft.data.objectId
                 });
             }
         }
@@ -595,6 +600,8 @@ export class TokenService {
                 let packageId: string = '';
                 if (nftType.toLowerCase() == 'beats_nft') packageId = this.config.beatsNftPackageId;
                 if (nftType.toLowerCase() == 'beatmaps_nft') packageId = this.config.beatmapsNftPackageId;
+
+                console.log(response.data);
 
                 //get objects which are the named NFTs
                 const beatsNfts = response.data.filter((o) => {

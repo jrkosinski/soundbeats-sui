@@ -73,11 +73,13 @@ export class GetTokenBalanceResponseDto extends ResponseDtoBase {
 }
 
 export class BeatsNftDto {
+    address: string;
     name: string;
     url: string;
 }
 
 export class BeatmapsNftDto {
+    address: string;
     username: string;
     title: string;
     artist: string;
