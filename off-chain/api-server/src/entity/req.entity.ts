@@ -55,6 +55,10 @@ export class MintNftResponseDto extends ResponseDtoBase {
     signature: string;
     @ApiProperty({ description: 'The list of NFT addresses minted' })
     addresses: string[];
+    @ApiProperty({ description: 'True if the mint succeeded' })
+    success: boolean;
+    @ApiProperty({ description: 'Error message (if failed)' })
+    message: string;
 }
 
 export class RequestNFTResponseDto extends ResponseDtoBase {
@@ -65,6 +69,10 @@ export class RequestNFTResponseDto extends ResponseDtoBase {
 export class MintTokenResponseDto extends ResponseDtoBase {
     @ApiProperty({ description: 'The signature of the transaction' })
     signature: string;
+    @ApiProperty({ description: 'True if the mint succeeded' })
+    success: boolean;
+    @ApiProperty({ description: 'Error message (if failed)' })
+    message: string;
 }
 
 export class GetTokenBalanceResponseDto extends ResponseDtoBase {
@@ -310,4 +318,4 @@ export class GetUserOAuthDto {
     nonceToken: string;
 }
 
-export class GetUserOAuthResponseDto extends GetAccountResponseDto { }
+export class GetUserOAuthResponseDto extends GetAccountResponseDto {}

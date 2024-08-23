@@ -40,7 +40,7 @@ export class TokenService {
 
     constructor(
         @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
-        @Inject('AuthManagerModule') authManagerModule: AuthManagerModule
+        @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
     ) {
         this.config = configSettingsModule.get();
 
@@ -175,49 +175,71 @@ export class TokenService {
         beatmapJson: string,
         imageUrl: string,
         quantity: number,
-    ): Promise<{ signature: string; addresses: string[]; network: string }> {
-        //mint nft to recipient
-        const tx = new TransactionBlock();
+    ): Promise<{
+        signature: string;
+        addresses: string[];
+        network: string;
+        message: string;
+        success: boolean;
+    }> {
+        try {
+            //mint nft to recipient
+            const tx = new TransactionBlock();
 
-        const metadata = {
-            beatmap: beatmapJson,
-            username: username,
-            title: title,
-            artist: artist,
-        };
+            const metadata = {
+                beatmap: beatmapJson,
+                username: username,
+                title: title,
+                artist: artist,
+            };
 
-        tx.moveCall({
-            target: `${this.config.beatmapsNftPackageId}::beatmaps_nft::mint`,
-            arguments: [
-                tx.pure(this.beatmapsNftOwnerCap),
-                tx.pure(JSON.stringify(metadata)),
-                tx.pure(imageUrl),
-                tx.pure(recipient),
-                tx.pure(quantity),
-            ],
-        });
+            tx.moveCall({
+                target: `${this.config.beatmapsNftPackageId}::beatmaps_nft::mint`,
+                arguments: [
+                    tx.pure(this.beatmapsNftOwnerCap),
+                    tx.pure(JSON.stringify(metadata)),
+                    tx.pure(imageUrl),
+                    tx.pure(recipient),
+                    tx.pure(quantity),
+                ],
+            });
 
-        //execute tx
-        const result = await this.signer.signAndExecuteTransactionBlock({
-            transactionBlock: tx,
-            options: {
-                showEffects: true,
-                showEvents: true,
-                showBalanceChanges: true,
-                showObjectChanges: true,
-                showInput: true,
-            },
-        });
+            //execute tx
+            const result = await this.signer.signAndExecuteTransactionBlock({
+                transactionBlock: tx,
+                options: {
+                    showEffects: true,
+                    showEvents: true,
+                    showBalanceChanges: true,
+                    showObjectChanges: true,
+                    showInput: true,
+                },
+            });
 
-        //check results
-        if (result.effects == null) {
-            throw new Error('Fail');
+            //check results
+            if (result.effects == null) {
+                throw new Error('Fail');
+            }
+
+            const signature = result.effects.transactionDigest;
+            const addresses = result.effects.created?.map((obj) => obj.reference.objectId) ?? [];
+
+            return {
+                signature,
+                addresses,
+                network: this.network,
+                success: true,
+                message: '',
+            };
+        } catch (e) {
+            return {
+                signature: '',
+                addresses: [],
+                network: this.network,
+                success: false,
+                message: e.message,
+            };
         }
-
-        const signature = result.effects.transactionDigest;
-        const addresses = result.effects.created?.map((obj) => obj.reference.objectId) ?? [];
-
-        return { signature, addresses, network: this.network };
     }
 
     /**
@@ -227,32 +249,54 @@ export class TokenService {
      * @param amount
      * @returns
      */
-    async mintTokens(recipient: string, amount: number): Promise<{ signature: string; network: string }> {
-        //mint token to recipient
-        const tx = new TransactionBlock();
-        tx.moveCall({
-            target: `${this.config.beatsCoinPackageId}::beats::mint`,
-            arguments: [tx.pure(this.treasuryCap), tx.pure(amount), tx.pure(recipient)],
-        });
+    async mintTokens(
+        recipient: string,
+        amount: number,
+    ): Promise<{
+        signature: string;
+        network: string;
+        message: string;
+        success: boolean;
+    }> {
+        try {
+            //mint token to recipient
+            const tx = new TransactionBlock();
+            tx.moveCall({
+                target: `${this.config.beatsCoinPackageId}::beats::mint`,
+                arguments: [tx.pure(this.treasuryCap), tx.pure(amount), tx.pure(recipient)],
+            });
 
-        //execute tx
-        const result = await this.signer.signAndExecuteTransactionBlock({
-            transactionBlock: tx,
-            options: {
-                showEffects: true,
-                showEvents: true,
-                showBalanceChanges: true,
-                showObjectChanges: true,
-            },
-        });
+            //execute tx
+            const result = await this.signer.signAndExecuteTransactionBlock({
+                transactionBlock: tx,
+                options: {
+                    showEffects: true,
+                    showEvents: true,
+                    showBalanceChanges: true,
+                    showObjectChanges: true,
+                },
+            });
 
-        //check results
-        if (result.effects == null) {
-            throw new Error('Move call Failed');
+            //check results
+            if (result.effects == null) {
+                throw new Error('Move call Failed');
+            }
+
+            const signature = result.effects?.transactionDigest;
+            return {
+                signature,
+                network: this.network,
+                success: true,
+                message: '',
+            };
+        } catch (e) {
+            return {
+                signature: '',
+                network: this.network,
+                success: false,
+                message: e.message,
+            };
         }
-
-        const signature = result.effects?.transactionDigest;
-        return { signature, network: this.network };
     }
 
     /**
@@ -283,16 +327,14 @@ export class TokenService {
      */
     async getBeatsNfts(wallet: string): Promise<{ nfts: any[]; network: string }> {
         const output: {
-            nfts: { name: string; url: string, address: string }[];
+            nfts: { name: string; url: string; address: string }[];
             network: string;
         } = {
             nfts: [],
             network: this.network,
         };
 
-        const nfts = wallet ?
-            await this._getUserNFTs(wallet) :
-            await this._getAllUserNFTs();
+        const nfts = wallet ? await this._getUserNFTs(wallet) : await this._getAllUserNFTs();
 
         //get list of unique names for all NFTs owned
         for (let i = 0; i < nfts.length; i++) {
@@ -304,8 +346,9 @@ export class TokenService {
                 //only add if name is unique
                 if (!output.nfts.some((nft) => nft.name == nftName)) {
                     output.nfts.push({
-                        name: nftName, url: nftUrl,
-                        address: nft.data.objectId
+                        name: nftName,
+                        url: nftUrl,
+                        address: nft.data.objectId,
                     });
                 }
             }
@@ -333,9 +376,9 @@ export class TokenService {
             network: string;
         } = { nfts: [], network: this.network };
 
-        const nfts = wallet ?
-            await this._getUserNFTs(wallet, 'BEATMAPS_NFT') :
-            await this._getAllUserNFTs('BEATMAPS_NFT');
+        const nfts = wallet
+            ? await this._getUserNFTs(wallet, 'BEATMAPS_NFT')
+            : await this._getAllUserNFTs('BEATMAPS_NFT');
 
         //get list of unique names for all NFTs owned
         for (let i = 0; i < nfts.length; i++) {
@@ -344,13 +387,13 @@ export class TokenService {
                 let metadata: any = {};
                 try {
                     metadata = JSON.parse(nft.data.content['fields']['metadata']);
-                } catch { }
+                } catch {}
                 output.nfts.push({
                     username: metadata.username ?? '',
                     artist: metadata.artist ?? '',
                     title: metadata.title ?? '',
                     beatmapJson: metadata.beatmap ?? '',
-                    address: nft.data.objectId
+                    address: nft.data.objectId,
                 });
             }
         }
@@ -558,10 +601,9 @@ export class TokenService {
 
         try {
             const wallets = await this.authManager.getUniqueWalletAddresses();
-            const results = await Promise.all(wallets.map(a => this._getUserNFTs(a, nftType)));
+            const results = await Promise.all(wallets.map((a) => this._getUserNFTs(a, nftType)));
             output = results.flat();
-        }
-        catch (e) {
+        } catch (e) {
             this.logger.error(e.toString());
         }
 
