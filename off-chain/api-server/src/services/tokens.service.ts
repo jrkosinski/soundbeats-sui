@@ -118,42 +118,65 @@ export class TokenService {
         description: string,
         imageUrl: string,
         quantity: number,
-    ): Promise<{ signature: string; addresses: string[]; network: string }> {
-        //mint nft to recipient
-        const tx = new TransactionBlock();
-        tx.moveCall({
-            target: `${this.config.beatsNftPackageId}::beats_nft::mint`,
-            arguments: [
-                tx.pure(this.beatsNftOwnerCap),
-                tx.pure(name),
-                tx.pure(description),
-                tx.pure(imageUrl),
-                tx.pure(recipient),
-                tx.pure(quantity),
-            ],
-        });
+    ): Promise<{
+        signature: string;
+        addresses: string[];
+        network: string;
+        message: string;
+        success: boolean;
+    }> {
+        try {
+            //mint nft to recipient
+            const tx = new TransactionBlock();
+            tx.moveCall({
+                target: `${this.config.beatsNftPackageId}::beats_nft::mint`,
+                arguments: [
+                    tx.pure(this.beatsNftOwnerCap),
+                    tx.pure(name),
+                    tx.pure(description),
+                    tx.pure(imageUrl),
+                    tx.pure(recipient),
+                    tx.pure(quantity),
+                ],
+            });
 
-        //execute tx
-        const result = await this.signer.signAndExecuteTransactionBlock({
-            transactionBlock: tx,
-            options: {
-                showEffects: true,
-                showEvents: true,
-                showBalanceChanges: true,
-                showObjectChanges: true,
-                showInput: true,
-            },
-        });
+            //execute tx
+            const result = await this.signer.signAndExecuteTransactionBlock({
+                transactionBlock: tx,
+                options: {
+                    showEffects: true,
+                    showEvents: true,
+                    showBalanceChanges: true,
+                    showObjectChanges: true,
+                    showInput: true,
+                },
+            });
 
-        //check results
-        if (result.effects == null) {
-            throw new Error('Fail');
+            //check results
+            if (result.effects == null) {
+                throw new Error('Fail');
+            }
+
+            const signature = result.effects.transactionDigest;
+            const addresses = result.effects.created?.map((obj) => obj.reference.objectId) ?? [];
+
+            return {
+                signature,
+                addresses,
+                network: this.network,
+                success: true,
+                message: ''
+            };
         }
-
-        const signature = result.effects.transactionDigest;
-        const addresses = result.effects.created?.map((obj) => obj.reference.objectId) ?? [];
-
-        return { signature, addresses, network: this.network };
+        catch (e) {
+            return {
+                signature: '',
+                addresses: [],
+                network: this.network,
+                success: false,
+                message: e.message,
+            };
+        }
     }
 
     /**
@@ -387,7 +410,7 @@ export class TokenService {
                 let metadata: any = {};
                 try {
                     metadata = JSON.parse(nft.data.content['fields']['metadata']);
-                } catch {}
+                } catch { }
                 output.nfts.push({
                     username: metadata.username ?? '',
                     artist: metadata.artist ?? '',

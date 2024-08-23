@@ -127,7 +127,7 @@ export class SuiService {
         description: string,
         imageUrl: string,
         quantity: number,
-    ): Promise<{ signature: string; addresses: string[]; network: string }> {
+    ): Promise<{ signature: string; addresses: string[]; network: string, success: boolean, message: string }> {
         //mint nft to recipient
         const tx = new TransactionBlock();
         tx.moveCall({
@@ -162,7 +162,7 @@ export class SuiService {
         const signature = result.effects.transactionDigest;
         const addresses = result.effects.created?.map((obj) => obj.reference.objectId) ?? [];
 
-        return { signature, addresses, network: this.network };
+        return { signature, addresses, network: this.network, success: true, message: '' };
     }
 
     /**
@@ -184,7 +184,7 @@ export class SuiService {
         beatmapJson: string,
         imageUrl: string,
         quantity: number,
-    ): Promise<{ signature: string; addresses: string[]; network: string }> {
+    ): Promise<{ signature: string; addresses: string[]; network: string, success: boolean, message: string }> {
         //mint nft to recipient
         const tx = new TransactionBlock();
 
@@ -226,7 +226,7 @@ export class SuiService {
         const signature = result.effects.transactionDigest;
         const addresses = result.effects.created?.map((obj) => obj.reference.objectId) ?? [];
 
-        return { signature, addresses, network: this.network };
+        return { signature, addresses, network: this.network, success: true, message: '' };
     }
 
     /**
@@ -236,7 +236,7 @@ export class SuiService {
      * @param amount
      * @returns
      */
-    async mintTokens(recipient: string, amount: number): Promise<{ signature: string; network: string }> {
+    async mintTokens(recipient: string, amount: number): Promise<{ signature: string; network: string, success: boolean, message: string }> {
         //mint token to recipient
         const tx = new TransactionBlock();
         tx.moveCall({
@@ -261,7 +261,7 @@ export class SuiService {
         }
 
         const signature = result.effects?.transactionDigest;
-        return { signature, network: this.network };
+        return { signature, network: this.network, success: true, message: '' };
     }
 
     /**
