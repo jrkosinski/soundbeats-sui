@@ -73,11 +73,13 @@ export class MintTokenResponseDto extends ResponseDtoBase {
     success: boolean;
     @ApiProperty({ description: 'Error message (if failed)' })
     message: string;
+    @ApiProperty({ description: 'Current balance after new mint' })
+    balance: number; //TODO: should be BigNumber
 }
 
 export class GetTokenBalanceResponseDto extends ResponseDtoBase {
     @ApiProperty({ description: 'The balance of the wallet' })
-    balance: number;
+    balance: number; //TODO: should be BigNumber
 }
 
 export class BeatsNftDto {
@@ -318,4 +320,4 @@ export class GetUserOAuthDto {
     nonceToken: string;
 }
 
-export class GetUserOAuthResponseDto extends GetAccountResponseDto {}
+export class GetUserOAuthResponseDto extends GetAccountResponseDto { }

@@ -280,7 +280,9 @@ export class TokenService {
         network: string;
         message: string;
         success: boolean;
+        balance: number;
     }> {
+        let balance = 0;
         try {
             //mint token to recipient
             const tx = new TransactionBlock();
@@ -305,18 +307,27 @@ export class TokenService {
                 throw new Error('Move call Failed');
             }
 
+            try {
+                balance = (await this.getTokenBalance(recipient))?.balance ?? 0;
+            }
+            catch (e) {
+                this.logger.error(`Error getting balance of token for ${recipient}`, e);
+            }
+
             const signature = result.effects?.transactionDigest;
             return {
                 signature,
                 network: this.network,
                 success: true,
                 message: '',
+                balance
             };
         } catch (e) {
             return {
                 signature: '',
                 network: this.network,
                 success: false,
+                balance,
                 message: e.message,
             };
         }

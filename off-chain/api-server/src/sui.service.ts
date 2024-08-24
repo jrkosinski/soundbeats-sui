@@ -236,7 +236,13 @@ export class SuiService {
      * @param amount
      * @returns
      */
-    async mintTokens(recipient: string, amount: number): Promise<{ signature: string; network: string, success: boolean, message: string }> {
+    async mintTokens(recipient: string, amount: number): Promise<{
+        signature: string;
+        network: string,
+        success: boolean,
+        message: string,
+        balance: number
+    }> {
         //mint token to recipient
         const tx = new TransactionBlock();
         tx.moveCall({
@@ -260,8 +266,22 @@ export class SuiService {
             throw new Error('Move call Failed');
         }
 
+        let balance = 0;
+        try {
+            balance = (await this.getTokenBalance(recipient))?.balance ?? 0;
+        }
+        catch (e) {
+            this.logger.error(`Error getting balance of token for ${recipient}`, e);
+        }
+
         const signature = result.effects?.transactionDigest;
-        return { signature, network: this.network, success: true, message: '' };
+        return {
+            signature,
+            network: this.network,
+            success: true,
+            balance,
+            message: ''
+        };
     }
 
     /**
