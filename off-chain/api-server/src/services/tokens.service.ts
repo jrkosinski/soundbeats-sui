@@ -406,6 +406,7 @@ export class TokenService {
                 artist: string;
                 beatmapJson: string;
                 address: string;
+                uniqueUserCount: number;
             }[];
             network: string;
         } = { nfts: [], network: this.network };
@@ -428,6 +429,7 @@ export class TokenService {
                     title: metadata.title ?? '',
                     beatmapJson: metadata.beatmap ?? '',
                     address: nft.data.objectId,
+                    uniqueUserCount: 0
                 });
             }
         }

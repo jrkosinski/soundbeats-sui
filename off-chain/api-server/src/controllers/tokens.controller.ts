@@ -26,6 +26,7 @@ import {
 } from '../entity/req.entity';
 import { TokenService } from '../services/tokens.service';
 import { AppLogger } from '../app.logger';
+import { LeaderboardService } from 'src/services/leaderboard.service';
 
 const MAX_URL_LENGTH = 400;
 const MAX_NFT_NAME_LENGTH = 100;
@@ -39,7 +40,8 @@ export class TokenController {
 
     constructor(
         private readonly appService: AppService,
-        private readonly tokenService: TokenService
+        private readonly tokenService: TokenService,
+        private readonly leaderboardService: LeaderboardService
     ) {
         this.logger = new AppLogger('tokens.controller');
     }
@@ -190,6 +192,15 @@ export class TokenController {
 
         try {
             const output = await this.tokenService.getBeatmapsNfts(wallet);
+
+
+            const uniqueUsers = await this.leaderboardService.getLeaderboardUniqueUsers();
+
+            //get user counts 
+            for (let nft of output.nfts) {
+                nft.uniqueUserCount = (uniqueUsers.items.find(i => i.identifier === nft.address))?.count ?? 0;
+            }
+
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {

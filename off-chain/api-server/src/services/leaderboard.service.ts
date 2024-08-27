@@ -85,7 +85,8 @@ export class LeaderboardService {
         items: { identifier: string; count: number }[];
         network: string;
     }> {
-        return await this.leaderboard.getLeaderboardUniqueUsers();
+        const output = await this.leaderboard.getLeaderboardUniqueUsers();
+        return output;
     }
 
     /**
