@@ -95,6 +95,7 @@ export class BeatmapsNftDto {
     artist: string;
     beatmapJson: string;
     uniqueUserCount: number;
+    owner: string;
 }
 
 export class GetBeatsNftsResponseDto extends ResponseDtoBase {

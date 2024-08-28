@@ -431,6 +431,7 @@ export class TokenService {
                 artist: string;
                 beatmapJson: string;
                 address: string;
+                owner: string;
                 uniqueUserCount: number;
             }[];
             network: string;
@@ -454,10 +455,13 @@ export class TokenService {
                     title: metadata.title ?? '',
                     beatmapJson: metadata.beatmap ?? '',
                     address: nft.data.objectId,
-                    uniqueUserCount: 0
+                    uniqueUserCount: 0,
+                    owner: nft.owner
                 });
             }
         }
+
+        console.log(output);
         return output;
     }
 
@@ -749,6 +753,9 @@ export class TokenService {
             }
         }
 
+        for (let o of output) {
+            o.owner = wallet;
+        }
         return output;
     }
 }

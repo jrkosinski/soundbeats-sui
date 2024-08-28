@@ -41,13 +41,13 @@ export class BeatmapsDynamoDb implements IBeatmapsRepo {
 
     _mapRecord(record: any): IBeatmap {
         return {
-            address: record.address.S,
-            owner: record.owner.S,
-            timestamp: record.timestamp.N,
-            json: record.json.S,
-            username: record.username.S,
-            title: record.title.S,
-            artist: record.artist.S,
+            address: record.address?.S ?? '',
+            owner: record.owner?.S ?? '',
+            timestamp: record.timestamp?.N ?? 0,
+            json: record.json?.S ?? '',
+            username: record.username?.S ?? '',
+            title: record.title?.S ?? '',
+            artist: record.artist?.S ?? '',
         };
     }
 
