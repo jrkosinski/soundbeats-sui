@@ -497,6 +497,9 @@ export class TokenService {
             });
         }
 
+        //sort
+        output.nfts = output.nfts.sort((a, b) => (a.timestamp - b.timestamp));
+
         return output;
     }
 
