@@ -474,6 +474,8 @@ export class TokenService {
                 beatmapJson: string;
                 address: string;
                 uniqueUserCount: number;
+                owner: string;
+                timestamp: number;
             }[];
             network: string;
         } = { nfts: [], network: this.network };
@@ -489,7 +491,9 @@ export class TokenService {
                 artist: nft.artist,
                 beatmapJson: nft.json,
                 address: nft.address,
-                uniqueUserCount: 0
+                uniqueUserCount: 0,
+                owner: nft.owner,
+                timestamp: nft.timestamp
             });
         }
 
