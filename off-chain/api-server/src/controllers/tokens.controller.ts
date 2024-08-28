@@ -191,7 +191,7 @@ export class TokenController {
         const { wallet } = query;
 
         try {
-            const output = await this.tokenService.getBeatmapsNfts(wallet);
+            const output = await this.tokenService.getBeatmapsNftsFromRepo(wallet);
 
             const uniqueUsers = await this.leaderboardService.getLeaderboardUniqueUsers();
 

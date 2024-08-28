@@ -2,14 +2,8 @@ import { IBeatmapsRepo, IBeatmap } from './IBeatmaps';
 import { IDynamoResult } from '../dataAccess/IDynamoResult';
 import { Config, IConfigSettings } from 'src/config';
 import { DynamoDbAccess } from '../dataAccess/DynamoDbAccess';
-import { raw } from 'express';
-import { toBeArray } from 'ethers';
 
 const GSI_OWNER_NAME = 'GSI_OWNER';
-
-function unixDate() {
-    return Math.floor(Date.now() / 1000);
-}
 
 export class BeatmapsDynamoDb implements IBeatmapsRepo {
     network: string;
@@ -39,10 +33,7 @@ export class BeatmapsDynamoDb implements IBeatmapsRepo {
 
     async addBeatmap(beatmap: IBeatmap): Promise<void> {
         await this._dataAccess_putBeatmap(
-            beatmap.address,
-            beatmap.owner,
-            beatmap.json,
-            beatmap.timestamp
+            beatmap
         );
     }
 
@@ -53,7 +44,10 @@ export class BeatmapsDynamoDb implements IBeatmapsRepo {
             address: record.address.S,
             owner: record.owner.S,
             timestamp: record.timestamp.N,
-            json: record.json.S
+            json: record.json.S,
+            username: record.username.S,
+            title: record.title.S,
+            artist: record.artist.S,
         };
     }
 
@@ -119,19 +113,17 @@ export class BeatmapsDynamoDb implements IBeatmapsRepo {
         });
     }
 
-    private async _dataAccess_putBeatmap(
-        address: string,
-        owner: string,
-        json: string,
-        timestamp: number
-    ): Promise<IDynamoResult> {
+    private async _dataAccess_putBeatmap(beatmap: IBeatmap): Promise<IDynamoResult> {
         return await this.dynamoDb.putItem({
             TableName: this.config.beatmapsTableName,
             Item: {
-                address: { S: address },
-                owner: { S: owner },
-                json: { S: json },
-                timestamp: { N: timestamp.toString() },
+                address: { S: beatmap.address },
+                owner: { S: beatmap.owner },
+                json: { S: beatmap.json },
+                title: { S: beatmap.title },
+                username: { S: beatmap.username },
+                artist: { S: beatmap.artist },
+                timestamp: { N: beatmap.timestamp.toString() },
             },
         });
     }

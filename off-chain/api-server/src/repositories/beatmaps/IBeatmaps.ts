@@ -2,6 +2,9 @@
 export interface IBeatmap {
     address: string;
     owner: string;
+    username: string;
+    title: string;
+    artist: string;
     timestamp: number;
     json: string;
 }

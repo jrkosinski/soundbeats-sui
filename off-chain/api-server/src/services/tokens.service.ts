@@ -20,6 +20,10 @@ import { IBeatmapsRepo } from 'src/repositories/beatmaps/IBeatmaps';
 // - retest
 //TODO: logging msgs
 
+function unixDate() {
+    return Math.floor(Date.now() / 1000);
+}
+
 export const strToByteArray = (str: string): number[] => {
     const utf8Encode = new TextEncoder();
     return Array.from(utf8Encode.encode(str).values());
@@ -251,12 +255,29 @@ export class TokenService {
             const signature = result.effects.transactionDigest;
             const addresses = result.effects.created?.map((obj) => obj.reference.objectId) ?? [];
 
+            //add to beatmaps repository 
+            let message = '';
+            try {
+                await this.beatmapsRepo.addBeatmap({
+                    address: addresses[0],
+                    timestamp: unixDate(),
+                    owner: recipient,
+                    json: beatmapJson,
+                    title,
+                    artist,
+                    username,
+                });
+            }
+            catch (e) {
+                message = 'Minted successfully, but failed to add to database'
+            }
+
             return {
                 signature,
                 addresses,
                 network: this.network,
                 success: true,
-                message: '',
+                message,
             };
         } catch (e) {
             return {
@@ -437,6 +458,37 @@ export class TokenService {
                 });
             }
         }
+        return output;
+    }
+
+    async getBeatmapsNftsFromRepo(wallet: string): Promise<{ nfts: any[]; network: string }> {
+        const output: {
+            nfts: {
+                username: string;
+                title: string;
+                artist: string;
+                beatmapJson: string;
+                address: string;
+                uniqueUserCount: number;
+            }[];
+            network: string;
+        } = { nfts: [], network: this.network };
+
+        const nfts = wallet
+            ? await this.beatmapsRepo.getBeatmapsByOwner(wallet)
+            : await this.beatmapsRepo.getAllBeatmaps();
+
+        for (let nft of nfts) {
+            output.nfts.push({
+                username: nft.username,
+                title: nft.title,
+                artist: nft.artist,
+                beatmapJson: nft.json,
+                address: nft.address,
+                uniqueUserCount: 0
+            });
+        }
+
         return output;
     }
 
