@@ -193,7 +193,6 @@ export class TokenController {
         try {
             const output = await this.tokenService.getBeatmapsNfts(wallet);
 
-
             const uniqueUsers = await this.leaderboardService.getLeaderboardUniqueUsers();
 
             //get user counts 

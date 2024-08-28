@@ -12,11 +12,13 @@ import { SuiService } from './sui.service';
 import { ConfigSettings, IConfigSettings } from './config';
 import { ILeaderboard } from './repositories/leaderboard/ILeaderboard';
 import { LeaderboardDynamoDb } from './repositories/leaderboard/LeaderboardDynamoDb';
+import { BeatmapsDynamoDb } from './repositories/beatmaps/BeatmapsDynamoDb';
 import { LeaderboardMock } from './repositories/leaderboard/LeaderboardMock';
 import { LeaderboardService } from './services/leaderboard.service';
 import { TokenService } from './services/tokens.service';
 import { AuthService } from './services/auth.service';
 import { AuthController } from './controllers/auth.controller';
+import { IBeatmapsRepo } from './repositories/beatmaps/IBeatmaps';
 
 @Module({})
 export class AuthManagerModule {
@@ -59,6 +61,26 @@ export class LeaderboardModule {
 }
 
 @Module({})
+export class BeatmapsModule {
+    static register(): DynamicModule {
+        let provider = {
+            provide: 'BeatmapsModule',
+            useClass: BeatmapsModule,
+        };
+
+        return {
+            module: BeatmapsModule,
+            providers: [provider],
+            exports: [provider],
+        };
+    }
+
+    get(config: IConfigSettings): IBeatmapsRepo {
+        return config.testMode ? new BeatmapsDynamoDb(config) : new BeatmapsDynamoDb(config);
+    }
+}
+
+@Module({})
 export class ConfigSettingsModule {
     static register(): DynamicModule {
         let provider = {
@@ -83,7 +105,8 @@ export class ConfigSettingsModule {
         ConfigModule.forRoot(),
         AuthManagerModule.register(),
         ConfigSettingsModule.register(),
-        LeaderboardModule.register()
+        LeaderboardModule.register(),
+        BeatmapsModule.register()
     ],
     controllers: [AppController, LeaderboardController, TokenController, AuthController, SettingsController],
     providers: [AppService, SuiService, LeaderboardService, TokenService, AuthService],

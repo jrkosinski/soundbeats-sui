@@ -92,6 +92,7 @@ export interface IConfigSettings {
     get coinCap(): string;
     get sprintsTableName(): string;
     get scoresTableName(): string;
+    get beatmapsTableName(): string;
     get authTableName(): string;
     get authSessionTableName(): string;
     get allowedCorsOrigin(): string;
@@ -144,6 +145,9 @@ export class ConfigSettings implements IConfigSettings {
     }
     get scoresTableName(): string {
         return process.env.DBTABLE_NAME_SCORES;
+    }
+    get beatmapsTableName(): string {
+        return process.env.DBTABLE_NAME_BEATMAPS;
     }
     get authTableName(): string {
         return process.env.DBTABLE_NAME_AUTH || "auth-dev";
@@ -227,6 +231,9 @@ export class TestConfigSettings implements IConfigSettings {
         return '';
     }
     get authTableName(): string {
+        return '';
+    }
+    get beatmapsTableName(): string {
         return '';
     }
     get authSessionTableName(): string {

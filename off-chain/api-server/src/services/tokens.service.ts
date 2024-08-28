@@ -9,8 +9,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IAuthManager, IAuthRecord } from '../repositories/auth/IAuthManager';
 import { ConfigSettings } from '../config';
 import { AppLogger } from '../app.logger';
-import { AuthManagerModule, ConfigSettingsModule } from '../app.module';
+import { AuthManagerModule, ConfigSettingsModule, BeatmapsModule } from '../app.module';
 import { AuthService } from './auth.service';
+import { IBeatmapsRepo } from 'src/repositories/beatmaps/IBeatmaps';
 
 //TODO: replace 'success' with 'completed'
 // - delete table
@@ -35,11 +36,13 @@ export class TokenService {
     network: string;
     logger: AppLogger;
     authManager: IAuthManager;
+    beatmapsRepo: IBeatmapsRepo;
     config: ConfigSettings;
     noncesToWallets: { [key: string]: string };
 
     constructor(
         @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
+        @Inject('BeatmapsModule') beatmapsModule: BeatmapsModule,
         @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
     ) {
         this.config = configSettingsModule.get();
@@ -54,6 +57,7 @@ export class TokenService {
         this.provider = this._createRpcProvider(this.network);
         this.signer = new RawSigner(this.keypair, this.provider);
         this.authManager = authManagerModule.get(this.config);
+        this.beatmapsRepo = beatmapsModule.get(this.config);
 
         //get initial addresses from config setting
         this.treasuryCap = this.config.treasuryCap;
@@ -241,7 +245,7 @@ export class TokenService {
 
             //check results
             if (result.effects == null) {
-                throw new Error('Fail');
+                throw new Error('Failure to detect changes to blockchain');
             }
 
             const signature = result.effects.transactionDigest;
