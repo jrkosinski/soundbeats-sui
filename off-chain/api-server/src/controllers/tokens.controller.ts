@@ -10,6 +10,7 @@ import {
     UnauthorizedException,
     InternalServerErrorException,
     Param,
+    NotFoundException,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { AppService } from '../app.service';
@@ -60,6 +61,8 @@ export class TokenController {
                 throw new BadRequestException(message);
             case 401:
                 throw new UnauthorizedException(message);
+            case 404:
+                throw new NotFoundException(message);
             case 500:
                 throw new InternalServerErrorException(message);
         }
