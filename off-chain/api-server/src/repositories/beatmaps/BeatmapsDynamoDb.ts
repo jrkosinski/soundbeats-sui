@@ -4,6 +4,7 @@ import { Config, IConfigSettings } from 'src/config';
 import { DynamoDbAccess } from '../dataAccess/DynamoDbAccess';
 
 const GSI_OWNER_NAME = 'GSI_OWNER';
+const GSI_BEATMAP_ADDRESS = 'GSI_BEATMAP_ADDRESS';
 
 export class BeatmapsDynamoDb implements IBeatmapsRepo {
     network: string;
@@ -20,11 +21,7 @@ export class BeatmapsDynamoDb implements IBeatmapsRepo {
     }
 
     async getBeatmap(address: string): Promise<IBeatmap> {
-        const record = await this._dataAccess_getBeatmap(address);
-
-        return (record.success && record.data) ?
-            this._mapRecord(record.data) :
-            null;
+        return await this._dataAccess_getBeatmap(address);
     }
 
     async getBeatmapsByOwner(ownerAddress: string): Promise<IBeatmap[]> {
@@ -76,7 +73,7 @@ export class BeatmapsDynamoDb implements IBeatmapsRepo {
     private async _scanForBeatmapsByAddress(address: string): Promise<IBeatmap[]> {
         const params = {
             TableName: this.config.beatmapsTableName,
-            //IndexName: GSI_OWNER_NAME,
+            IndexName: GSI_BEATMAP_ADDRESS,
             KeyConditionExpression: 'address = :address_val',
             ExpressionAttributeValues: {
                 ':address_val': { S: address },
@@ -104,13 +101,19 @@ export class BeatmapsDynamoDb implements IBeatmapsRepo {
         return [];
     }
 
-    private async _dataAccess_getBeatmap(address: string): Promise<IDynamoResult> {
+    private async _dataAccess_getBeatmap(address: string): Promise<IBeatmap> {
+
+        const beatmaps = await this._scanForBeatmapsByAddress(address);
+        return beatmaps?.length ? beatmaps[0] : null;
+        /*
         return await this.dynamoDb.getItem({
             TableName: this.config.beatmapsTableName,
             Key: {
-                address: { S: address }
+                address: { S: address },
+                owner: {}
             },
         });
+        */
     }
 
     private async _dataAccess_putBeatmap(beatmap: IBeatmap): Promise<IDynamoResult> {

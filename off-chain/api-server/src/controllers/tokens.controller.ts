@@ -9,6 +9,7 @@ import {
     BadRequestException,
     UnauthorizedException,
     InternalServerErrorException,
+    Param,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { AppService } from '../app.service';
@@ -199,6 +200,22 @@ export class TokenController {
             for (let nft of output.nfts) {
                 nft.uniqueUserCount = (uniqueUsers.items.find(i => i.identifier === nft.address))?.count ?? 0;
             }
+
+            this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
+            return output;
+        } catch (e) {
+            this.returnError(logString, 500, e);
+        }
+    }
+
+    @ApiOperation({ summary: 'Gets a specific beatmap NFT' })
+    @Get('/api/v2/nfts/beatmaps/:id')
+    async getBeatmapsNft(@Param('id') address): Promise<GetBeatmapsNftsResponseDto> {
+        const logString = `GET /api/v2/nfts/beatmaps/${address}`;
+        this.logger.log(logString);
+
+        try {
+            const output = await this.tokenService.getBeatmapsNftByAddress(address);
 
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;

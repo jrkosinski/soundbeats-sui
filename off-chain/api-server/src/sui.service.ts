@@ -370,7 +370,7 @@ export class SuiService {
                     username: metadata.username ?? '',
                     artist: metadata.artist ?? '',
                     title: metadata.title ?? '',
-                    beatmapJson: metadata.beatmap ?? '',
+                    beatmapJson: '',
                 });
             }
         }

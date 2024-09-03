@@ -453,7 +453,7 @@ export class TokenService {
                     username: metadata.username ?? '',
                     artist: metadata.artist ?? '',
                     title: metadata.title ?? '',
-                    beatmapJson: metadata.beatmap ?? '',
+                    beatmapJson: '',
                     address: nft.data.objectId,
                     uniqueUserCount: 0,
                     owner: nft.owner
@@ -483,6 +483,47 @@ export class TokenService {
         const nfts = wallet
             ? await this.beatmapsRepo.getBeatmapsByOwner(wallet)
             : await this.beatmapsRepo.getAllBeatmaps();
+
+        for (let nft of nfts) {
+            output.nfts.push({
+                username: nft.username,
+                title: nft.title,
+                artist: nft.artist,
+                beatmapJson: '',
+                address: nft.address,
+                uniqueUserCount: 0,
+                owner: nft.owner,
+                timestamp: nft.timestamp
+            });
+        }
+
+        //sort
+        output.nfts = output.nfts.sort((a, b) => (a.timestamp - b.timestamp));
+
+        return output;
+    }
+
+    async getBeatmapsNftByAddress(address: string): Promise<{ nfts: any[]; network: string }> {
+        const output: {
+            nfts: {
+                username: string;
+                title: string;
+                artist: string;
+                beatmapJson: string;
+                address: string;
+                uniqueUserCount: number;
+                owner: string;
+                timestamp: number;
+            }[];
+            network: string;
+        } = { nfts: [], network: this.network };
+
+        let nfts = address
+            ? [await this.beatmapsRepo.getBeatmap(address)]
+            : await this.beatmapsRepo.getAllBeatmaps();
+
+        if (nfts.length == 1 && !nfts[0])
+            nfts = [];
 
         for (let nft of nfts) {
             output.nfts.push({

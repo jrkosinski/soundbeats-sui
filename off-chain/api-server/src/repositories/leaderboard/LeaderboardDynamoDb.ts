@@ -384,12 +384,12 @@ export class LeaderboardDynamoDb implements ILeaderboard {
     }
 
     //private methods
-    private async _sprintExists(sprintId: string): Promise<boolean> {
+    async _sprintExists(sprintId: string): Promise<boolean> {
         const result = await this._dataAccess_getSprint(sprintId);
         return result.success && result.data ? true : false;
     }
 
-    private async _getActiveSprintName(): Promise<string> {
+    async _getActiveSprintName(): Promise<string> {
         const activeSprints = await this._dataAccess_getActiveSprints();
         if (activeSprints.success && activeSprints.data && activeSprints.data.length) {
             const sprint = activeSprints.data[0];
@@ -406,12 +406,12 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         return 'default';
     }
 
-    private async _isCurrentSprint(sprintId: string): Promise<boolean> {
+    async _isCurrentSprint(sprintId: string): Promise<boolean> {
         const result = await this._dataAccess_getSprint(sprintId);
         return result.success && result.data && result.data.active.N > 0;
     }
 
-    private async _getScoresFromCache(
+    async _getScoresFromCache(
         cache: LocalScoreCache,
         beatmap: string,
         sprintId: string,
@@ -436,7 +436,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         };
     }
 
-    private async _updateCacheItem(
+    async _updateCacheItem(
         wallet: string,
         username: string,
         score: number,
@@ -472,7 +472,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
 
     //data access methods
 
-    private async _scanForScoresBySprint(sprintId: string): Promise<IScore[]> {
+    async _scanForScoresBySprint(sprintId: string): Promise<IScore[]> {
         const params = {
             TableName: this.config.scoresTableName,
             IndexName: GSI_SPRINT_NAME,
@@ -493,7 +493,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         return [];
     }
 
-    private async _scanForScoresByBeatmap(beatmap: string): Promise<IScore[]> {
+    async _scanForScoresByBeatmap(beatmap: string): Promise<IScore[]> {
         beatmap = `beatmap:${beatmap}`;
         const params = {
             TableName: this.config.scoresTableName,
@@ -515,7 +515,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         return [];
     }
 
-    private async _scanForScores(): Promise<IScore[]> {
+    async _scanForScores(): Promise<IScore[]> {
         const result = await this.dynamoDb.scanTable(this.config.scoresTableName);
         if (result.success) {
             const sortedItems = result.data.sort((a, b) => parseInt(b.score.N) - parseInt(a.score.N));
@@ -527,11 +527,11 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         return [];
     }
 
-    private async _dataAccess_scanSprints(): Promise<IDynamoResult> {
+    async _dataAccess_scanSprints(): Promise<IDynamoResult> {
         return await this.dynamoDb.scanTable(this.config.sprintsTableName);
     }
 
-    private async _dataAccess_getScore(wallet: string, beatmap: string, sprintId: string): Promise<IDynamoResult> {
+    async _dataAccess_getScore(wallet: string, beatmap: string, sprintId: string): Promise<IDynamoResult> {
         return await this.dynamoDb.getItem({
             TableName: this.config.scoresTableName,
             Key: {
@@ -542,7 +542,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         });
     }
 
-    private async _dataAccess_putScore(
+    async _dataAccess_putScore(
         wallet: string,
         username: string,
         score: number,
@@ -561,7 +561,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         });
     }
 
-    private async _dataAccess_getSprint(sprintId: string): Promise<IDynamoResult> {
+    async _dataAccess_getSprint(sprintId: string): Promise<IDynamoResult> {
         return await this.dynamoDb.getItem({
             TableName: this.config.sprintsTableName,
             Key: {
@@ -570,7 +570,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         });
     }
 
-    private async _dataAccess_getActiveSprints(): Promise<IDynamoResult> {
+    async _dataAccess_getActiveSprints(): Promise<IDynamoResult> {
         const params = {
             TableName: this.config.sprintsTableName,
             IndexName: GSI_ACTIVE_NAME,
@@ -583,7 +583,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         return await this.dynamoDb.query(params);
     }
 
-    private async _dataAccess_putSprint(
+    async _dataAccess_putSprint(
         sprintId: string,
         startDate: number,
         endDate: number = 0,
@@ -602,7 +602,7 @@ export class LeaderboardDynamoDb implements ILeaderboard {
         });
     }
 
-    private async _dataAccess_deleteSprint(sprintId: string): Promise<IDynamoResult> {
+    async _dataAccess_deleteSprint(sprintId: string): Promise<IDynamoResult> {
         const params = {
             TableName: this.config.sprintsTableName,
             Key: {
