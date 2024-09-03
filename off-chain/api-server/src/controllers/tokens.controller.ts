@@ -216,7 +216,9 @@ export class TokenController {
 
         try {
             const output = await this.tokenService.getBeatmapsNftByAddress(address);
-
+            if (!output?.nfts?.length) {
+                this.returnError(logString, 404, 'Beatmap not found');
+            }
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
