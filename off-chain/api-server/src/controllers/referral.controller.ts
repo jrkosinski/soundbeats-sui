@@ -42,7 +42,7 @@ export class ReferralController {
 
         try {
             return {
-                code: await this.referralService.generateReferralToken(authId)
+                code: (await this.referralService.generateReferralToken(authId))
             };
         } catch (e) {
             returnError(logString, 500, e);

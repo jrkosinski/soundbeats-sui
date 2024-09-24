@@ -21,6 +21,8 @@ import { AuthController } from './controllers/auth.controller';
 import { IBeatmapsRepo } from './repositories/beatmaps/IBeatmaps';
 import { ReferralController } from './controllers/referral.controller';
 import { ReferralService } from './services/referral.service';
+import { IReferralRepo } from './repositories/referral/IReferralManager';
+import { ReferralDynamoDb } from './repositories/referral/ReferralDynamoDb';
 
 @Module({})
 export class AuthManagerModule {
@@ -83,6 +85,26 @@ export class BeatmapsModule {
 }
 
 @Module({})
+export class ReferralModule {
+    static register(): DynamicModule {
+        let provider = {
+            provide: 'ReferralModule',
+            useClass: ReferralModule,
+        };
+
+        return {
+            module: ReferralModule,
+            providers: [provider],
+            exports: [provider],
+        };
+    }
+
+    get(config: IConfigSettings): IReferralRepo {
+        return config.testMode ? new ReferralDynamoDb(config) : new ReferralDynamoDb(config);
+    }
+}
+
+@Module({})
 export class ConfigSettingsModule {
     static register(): DynamicModule {
         let provider = {
@@ -108,7 +130,8 @@ export class ConfigSettingsModule {
         AuthManagerModule.register(),
         ConfigSettingsModule.register(),
         LeaderboardModule.register(),
-        BeatmapsModule.register()
+        BeatmapsModule.register(),
+        ReferralModule.register()
     ],
     controllers: [AppController, LeaderboardController, TokenController, AuthController, SettingsController, ReferralController],
     providers: [AppService, SuiService, LeaderboardService, TokenService, AuthService, ReferralService],
