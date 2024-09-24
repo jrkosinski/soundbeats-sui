@@ -27,8 +27,22 @@ export class ReferralService {
         this.authManager = authManagerModule.get(this.config);
     }
 
-    async generateReferralToken(authId: string): Promise<string> {
-        const referralCode = await this.referralRepo.generateReferralCode(authId);
-        return referralCode?.code ?? '';
+    async generateReferralCode(authId: string): Promise<{ code: string, message: string, success: boolean }> {
+        const output = {
+            code: '',
+            message: '',
+            success: false
+        }
+        //make sure that user exists
+        if (!this.authManager.exists(authId, 'evm')) {
+            output.message = 'user not found'
+        }
+        else {
+            const referralCode = await this.referralRepo.generateReferralCode(authId);
+            output.success = referralCode?.code.length ? true : false;
+            output.code = referralCode?.code ?? '';
+        }
+
+        return output;
     }
 }

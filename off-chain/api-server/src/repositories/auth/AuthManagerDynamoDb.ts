@@ -40,7 +40,7 @@ export class AuthManagerDynamoDb implements IAuthManager {
         }
 
         //write it to the database
-        const result = await this._dataAccess_putAuthRecord(authId, authType, suiWallet, username, 0, extraData);
+        const result = await this._dataAccess_putAuthRecord(authId, authType, suiWallet, username, 0, extraData, referralCode);
 
         return result.success;
     }
@@ -278,6 +278,7 @@ export class AuthManagerDynamoDb implements IAuthManager {
         username: string,
         level: number,
         extraData: any = null,
+        referralCode?: string
     ): Promise<IDynamoResult> {
         //get the core data items
         const data: any = {
@@ -286,6 +287,7 @@ export class AuthManagerDynamoDb implements IAuthManager {
             suiWallet: { S: suiWallet },
             username: { S: username },
             level: { N: level.toString() },
+            referralCode: { S: referralCode ?? '' }
         };
 
         //add extra data if any
