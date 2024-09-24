@@ -29,13 +29,13 @@ import {
 import { TokenService } from '../services/tokens.service';
 import { AppLogger } from '../app.logger';
 import { LeaderboardService } from 'src/services/leaderboard.service';
+import { returnError } from 'src/util/return-error';
 
 const MAX_URL_LENGTH = 400;
 const MAX_NFT_NAME_LENGTH = 100;
 const MAX_USERNAME_LENGTH = 100;
 const MAX_JSON_LENGTH = 1000;
 
-//TODO: break into different controllers
 @Controller()
 export class TokenController {
     logger: AppLogger;
@@ -53,23 +53,6 @@ export class TokenController {
         return 'ok';
     }
 
-    //TODO: REPEATED CODE
-    returnError(apiCall: string, errorCode: number, message: any) {
-        this.logger.error(`${apiCall} returning ${errorCode}: ${message}`);
-        switch (errorCode) {
-            case 400:
-                throw new BadRequestException(message);
-            case 401:
-                throw new UnauthorizedException(message);
-            case 404:
-                throw new NotFoundException(message);
-            case 500:
-                throw new InternalServerErrorException(message);
-        }
-
-        throw new BadRequestException(message);
-    }
-
     @ApiOperation({ summary: 'Mint NFT' })
     @Post('/api/v2/nfts')
     @HttpCode(200)
@@ -85,16 +68,16 @@ export class TokenController {
         this.logger.log(logString);
         const { name, recipient, imageUrl, quantity } = body;
         if (!name || name == '') {
-            this.returnError(logString, 400, 'name cannot be null or empty');
+            returnError(logString, 400, 'name cannot be null or empty');
         }
         if (name.length > MAX_NFT_NAME_LENGTH) {
-            this.returnError(logString, 400, `name exceeded max length of ${MAX_NFT_NAME_LENGTH}`);
+            returnError(logString, 400, `name exceeded max length of ${MAX_NFT_NAME_LENGTH}`);
         }
         if (!imageUrl || imageUrl == '') {
-            this.returnError(logString, 400, 'imageUrl cannot be null or empty');
+            returnError(logString, 400, 'imageUrl cannot be null or empty');
         }
         if (imageUrl.length > MAX_URL_LENGTH) {
-            this.returnError(logString, 400, `imageUrl exceeded max length of ${MAX_URL_LENGTH}`);
+            returnError(logString, 400, `imageUrl exceeded max length of ${MAX_URL_LENGTH}`);
         }
 
         try {
@@ -108,7 +91,7 @@ export class TokenController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            this.returnError(logString, 500, e.toString());
+            returnError(logString, 500, e.toString());
         }
     }
 
@@ -121,31 +104,31 @@ export class TokenController {
         let { recipient, username, title, artist, beatmapJson, imageUrl, quantity } = body;
 
         if (!username || username == '') {
-            this.returnError(logString, 400, 'username cannot be null or empty');
+            returnError(logString, 400, 'username cannot be null or empty');
         }
         if (username.length > MAX_USERNAME_LENGTH) {
-            this.returnError(logString, 400, `username exceeded max length of ${MAX_USERNAME_LENGTH}`);
+            returnError(logString, 400, `username exceeded max length of ${MAX_USERNAME_LENGTH}`);
         }
         if (!title || title == '') {
-            this.returnError(logString, 400, 'title cannot be null or empty');
+            returnError(logString, 400, 'title cannot be null or empty');
         }
         if (!artist) {
             artist = '';
         }
         if (artist.length > MAX_USERNAME_LENGTH) {
-            this.returnError(logString, 400, `artist exceeded max length of ${MAX_USERNAME_LENGTH}`);
+            returnError(logString, 400, `artist exceeded max length of ${MAX_USERNAME_LENGTH}`);
         }
         if (!beatmapJson || beatmapJson == '') {
-            this.returnError(logString, 400, 'beatmapJson cannot be null or empty');
+            returnError(logString, 400, 'beatmapJson cannot be null or empty');
         }
         if (beatmapJson.length > MAX_JSON_LENGTH) {
-            this.returnError(logString, 400, `beatmapJson exceeded max length of ${MAX_JSON_LENGTH}`);
+            returnError(logString, 400, `beatmapJson exceeded max length of ${MAX_JSON_LENGTH}`);
         }
         if (!imageUrl || imageUrl == '') {
-            this.returnError(logString, 400, 'imageUrl cannot be null or empty');
+            returnError(logString, 400, 'imageUrl cannot be null or empty');
         }
         if (imageUrl.length > MAX_URL_LENGTH) {
-            this.returnError(logString, 400, `imageUrl exceeded max length of ${MAX_URL_LENGTH}`);
+            returnError(logString, 400, `imageUrl exceeded max length of ${MAX_URL_LENGTH}`);
         }
 
         try {
@@ -161,7 +144,7 @@ export class TokenController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            this.returnError(logString, 500, e);
+            returnError(logString, 500, e);
         }
     }
 
@@ -183,7 +166,7 @@ export class TokenController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            this.returnError(logString, 500, e);
+            returnError(logString, 500, e);
         }
     }
 
@@ -207,7 +190,7 @@ export class TokenController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            this.returnError(logString, 500, e);
+            returnError(logString, 500, e);
         }
     }
 
@@ -220,12 +203,12 @@ export class TokenController {
         try {
             const output = await this.tokenService.getBeatmapsNftByAddress(address);
             if (!output?.nfts?.length) {
-                this.returnError(logString, 404, 'Beatmap not found');
+                returnError(logString, 404, 'Beatmap not found');
             }
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            this.returnError(logString, 500, e);
+            returnError(logString, 500, e);
         }
     }
 
@@ -237,10 +220,10 @@ export class TokenController {
         this.logger.log(logString);
         const { amount, recipient } = body;
         if (!amount || amount <= 0) {
-            this.returnError(logString, 400, 'amount cannot be null, zero or negative');
+            returnError(logString, 400, 'amount cannot be null, zero or negative');
         }
         if (!recipient || recipient == '') {
-            this.returnError(logString, 400, 'recipient cannot be null or empty');
+            returnError(logString, 400, 'recipient cannot be null or empty');
         }
 
         try {
@@ -248,7 +231,7 @@ export class TokenController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            this.returnError(logString, 500, e);
+            returnError(logString, 500, e);
         }
     }
 
@@ -259,7 +242,7 @@ export class TokenController {
         this.logger.log(logString);
         const { wallet } = query;
         if (!wallet || wallet == '') {
-            this.returnError(logString, 400, 'wallet cannot be null or empty');
+            returnError(logString, 400, 'wallet cannot be null or empty');
         }
 
         try {
@@ -267,7 +250,7 @@ export class TokenController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            this.returnError(logString, 500, e);
+            returnError(logString, 500, e);
         }
     }
 }

@@ -1,7 +1,3 @@
-import {
-    RawSigner, // use keypair
-} from '@mysten/sui.js';
-import { Keypair, Signer } from '@mysten/sui.js/cryptography';
 import { Inject, Injectable } from '@nestjs/common';
 import { IAuthManager, IAuthRecord, IAuthSession } from '../repositories/auth/IAuthManager';
 import { ConfigSettings } from '../config';

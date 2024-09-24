@@ -19,6 +19,8 @@ import { TokenService } from './services/tokens.service';
 import { AuthService } from './services/auth.service';
 import { AuthController } from './controllers/auth.controller';
 import { IBeatmapsRepo } from './repositories/beatmaps/IBeatmaps';
+import { ReferralController } from './controllers/referral.controller';
+import { ReferralService } from './services/referral.service';
 
 @Module({})
 export class AuthManagerModule {
@@ -108,8 +110,8 @@ export class ConfigSettingsModule {
         LeaderboardModule.register(),
         BeatmapsModule.register()
     ],
-    controllers: [AppController, LeaderboardController, TokenController, AuthController, SettingsController],
-    providers: [AppService, SuiService, LeaderboardService, TokenService, AuthService],
+    controllers: [AppController, LeaderboardController, TokenController, AuthController, SettingsController, ReferralController],
+    providers: [AppService, SuiService, LeaderboardService, TokenService, AuthService, ReferralService],
 })
 
 export class AppModule { }

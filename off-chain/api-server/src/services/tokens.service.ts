@@ -10,7 +10,6 @@ import { IAuthManager, IAuthRecord } from '../repositories/auth/IAuthManager';
 import { ConfigSettings } from '../config';
 import { AppLogger } from '../app.logger';
 import { AuthManagerModule, ConfigSettingsModule, BeatmapsModule } from '../app.module';
-import { AuthService } from './auth.service';
 import { IBeatmapsRepo } from 'src/repositories/beatmaps/IBeatmaps';
 
 //TODO: replace 'success' with 'completed'

@@ -8,16 +8,13 @@ import {
     HttpCode,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
-import { AppService } from '../app.service';
 import { AppLogger } from '../app.logger';
 
-//TODO: break into different controllers
 @Controller()
 export class SettingsController {
     logger: AppLogger;
 
     constructor(
-        private readonly appService: AppService
     ) {
         this.logger = new AppLogger('settings.controller');
     }
