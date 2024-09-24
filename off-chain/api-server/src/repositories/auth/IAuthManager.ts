@@ -35,6 +35,7 @@ export interface IAuthManager {
         suiWallet: string,
         username: string,
         extraData: any,
+        referralCode?: string
     ): Promise<boolean>;
 
     /**

@@ -307,6 +307,8 @@ export class UpdateUserOAuthDto {
     nonceToken: string;
     @ApiProperty({ description: 'Normally, the email' })
     username: string;
+    @ApiProperty({ description: 'Optional; if referred by another user' })
+    referralCode?: string;
 }
 
 export class UpdateUserOAuthResponseDto {

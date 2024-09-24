@@ -149,7 +149,7 @@ export class AuthController {
         this.logger.log(logString);
         let status = '';
 
-        let { suiAddress, username, oauthToken, nonceToken } = body;
+        let { suiAddress, username, oauthToken, nonceToken, referralCode } = body;
         if (!suiAddress || suiAddress == '') {
             returnError(logString, 400, 'suiAddress cannot be null or empty');
         }
@@ -173,7 +173,7 @@ export class AuthController {
         }
 
         try {
-            const output = await this.authService.updateUserFromOAuth(suiAddress, username, oauthToken, nonceToken);
+            const output = await this.authService.updateUserFromOAuth(suiAddress, username, oauthToken, nonceToken, referralCode);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
 
             status = output.status;

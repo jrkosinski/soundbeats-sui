@@ -153,6 +153,7 @@ export class AuthService {
         username: string,
         oauthToken: string,
         nonceToken: string,
+        referralCode?: string
     ): Promise<{ username: string; authId: string; status: string }> {
         const output = { username: '', authId: '', status: '' };
         const authRecord = await this.authManager.getAuthRecord(suiAddress, 'sui');
@@ -162,7 +163,7 @@ export class AuthService {
                 await this.authManager.registerUser(suiAddress, 'sui', suiAddress, username, {
                     source: 'oauth',
                     nonce: nonceToken,
-                })
+                }, referralCode)
             ) {
                 output.username = username;
                 output.authId = suiAddress;
