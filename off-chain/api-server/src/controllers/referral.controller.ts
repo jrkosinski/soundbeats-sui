@@ -38,22 +38,20 @@ export class ReferralController {
         const { authId } = body;
 
         if (!authId || authId == '') {
-            returnError(logString, 400, 'authId cannot be null or empty');
+            returnError(this.logger, logString, 400, 'authId cannot be null or empty');
         }
 
         let referralCode;
         try {
             referralCode = await this.referralService.generateReferralCode(authId);
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
 
         if (!referralCode?.success) {
             if (referralCode.message === 'user not found') {
-                returnError(logString, 404, `User ${authId} not found`);
+                returnError(this.logger, logString, 404, `User ${authId} not found`);
             }
-        } else {
-            returnError(logString, 500, 'Referral code not generated: ' + referralCode?.message);
         }
 
         return {

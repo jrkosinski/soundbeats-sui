@@ -56,5 +56,15 @@ GET http://localhost:3000/api/v2/nfts/beats
 GET http://localhost:3000/api/v2/nfts/beatmaps
 
 
+###
+POST http://localhost:3000/api/v2/referral
+Content-Type: application/json
+
+{
+    "authId": "noodles"
+}
+
+
+
 
 

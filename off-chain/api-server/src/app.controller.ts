@@ -94,16 +94,16 @@ export class AppController {
         this.logger.log(logString);
         const { name, recipient, imageUrl, quantity } = body;
         if (!name || name == '') {
-            returnError(logString, 400, 'name cannot be null or empty');
+            returnError(this.logger, logString, 400, 'name cannot be null or empty');
         }
         if (name.length > MAX_NFT_NAME_LENGTH) {
-            returnError(logString, 400, `name exceeded max length of ${MAX_NFT_NAME_LENGTH}`);
+            returnError(this.logger, logString, 400, `name exceeded max length of ${MAX_NFT_NAME_LENGTH}`);
         }
         if (!imageUrl || imageUrl == '') {
-            returnError(logString, 400, 'imageUrl cannot be null or empty');
+            returnError(this.logger, logString, 400, 'imageUrl cannot be null or empty');
         }
         if (imageUrl.length > MAX_URL_LENGTH) {
-            returnError(logString, 400, `imageUrl exceeded max length of ${MAX_URL_LENGTH}`);
+            returnError(this.logger, logString, 400, `imageUrl exceeded max length of ${MAX_URL_LENGTH}`);
         }
 
         try {
@@ -117,7 +117,7 @@ export class AppController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            returnError(logString, 500, e.toString());
+            returnError(this.logger, logString, 500, e.toString());
         }
     }
 
@@ -130,31 +130,31 @@ export class AppController {
         let { recipient, username, title, artist, beatmapJson, imageUrl, quantity } = body;
 
         if (!username || username == '') {
-            returnError(logString, 400, 'username cannot be null or empty');
+            returnError(this.logger, logString, 400, 'username cannot be null or empty');
         }
         if (username.length > MAX_USERNAME_LENGTH) {
-            returnError(logString, 400, `username exceeded max length of ${MAX_USERNAME_LENGTH}`);
+            returnError(this.logger, logString, 400, `username exceeded max length of ${MAX_USERNAME_LENGTH}`);
         }
         if (!title || title == '') {
-            returnError(logString, 400, 'title cannot be null or empty');
+            returnError(this.logger, logString, 400, 'title cannot be null or empty');
         }
         if (!artist) {
             artist = '';
         }
         if (artist.length > MAX_USERNAME_LENGTH) {
-            returnError(logString, 400, `artist exceeded max length of ${MAX_USERNAME_LENGTH}`);
+            returnError(this.logger, logString, 400, `artist exceeded max length of ${MAX_USERNAME_LENGTH}`);
         }
         if (!beatmapJson || beatmapJson == '') {
-            returnError(logString, 400, 'beatmapJson cannot be null or empty');
+            returnError(this.logger, logString, 400, 'beatmapJson cannot be null or empty');
         }
         if (beatmapJson.length > MAX_JSON_LENGTH) {
-            returnError(logString, 400, `beatmapJson exceeded max length of ${MAX_JSON_LENGTH}`);
+            returnError(this.logger, logString, 400, `beatmapJson exceeded max length of ${MAX_JSON_LENGTH}`);
         }
         if (!imageUrl || imageUrl == '') {
-            returnError(logString, 400, 'imageUrl cannot be null or empty');
+            returnError(this.logger, logString, 400, 'imageUrl cannot be null or empty');
         }
         if (imageUrl.length > MAX_URL_LENGTH) {
-            returnError(logString, 400, `imageUrl exceeded max length of ${MAX_URL_LENGTH}`);
+            returnError(this.logger, logString, 400, `imageUrl exceeded max length of ${MAX_URL_LENGTH}`);
         }
 
         try {
@@ -170,7 +170,7 @@ export class AppController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
     }
 
@@ -187,7 +187,7 @@ export class AppController {
         this.logger.log(logString);
         const { wallet } = query;
         if (!wallet || wallet == '') {
-            returnError(logString, 400, 'wallet cannot be null or empty');
+            returnError(this.logger, logString, 400, 'wallet cannot be null or empty');
         }
 
         try {
@@ -195,7 +195,7 @@ export class AppController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
     }
 
@@ -206,7 +206,7 @@ export class AppController {
         this.logger.log(logString);
         const { wallet } = query;
         if (!wallet || wallet == '') {
-            returnError(logString, 400, 'wallet cannot be null or empty');
+            returnError(this.logger, logString, 400, 'wallet cannot be null or empty');
         }
 
         try {
@@ -214,7 +214,7 @@ export class AppController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
     }
 
@@ -226,10 +226,10 @@ export class AppController {
         this.logger.log(logString);
         const { amount, recipient } = body;
         if (!amount || amount <= 0) {
-            returnError(logString, 400, 'amount cannot be null, zero or negative');
+            returnError(this.logger, logString, 400, 'amount cannot be null, zero or negative');
         }
         if (!recipient || recipient == '') {
-            returnError(logString, 400, 'recipient cannot be null or empty');
+            returnError(this.logger, logString, 400, 'recipient cannot be null or empty');
         }
 
         try {
@@ -237,7 +237,7 @@ export class AppController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
     }
 
@@ -248,7 +248,7 @@ export class AppController {
         this.logger.log(logString);
         const { wallet } = query;
         if (!wallet || wallet == '') {
-            returnError(logString, 400, 'wallet cannot be null or empty');
+            returnError(this.logger, logString, 400, 'wallet cannot be null or empty');
         }
 
         try {
@@ -256,7 +256,7 @@ export class AppController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
     }
 
@@ -267,7 +267,7 @@ export class AppController {
         this.logger.log(logString);
         let { username } = query;
         if (!username || username == '') {
-            returnError(logString, 400, 'username cannot be null or empty');
+            returnError(this.logger, logString, 400, 'username cannot be null or empty');
         }
 
         try {
@@ -278,7 +278,7 @@ export class AppController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
     }
 
@@ -306,7 +306,7 @@ export class AppController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
     }
 
@@ -319,13 +319,13 @@ export class AppController {
         const { score, authId } = body;
 
         if (!score || score <= 0) {
-            returnError(logString, 400, 'score cannot be null, zero or negative');
+            returnError(this.logger, logString, 400, 'score cannot be null, zero or negative');
         }
         if (!authId || authId == '') {
-            returnError(logString, 400, 'wallet cannot be null or empty');
+            returnError(this.logger, logString, 400, 'wallet cannot be null or empty');
         }
         if (authId.length > MAX_WALLET_LENGTH) {
-            returnError(logString, 400, `wallet exceeded max length of ${MAX_WALLET_LENGTH}`);
+            returnError(this.logger, logString, 400, `wallet exceeded max length of ${MAX_WALLET_LENGTH}`);
         }
 
         try {
@@ -333,7 +333,7 @@ export class AppController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
     }
 
@@ -353,7 +353,7 @@ export class AppController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
     }
 
@@ -367,16 +367,16 @@ export class AppController {
         this.logger.log(logString);
         let { evmWallet } = body;
         if (!evmWallet || evmWallet == '') {
-            returnError(logString, 400, 'evmWallet cannot be null or empty');
+            returnError(this.logger, logString, 400, 'evmWallet cannot be null or empty');
         }
         if (evmWallet.length > MAX_WALLET_LENGTH) {
-            returnError(logString, 400, `evmWallet exceeds max length of ${MAX_WALLET_LENGTH}`);
+            returnError(this.logger, logString, 400, `evmWallet exceeds max length of ${MAX_WALLET_LENGTH}`);
         }
 
         try {
             return await this.suiService.startAuthSession(evmWallet);
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
     }
 
@@ -388,7 +388,7 @@ export class AppController {
         this.logger.log(logString);
         let { authId } = query;
         if (!authId || authId == '') {
-            returnError(logString, 400, 'Auth Id cannot be null or empty');
+            returnError(this.logger, logString, 400, 'Auth Id cannot be null or empty');
         }
         try {
             output = await this.suiService.getAccountFromLogin(authId);
@@ -397,10 +397,10 @@ export class AppController {
                 return output;
             }
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
 
-        returnError(logString, 400, output.status);
+        returnError(this.logger, logString, 400, output.status);
     }
 
     @ApiOperation({ summary: "Update user's level." })
@@ -411,10 +411,10 @@ export class AppController {
         this.logger.log(logString);
         let { authId, level } = body;
         if (!authId || authId == '') {
-            returnError(logString, 400, 'Auth Id cannot be null or empty');
+            returnError(this.logger, logString, 400, 'Auth Id cannot be null or empty');
         }
         if (isNaN(level) || level < 0) {
-            returnError(logString, 400, 'Level must be a positive number, and is required');
+            returnError(this.logger, logString, 400, 'Level must be a positive number, and is required');
         }
 
         try {
@@ -424,10 +424,10 @@ export class AppController {
                 return output;
             }
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
 
-        returnError(logString, 400, output.status);
+        returnError(this.logger, logString, 400, output.status);
     }
 
     @ApiOperation({ summary: 'Create new user account from OAuth login.' })
@@ -439,25 +439,25 @@ export class AppController {
 
         let { suiAddress, username, oauthToken, nonceToken } = body;
         if (!suiAddress || suiAddress == '') {
-            returnError(logString, 400, 'suiAddress cannot be null or empty');
+            returnError(this.logger, logString, 400, 'suiAddress cannot be null or empty');
         }
         if (!username || username == '') {
-            returnError(logString, 400, 'username cannot be null or empty');
+            returnError(this.logger, logString, 400, 'username cannot be null or empty');
         }
         if (suiAddress.length > MAX_WALLET_LENGTH) {
-            returnError(logString, 400, `suiAddress exceeds max length of ${MAX_WALLET_LENGTH}`);
+            returnError(this.logger, logString, 400, `suiAddress exceeds max length of ${MAX_WALLET_LENGTH}`);
         }
         if (username.length > MAX_USERNAME_LENGTH) {
-            returnError(logString, 400, `username exceeds max length of ${MAX_USERNAME_LENGTH}`);
+            returnError(this.logger, logString, 400, `username exceeds max length of ${MAX_USERNAME_LENGTH}`);
         }
         //if (!oauthToken || oauthToken == '') {
-        //    returnError(logString, 400, 'oauthToken cannot be null or empty');
+        //    returnError(this.logger, logString, 400, 'oauthToken cannot be null or empty');
         //}
         if (!nonceToken || nonceToken == '') {
-            returnError(logString, 400, 'nonceToken cannot be null or empty');
+            returnError(this.logger, logString, 400, 'nonceToken cannot be null or empty');
         }
         if (nonceToken.length > MAX_STRING_LENGTH) {
-            returnError(logString, 400, `nonceToken exceeds max length of ${MAX_STRING_LENGTH}`);
+            returnError(this.logger, logString, 400, `nonceToken exceeds max length of ${MAX_STRING_LENGTH}`);
         }
 
         try {
@@ -467,10 +467,10 @@ export class AppController {
             status = output.status;
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
 
-        returnError(logString, 400, status);
+        returnError(this.logger, logString, 400, status);
     }
 
     @ApiOperation({ summary: 'Get new user account created from OAuth login.' })
@@ -481,19 +481,19 @@ export class AppController {
 
         let { nonceToken } = query;
         if (!nonceToken || nonceToken == '') {
-            returnError(logString, 400, 'nonceToken cannot be null or empty');
+            returnError(this.logger, logString, 400, 'nonceToken cannot be null or empty');
         }
         if (nonceToken.length > MAX_STRING_LENGTH) {
-            returnError(logString, 400, `nonceToken exceeds max length of ${MAX_STRING_LENGTH}`);
+            returnError(this.logger, logString, 400, `nonceToken exceeds max length of ${MAX_STRING_LENGTH}`);
         }
 
         try {
             const output = await this.suiService.getUserFromOAuth(nonceToken);
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
 
-        returnError(logString, 400, '?');
+        returnError(this.logger, logString, 400, '?');
     }
 }

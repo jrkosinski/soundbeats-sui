@@ -70,7 +70,7 @@ export class LeaderboardController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
     }
 
@@ -88,7 +88,7 @@ export class LeaderboardController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
     }
 
@@ -101,13 +101,13 @@ export class LeaderboardController {
         const { score, wallet, beatmap } = body;
 
         if (!score || score <= 0) {
-            returnError(logString, 400, 'score cannot be null, zero or negative');
+            returnError(this.logger, logString, 400, 'score cannot be null, zero or negative');
         }
         if (!wallet || wallet == '') {
-            returnError(logString, 400, 'wallet cannot be null or empty');
+            returnError(this.logger, logString, 400, 'wallet cannot be null or empty');
         }
         if (wallet.length > MAX_WALLET_LENGTH) {
-            returnError(logString, 400, `wallet exceeded max length of ${MAX_WALLET_LENGTH}`);
+            returnError(this.logger, logString, 400, `wallet exceeded max length of ${MAX_WALLET_LENGTH}`);
         }
 
         try {
@@ -115,7 +115,7 @@ export class LeaderboardController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
     }
 
@@ -135,7 +135,7 @@ export class LeaderboardController {
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
     }
 }

@@ -2,8 +2,8 @@ import { BadRequestException, UnauthorizedException, NotFoundException, Internal
 
 
 //TODO: REPEATED CODE
-export function returnError(apiCall: string, errorCode: number, message: any) {
-    this.logger.error(`${apiCall} returning ${errorCode}: ${message}`);
+export function returnError(logger: any, apiCall: string, errorCode: number, message: any) {
+    logger.error(`${apiCall} returning ${errorCode}: ${message}`);
     switch (errorCode) {
         case 400:
             throw new BadRequestException(message);

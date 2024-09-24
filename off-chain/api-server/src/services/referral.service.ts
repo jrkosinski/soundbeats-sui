@@ -34,12 +34,12 @@ export class ReferralService {
             success: false
         }
         //make sure that user exists
-        if (!this.authManager.exists(authId, 'evm')) {
-            output.message = 'user not found'
+        if (!(await this.authManager.exists(authId, 'evm'))) {
+            output.message = 'user not found';
         }
         else {
             const referralCode = await this.referralRepo.generateReferralCode(authId);
-            output.success = referralCode?.code.length ? true : false;
+            output.success = referralCode?.code?.length ? true : false;
             output.code = referralCode?.code ?? '';
         }
 

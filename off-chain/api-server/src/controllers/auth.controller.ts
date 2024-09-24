@@ -6,39 +6,14 @@ import {
     Put,
     Query,
     HttpCode,
-    BadRequestException,
-    UnauthorizedException,
-    InternalServerErrorException,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { AppService } from '../app.service';
 import {
-    MintBeatsNftDto,
-    MintBeatmapsNftDto,
-    MintNftResponseDto,
-    GetTokenBalanceDto,
-    GetTokenBalanceResponseDto,
-    GetBeatsNftsDto,
-    GetBeatsNftsResponseDto,
-    GetBeatmapsNftsResponseDto,
-    MintTokenDto,
-    MintTokenResponseDto,
-    VerifySignatureDto,
-    VerifySignatureResponseDto,
     StartAuthSessionDto,
     StartAuthSessionResponseDto,
-    AuthVerifyDto,
-    AuthVerifyResponseDto,
-    GetLeaderboardDto,
-    GetLeaderboardResponseDto,
-    AddLeaderboardDto,
-    AddLeaderboardResponseDto,
-    GetLeaderboardSprintDto,
-    GetLeaderboardSprintResponseDto,
     GetAccountDto,
     GetAccountResponseDto,
-    CheckUsernameDto,
-    CheckUsernameResponseDto,
     UpdateUserLevelDto,
     UpdateUserOAuthDto,
     UpdateUserOAuthResponseDto,
@@ -79,16 +54,16 @@ export class AuthController {
         this.logger.log(logString);
         let { evmWallet } = body;
         if (!evmWallet || evmWallet == '') {
-            returnError(logString, 400, 'evmWallet cannot be null or empty');
+            returnError(this.logger, logString, 400, 'evmWallet cannot be null or empty');
         }
         if (evmWallet.length > MAX_WALLET_LENGTH) {
-            returnError(logString, 400, `evmWallet exceeds max length of ${MAX_WALLET_LENGTH}`);
+            returnError(this.logger, logString, 400, `evmWallet exceeds max length of ${MAX_WALLET_LENGTH}`);
         }
 
         try {
             return await this.authService.startAuthSession(evmWallet);
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
     }
 
@@ -100,7 +75,7 @@ export class AuthController {
         this.logger.log(logString);
         let { authId } = query;
         if (!authId || authId == '') {
-            returnError(logString, 400, 'Auth Id cannot be null or empty');
+            returnError(this.logger, logString, 400, 'Auth Id cannot be null or empty');
         }
         try {
             output = await this.authService.getAccountFromLogin(authId);
@@ -109,10 +84,10 @@ export class AuthController {
                 return output;
             }
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
 
-        returnError(logString, 400, output.status);
+        returnError(this.logger, logString, 400, output.status);
     }
 
     @ApiOperation({ summary: "Update user's level." })
@@ -123,10 +98,10 @@ export class AuthController {
         this.logger.log(logString);
         let { authId, level } = body;
         if (!authId || authId == '') {
-            returnError(logString, 400, 'Auth Id cannot be null or empty');
+            returnError(this.logger, logString, 400, 'Auth Id cannot be null or empty');
         }
         if (isNaN(level) || level < 0) {
-            returnError(logString, 400, 'Level must be a positive number, and is required');
+            returnError(this.logger, logString, 400, 'Level must be a positive number, and is required');
         }
 
         try {
@@ -136,10 +111,10 @@ export class AuthController {
                 return output;
             }
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
 
-        returnError(logString, 400, output.status);
+        returnError(this.logger, logString, 400, output.status);
     }
 
     @ApiOperation({ summary: 'Create new user account from OAuth login.' })
@@ -151,25 +126,25 @@ export class AuthController {
 
         let { suiAddress, username, oauthToken, nonceToken, referralCode } = body;
         if (!suiAddress || suiAddress == '') {
-            returnError(logString, 400, 'suiAddress cannot be null or empty');
+            returnError(this.logger, logString, 400, 'suiAddress cannot be null or empty');
         }
         if (!username || username == '') {
-            returnError(logString, 400, 'username cannot be null or empty');
+            returnError(this.logger, logString, 400, 'username cannot be null or empty');
         }
         if (suiAddress.length > MAX_WALLET_LENGTH) {
-            returnError(logString, 400, `suiAddress exceeds max length of ${MAX_WALLET_LENGTH}`);
+            returnError(this.logger, logString, 400, `suiAddress exceeds max length of ${MAX_WALLET_LENGTH}`);
         }
         if (username.length > MAX_USERNAME_LENGTH) {
-            returnError(logString, 400, `username exceeds max length of ${MAX_USERNAME_LENGTH}`);
+            returnError(this.logger, logString, 400, `username exceeds max length of ${MAX_USERNAME_LENGTH}`);
         }
         //if (!oauthToken || oauthToken == '') {
-        //    returnError(logString, 400, 'oauthToken cannot be null or empty');
+        //    returnError(this.logger, logString, 400, 'oauthToken cannot be null or empty');
         //}
         if (!nonceToken || nonceToken == '') {
-            returnError(logString, 400, 'nonceToken cannot be null or empty');
+            returnError(this.logger, logString, 400, 'nonceToken cannot be null or empty');
         }
         if (nonceToken.length > MAX_STRING_LENGTH) {
-            returnError(logString, 400, `nonceToken exceeds max length of ${MAX_STRING_LENGTH}`);
+            returnError(this.logger, logString, 400, `nonceToken exceeds max length of ${MAX_STRING_LENGTH}`);
         }
 
         try {
@@ -179,10 +154,10 @@ export class AuthController {
             status = output.status;
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
 
-        returnError(logString, 400, status);
+        returnError(this.logger, logString, 400, status);
     }
 
     @ApiOperation({ summary: 'Get new user account created from OAuth login.' })
@@ -193,19 +168,19 @@ export class AuthController {
 
         let { nonceToken } = query;
         if (!nonceToken || nonceToken == '') {
-            returnError(logString, 400, 'nonceToken cannot be null or empty');
+            returnError(this.logger, logString, 400, 'nonceToken cannot be null or empty');
         }
         if (nonceToken.length > MAX_STRING_LENGTH) {
-            returnError(logString, 400, `nonceToken exceeds max length of ${MAX_STRING_LENGTH}`);
+            returnError(this.logger, logString, 400, `nonceToken exceeds max length of ${MAX_STRING_LENGTH}`);
         }
 
         try {
             const output = await this.authService.getUserFromOAuth(nonceToken);
             return output;
         } catch (e) {
-            returnError(logString, 500, e);
+            returnError(this.logger, logString, 500, e);
         }
 
-        returnError(logString, 400, '?');
+        returnError(this.logger, logString, 400, '?');
     }
 }
