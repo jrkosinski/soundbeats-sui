@@ -27,10 +27,17 @@ export class SettingsController {
     @ApiOperation({ summary: 'Get score for perfect hit' })
     @Get('/api/v2/settings')
     @HttpCode(200)
-    async getPerfectHitScore(@Query() query: {}): Promise<{ perfectHit: number, network: string }> {
+    async getPerfectHitScore(@Query() query: {}): Promise<{
+        perfectHit: number,
+        beatmapReferrerReward: number,
+        beatmapReferredReward: number,
+        network: string
+    }> {
         return {
             perfectHit: 5,
-            network: 'testnet'
+            network: 'testnet',
+            beatmapReferrerReward: 100,
+            beatmapReferredReward: 50
         };
     }
 }
