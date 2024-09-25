@@ -34,6 +34,11 @@ export class BeatmapsDynamoDb implements IBeatmapsRepo {
         );
     }
 
+    async exists(address: string): Promise<boolean> {
+        const beatmap = await this.getBeatmap(address);
+        return (beatmap?.address === address);
+    }
+
     //data access methods
 
     _mapRecord(record: any): IBeatmap {

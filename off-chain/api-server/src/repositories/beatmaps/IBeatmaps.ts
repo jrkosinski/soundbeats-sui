@@ -14,4 +14,5 @@ export interface IBeatmapsRepo {
     getBeatmap(address: string): Promise<IBeatmap>;
     getBeatmapsByOwner(ownerAddress: string): Promise<IBeatmap[]>;
     addBeatmap(beatmap: IBeatmap): Promise<void>;
+    exists(address: string): Promise<boolean>;
 }

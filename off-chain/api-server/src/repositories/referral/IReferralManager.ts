@@ -1,7 +1,7 @@
 
 export interface IReferralCode {
     code: string;
-    user: string;
+    beatmapId: string;
     maxUses: number;
     uses: number;
     generatedAt: number;
@@ -9,5 +9,5 @@ export interface IReferralCode {
 }
 
 export interface IReferralRepo {
-    generateReferralCode(authId: string): Promise<IReferralCode>;
+    generateReferralCode(beatmapId: string): Promise<IReferralCode>;
 }

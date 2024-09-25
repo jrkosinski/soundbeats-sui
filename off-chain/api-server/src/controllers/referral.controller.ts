@@ -31,26 +31,26 @@ export class ReferralController {
     @ApiOperation({ summary: 'Post a new referral code' })
     @Post('/api/v2/referral')
     @HttpCode(201)
-    async generateReferralCode(@Body() body: { authId: string }): Promise<{ code: string }> {
+    async generateReferralCode(@Body() body: { beatmapId: string }): Promise<{ code: string }> {
 
         const logString = `POST /api/v2/referral ${JSON.stringify(body)}`;
         this.logger.log(logString);
-        const { authId } = body;
+        const { beatmapId } = body;
 
-        if (!authId || authId == '') {
-            returnError(this.logger, logString, 400, 'authId cannot be null or empty');
+        if (!beatmapId || beatmapId == '') {
+            returnError(this.logger, logString, 400, 'beatmapId cannot be null or empty');
         }
 
         let referralCode;
         try {
-            referralCode = await this.referralService.generateReferralCode(authId);
+            referralCode = await this.referralService.generateReferralCode(beatmapId);
         } catch (e) {
             returnError(this.logger, logString, 500, e);
         }
 
         if (!referralCode?.success) {
-            if (referralCode.message === 'user not found') {
-                returnError(this.logger, logString, 404, `User ${authId} not found`);
+            if (referralCode.message === 'Beatmap not found') {
+                returnError(this.logger, logString, 404, `Beatmap ${beatmapId} not found`);
             }
         }
 

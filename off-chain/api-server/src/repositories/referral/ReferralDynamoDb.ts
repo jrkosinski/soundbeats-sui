@@ -22,9 +22,9 @@ export class ReferralDynamoDb implements IReferralRepo {
         return await this._dataAccess_getReferral(code);
     }
 
-    async generateReferralCode(user: string): Promise<IReferralCode> {
+    async generateReferralCode(beatmapId: string): Promise<IReferralCode> {
         const output = {
-            user: user,
+            beatmapId: beatmapId,
             code: ethers.keccak256(ethers.randomBytes(32)),
             generatedAt: getTimestamp(),
             lastRedeemedAt: 0,
@@ -48,7 +48,7 @@ export class ReferralDynamoDb implements IReferralRepo {
     _mapRecord(record: any): IReferralCode {
         return {
             code: record.code?.S ?? '',
-            user: record.user?.S ?? '',
+            beatmapId: record.beatmapId?.S ?? '',
             generatedAt: record.generatedAt?.N ?? 0,
             lastRedeemedAt: record.lastRedeemedAt?.N ?? 0,
             maxUses: record.maxUses?.N ?? 0,
@@ -65,7 +65,7 @@ export class ReferralDynamoDb implements IReferralRepo {
             TableName: this.config.referralTableName,
             Item: {
                 code: { S: referral.code },
-                user: { S: referral.user },
+                beatmapId: { S: referral.beatmapId },
                 maxUses: { N: referral.maxUses.toString() },
                 uses: { N: referral.uses.toString() },
                 generatedAt: { N: referral.generatedAt.toString() },
