@@ -11,13 +11,14 @@ import { ApiOperation } from '@nestjs/swagger';
 import { AppLogger } from '../app.logger';
 import { BeatmapsService } from 'src/services/beatmaps.service';
 import { returnError } from 'src/util/return-error';
+import { IBeatmap } from 'src/repositories/beatmaps/IBeatmaps';
 
 @Controller()
 export class BeatmapsController {
     logger: AppLogger;
 
     constructor(
-        private readonly referralService: BeatmapsService,
+        private readonly beatmapsService: BeatmapsService,
     ) {
         this.logger = new AppLogger('beatmaps.controller');
     }
@@ -27,34 +28,44 @@ export class BeatmapsController {
         return 'ok';
     }
 
-    @ApiOperation({ summary: 'Post a new referral code' })
-    @Post('/api/v2/beatmaps')
-    @HttpCode(201)
-    async saveUnmintedBeatmap(@Body() body: { beatmapId: string }): Promise<{ code: string }> {
-
-        const logString = `POST /api/v2/referral ${JSON.stringify(body)}`;
+    @ApiOperation({ summary: 'Create or update an unminted beatmap' })
+    @Get('/api/v2/beatmaps')
+    @HttpCode(200)
+    async getBeatmaps(@Query() query: { beatmapId: string, minted: boolean }): Promise<IBeatmap[]> {
+        const logString = `GET /api/v2/beatmaps ${JSON.stringify(query)}`;
         this.logger.log(logString);
-        const { beatmapId } = body;
 
-        if (!beatmapId || beatmapId == '') {
-            returnError(this.logger, logString, 400, 'beatmapId cannot be null or empty');
-        }
+        const { beatmapId, minted } = query;
 
-        let referralCode;
         try {
-            referralCode = await this.referralService.generateReferralCode(beatmapId);
+            if (beatmapId) {
+                const beatmap = await this.beatmapsService.getBeatmapById(beatmapId);
+                return beatmap ? [beatmap] : [];
+            } else {
+                return this.beatmapsService.getBeatmaps(beatmapId, minted);
+            }
         } catch (e) {
             returnError(this.logger, logString, 500, e);
         }
 
-        if (!referralCode?.success) {
-            if (referralCode.message === 'Beatmap not found') {
-                returnError(this.logger, logString, 404, `Beatmap ${beatmapId} not found`);
-            }
+        return null;
+    }
+
+    @ApiOperation({ summary: 'Create or update an unminted beatmap' })
+    @Post('/api/v2/beatmaps')
+    @HttpCode(201)
+    async saveUnmintedBeatmap(@Body() body: IBeatmap): Promise<{ code: string }> {
+        const logString = `POST /api/v2/beatmaps ${JSON.stringify(body)}`;
+        this.logger.log(logString);
+
+        try {
+            await this.beatmapsService.saveBeatmap(body);
+        } catch (e) {
+            returnError(this.logger, logString, 500, e);
         }
 
         return {
-            code: referralCode?.code
+            code: ''
         };
     }
 }
