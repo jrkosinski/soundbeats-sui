@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IAuthManager } from '../repositories/auth/IAuthManager';
 import { ConfigSettings } from '../config';
 import { AppLogger } from '../app.logger';
-import { AuthManagerModule, BeatmapsModule, ConfigSettingsModule, LeaderboardModule, ReferralModule } from '../app.module';
+import { AuthManagerModule, BeatmapsModule, ConfigSettingsModule, ReferralModule } from '../app.module';
 import { IReferralRepo } from 'src/repositories/referral/IReferralManager';
 import { IBeatmapsRepo } from 'src/repositories/beatmaps/IBeatmaps';
 

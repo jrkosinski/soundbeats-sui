@@ -9,17 +9,17 @@ import {
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { AppLogger } from '../app.logger';
-import { ReferralService } from 'src/services/referral.service';
+import { BeatmapsService } from 'src/services/beatmaps.service';
 import { returnError } from 'src/util/return-error';
 
 @Controller()
-export class ReferralController {
+export class BeatmapsController {
     logger: AppLogger;
 
     constructor(
-        private readonly referralService: ReferralService,
+        private readonly referralService: BeatmapsService,
     ) {
-        this.logger = new AppLogger('referral.controller');
+        this.logger = new AppLogger('beatmaps.controller');
     }
 
     @Get('/')
@@ -28,9 +28,9 @@ export class ReferralController {
     }
 
     @ApiOperation({ summary: 'Post a new referral code' })
-    @Post('/api/v2/referral')
+    @Post('/api/v2/beatmaps')
     @HttpCode(201)
-    async generateReferralCode(@Body() body: { beatmapId: string }): Promise<{ code: string }> {
+    async saveUnmintedBeatmap(@Body() body: { beatmapId: string }): Promise<{ code: string }> {
 
         const logString = `POST /api/v2/referral ${JSON.stringify(body)}`;
         this.logger.log(logString);
