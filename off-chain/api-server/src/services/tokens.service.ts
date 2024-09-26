@@ -265,6 +265,7 @@ export class TokenService {
                     title,
                     artist,
                     username,
+                    minted: true
                 });
             }
             catch (e) {

@@ -6,6 +6,7 @@ export interface IBeatmap {
     title: string;
     artist: string;
     timestamp: number;
+    minted: boolean;
     json: string;
 }
 

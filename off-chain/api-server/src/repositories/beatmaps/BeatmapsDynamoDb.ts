@@ -50,6 +50,7 @@ export class BeatmapsDynamoDb implements IBeatmapsRepo {
             username: record.username?.S ?? '',
             title: record.title?.S ?? '',
             artist: record.artist?.S ?? '',
+            minted: (record.artist.N ?? 0) == 1
         };
     }
 
