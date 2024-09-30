@@ -25,6 +25,7 @@ import { IReferralRepo } from './repositories/referral/IReferralManager';
 import { ReferralDynamoDb } from './repositories/referral/ReferralDynamoDb';
 import { BeatmapsController } from './controllers/beatmaps.controller';
 import { BeatmapsService } from './services/beatmaps.service';
+import { VersionController } from './controllers/version.controller';
 
 @Module({})
 export class AuthManagerModule {
@@ -141,6 +142,7 @@ export class ConfigSettingsModule {
         TokenController,
         AuthController,
         SettingsController,
+        VersionController,
         BeatmapsController,
         ReferralController
     ],
