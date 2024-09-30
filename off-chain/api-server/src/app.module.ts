@@ -23,6 +23,7 @@ import { ReferralController } from './controllers/referral.controller';
 import { ReferralService } from './services/referral.service';
 import { IReferralRepo } from './repositories/referral/IReferralManager';
 import { ReferralDynamoDb } from './repositories/referral/ReferralDynamoDb';
+import { VersionController } from './controllers/version.controller';
 
 @Module({})
 export class AuthManagerModule {
@@ -133,7 +134,7 @@ export class ConfigSettingsModule {
         BeatmapsModule.register(),
         ReferralModule.register()
     ],
-    controllers: [AppController, LeaderboardController, TokenController, AuthController, SettingsController, ReferralController],
+    controllers: [AppController, LeaderboardController, TokenController, AuthController, VersionController, SettingsController, ReferralController],
     providers: [AppService, SuiService, LeaderboardService, TokenService, AuthService, ReferralService],
 })
 
