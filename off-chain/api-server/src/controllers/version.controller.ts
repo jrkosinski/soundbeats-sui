@@ -28,13 +28,16 @@ export class VersionController {
         major: number,
         minor: number,
         revision: number,
+        value: string,
         note: string
     }> {
-        return {
-            major: 0,
-            minor: 1,
+        const version = {
+            major: 2,
+            minor: 0,
             revision: 0,
-            note: ''
+            note: 'Sep 30 2024'
         };
+
+        return { value: `${version.major}.${version.minor}.${version.revision}`, ...version };
     }
 }
