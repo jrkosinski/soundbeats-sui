@@ -11,7 +11,6 @@ import { ApiOperation } from '@nestjs/swagger';
 import { AppLogger } from '../app.logger';
 import { ReferralService } from 'src/services/referral.service';
 import { returnError } from 'src/util/return-error';
-import { NotFoundError } from 'rxjs';
 
 @Controller()
 export class ReferralController {

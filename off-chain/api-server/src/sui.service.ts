@@ -580,8 +580,8 @@ export class SuiService {
         username: string,
         oauthToken: string,
         nonceToken: string,
-    ): Promise<{ username: string; authId: string; status: string }> {
-        const output = { username: '', authId: '', status: '' };
+    ): Promise<{ username: string; authId: string; status: string, referralBeatmap: string }> {
+        const output = { username: '', authId: '', status: '', referralBeatmap: '' };
         const authRecord = await this.authManager.getAuthRecord(suiAddress, 'sui');
 
         if (!authRecord) {
