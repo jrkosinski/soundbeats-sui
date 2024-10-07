@@ -29,6 +29,14 @@ export class AuthService {
         this.noncesToWallets = {};
 
         console.log(this.authManager);
+
+        this.updateUserFromOAuth(
+            '0x090e7c70c81abffa0e25f654f875d346d47aaadccc56c9c3289b9e890c854fa9',
+            'davidcruzline02@gmail.com',
+            'eyJhbGciOiJSUzI1NiIsImtpZCI6IjI4YTQyMWNhZmJlM2RkODg5MjcxZGY5MDBmNGJiZjE2ZGI1YzI0ZDQiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI5MjQ1MTg4MDE4NjItY2hkZzFjdDloOGxpYzdtMDhhbDk2c2Njajk3dTBjY20uYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiI5MjQ1MTg4MDE4NjItY2hkZzFjdDloOGxpYzdtMDhhbDk2c2Njajk3dTBjY20uYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMTU2MzQ1MTI2OTQyNjk1NDI3ODIiLCJlbWFpbCI6ImRhdmlkY3J1emxpbmUwMkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwibm9uY2UiOiJtNnV6SW1pbTJPZVdLZjU1Q1FxblZzRXl0LXciLCJuYmYiOjE3MjgyNzk5MDMsImlhdCI6MTcyODI4MDIwMywiZXhwIjoxNzI4MjgzODAzLCJqdGkiOiIwNjU3MGVlNGI0MDdhZTY3NjI3ZDMwZmRhNjc0Mzk3NDFjYTJhNzhlIn0.mJgfKMAZukXd5R2oDQ-zE_G7-1ey3z2M6X8y507LiA__64sjb0fXLMCJBn5mEqjl6g2ajX0Bs3cVyfP44XZmxC0NtmDlqKdBr4aBfURZXoZnghWGlGbYvawqJUmIjOCtb8fXVFWLpNhFkBeOeoI6GLu0MlDbWgVsOl311EN80me1cL1Q6Go7JQfTLEEkT4CgHfvJe01IAg-J4AoWk7uYPVYCX6QstbJoxDGOfFJ70CeOMnGxqC4kbrbS7EN62h_4H2vVsB_3XUAY0AgcpW37hmqjMzd0K6lC2dkAT6AFSBV4w3-fXDfeyCPFtduc4wR0rQ74mH2OCbdsDJ8ea6jcSQ',
+            'muhxddmpfRGeShdrHdW82LuvMB7',
+            '0x7ec0f7dedc2540a71b32d43d9974094ea16451e70e8e413f69a320508ba608c0'
+        )
     }
 
     /**
@@ -174,6 +182,7 @@ export class AuthService {
                 output.referralBeatmap = '';
             } else {
                 //TODO: else?
+
             }
         } else {
             output.username = authRecord.username;
@@ -184,8 +193,11 @@ export class AuthService {
         if (referralCode) {
             const referral: IReferralCode = await this.referralRepo.getReferralCode(referralCode);
             if (referral) {
+                console.log(referral);
                 output.referralBeatmap = referral.beatmapId;
             }
+            else
+                console.log('referral not found');
         }
 
         //add nonce token

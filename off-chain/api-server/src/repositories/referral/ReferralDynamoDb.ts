@@ -46,6 +46,9 @@ export class ReferralDynamoDb implements IReferralRepo {
     //data access methods
 
     _mapRecord(record: any): IReferralCode {
+        if (!record)
+            return null;
+
         return {
             code: record.code?.S ?? '',
             beatmapId: record.beatmapId?.S ?? '',
@@ -57,7 +60,12 @@ export class ReferralDynamoDb implements IReferralRepo {
     }
 
     private async _dataAccess_getReferral(code: string): Promise<IReferralCode> {
-        return null;
+        return this._mapRecord(await this.dynamoDb.getItem({
+            TableName: this.config.referralTableName,
+            Key: {
+                code: { S: code },
+            },
+        }));
     }
 
     private async _dataAccess_putReferral(referral: IReferralCode): Promise<IDynamoResult> {
