@@ -46,16 +46,18 @@ export class ReferralDynamoDb implements IReferralRepo {
     //data access methods
 
     _mapRecord(record: any): IReferralCode {
-        if (!record)
+        if (!record?.data)
             return null;
 
+        const data = record.data;
+
         return {
-            code: record.code?.S ?? '',
-            beatmapId: record.beatmapId?.S ?? '',
-            generatedAt: record.generatedAt?.N ?? 0,
-            lastRedeemedAt: record.lastRedeemedAt?.N ?? 0,
-            maxUses: record.maxUses?.N ?? 0,
-            uses: record.uses?.N ?? 0,
+            code: data.code?.S ?? '',
+            beatmapId: data.beatmapId?.S ?? '',
+            generatedAt: data.generatedAt?.N ?? 0,
+            lastRedeemedAt: data.lastRedeemedAt?.N ?? 0,
+            maxUses: data.maxUses?.N ?? 0,
+            uses: data.uses?.N ?? 0,
         };
     }
 
