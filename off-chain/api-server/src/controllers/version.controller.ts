@@ -28,16 +28,6 @@ export class VersionController {
         major: number,
         minor: number,
         revision: number,
-<<<<<<< HEAD
-        note: string
-    }> {
-        return {
-            major: 0,
-            minor: 1,
-            revision: 0,
-            note: ''
-        };
-=======
         value: string,
         note: string
     }> {
@@ -49,6 +39,5 @@ export class VersionController {
         };
 
         return { value: `${version.major}.${version.minor}.${version.revision}`, ...version };
->>>>>>> main
     }
 }
