@@ -2,20 +2,22 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IAuthManager, IAuthRecord, IAuthSession } from '../repositories/auth/IAuthManager';
 import { ConfigSettings } from '../config';
 import { AppLogger } from '../app.logger';
-import { AuthManagerModule, ConfigSettingsModule, LeaderboardModule } from '../app.module';
+import { AuthManagerModule, ConfigSettingsModule, LeaderboardModule, ReferralModule } from '../app.module';
+import { IReferralCode, IReferralRepo } from 'src/repositories/referral/IReferralManager';
 
 @Injectable()
 export class AuthService {
     network: string;
     logger: AppLogger;
     authManager: IAuthManager;
+    referralRepo: IReferralRepo;
     config: ConfigSettings;
     noncesToWallets: { [key: string]: string };
 
     constructor(
         @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
         @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
-        @Inject('LeaderboardModule') leaderboardModule: LeaderboardModule
+        @Inject('ReferralModule') referralModule: ReferralModule
     ) {
         this.config = configSettingsModule.get();
         this.logger = new AppLogger('auth.service');
@@ -23,6 +25,7 @@ export class AuthService {
         //create connect to the correct environment
         this.network = this.config.suiNetwork;
         this.authManager = authManagerModule.get(this.config);
+        this.referralRepo = referralModule.get(this.config);
         this.noncesToWallets = {};
 
         console.log(this.authManager);
@@ -154,11 +157,12 @@ export class AuthService {
         oauthToken: string,
         nonceToken: string,
         referralCode?: string
-    ): Promise<{ username: string; authId: string; status: string }> {
-        const output = { username: '', authId: '', status: '' };
+    ): Promise<{ username: string; authId: string; status: string, referralBeatmap: string }> {
+        const output = { username: '', authId: '', status: '', referralBeatmap: '' };
         const authRecord = await this.authManager.getAuthRecord(suiAddress, 'sui');
 
         if (!authRecord) {
+            console.log('registering user');
             if (
                 await this.authManager.registerUser(suiAddress, 'sui', suiAddress, username, {
                     source: 'oauth',
@@ -168,13 +172,29 @@ export class AuthService {
                 output.username = username;
                 output.authId = suiAddress;
                 output.status = 'created';
+                output.referralBeatmap = '';
             } else {
                 //TODO: else?
+
             }
         } else {
+            console.log('user found');
             output.username = authRecord.username;
             output.authId = authRecord.suiWallet;
             output.status = 'exists';
+        }
+
+        if (referralCode) {
+            console.log('referral found');
+            const referral: IReferralCode = await this.referralRepo.getReferralCode(referralCode);
+            if (referral) {
+                console.log(referral);
+                output.referralBeatmap = referral.beatmapId;
+            }
+            else
+                console.log('referral not found');
+        } else {
+            console.log('no referral code');
         }
 
         //add nonce token

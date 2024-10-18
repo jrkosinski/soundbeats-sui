@@ -318,6 +318,8 @@ export class UpdateUserOAuthResponseDto {
     username: string;
     @ApiProperty({ description: 'Success or failure of the operation' })
     status: string;
+    @ApiProperty({ description: 'If the user has a referral code, this is the beatmap that it refers to' })
+    referralBeatmap: string;
 }
 
 export class GetUserOAuthDto {

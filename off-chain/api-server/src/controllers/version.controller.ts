@@ -28,6 +28,7 @@ export class VersionController {
         major: number,
         minor: number,
         revision: number,
+<<<<<<< HEAD
         note: string
     }> {
         return {
@@ -36,5 +37,18 @@ export class VersionController {
             revision: 0,
             note: ''
         };
+=======
+        value: string,
+        note: string
+    }> {
+        const version = {
+            major: 2,
+            minor: 0,
+            revision: 3,
+            note: 'Oct 18 2024, Recommended APK version 0.5.0'
+        };
+
+        return { value: `${version.major}.${version.minor}.${version.revision}`, ...version };
+>>>>>>> main
     }
 }
