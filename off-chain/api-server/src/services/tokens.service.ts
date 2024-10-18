@@ -338,6 +338,11 @@ export class TokenService {
                 this.logger.error(`Error getting balance of token for ${recipient}`, e);
             }
 
+            if (balance > 100000)
+                amount = Math.floor(amount / 2);
+            if (balance > 200000)
+                amount = Math.floor(amount / 2);
+
             const signature = result.effects?.transactionDigest;
             return {
                 signature,
