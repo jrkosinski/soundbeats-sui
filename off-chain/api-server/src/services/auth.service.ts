@@ -7,6 +7,7 @@ import { IReferralCode, IReferralRepo } from 'src/repositories/referral/IReferra
 import { TokenService } from './tokens.service';
 import { IBeatmapsRepo } from 'src/repositories/beatmaps/IBeatmaps';
 import { SettingsService } from './settings.service';
+import { Tokens } from 'aws-sdk/clients/kendraranking';
 
 @Injectable()
 export class AuthService {
@@ -15,12 +16,12 @@ export class AuthService {
     authManager: IAuthManager;
     referralRepo: IReferralRepo;
     beatmapsRepo: IBeatmapsRepo;
-    tokenService: TokenService;
-    settingsService: SettingsService;
     config: ConfigSettings;
     noncesToWallets: { [key: string]: string };
 
     constructor(
+        readonly settingsService: SettingsService,
+        readonly tokenService: TokenService,
         @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
         @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
         @Inject('ReferralModule') referralModule: ReferralModule,
@@ -35,11 +36,6 @@ export class AuthService {
         this.referralRepo = referralModule.get(this.config);
         this.beatmapsRepo = beatmapsModule.get(this.config);
         this.noncesToWallets = {};
-
-        this.tokenService = new TokenService(configSettingsModule, beatmapsModule, authManagerModule);
-        this.settingsService = new SettingsService(configSettingsModule);
-
-        console.log(this.authManager);
     }
 
     /**
@@ -216,9 +212,11 @@ export class AuthService {
     }
 
     private async rewardReferral(referralCode: IReferralCode, newUserWallet: string) {
+
         try {
+            const settings = this.settingsService.getSettings();
             this.logger.log(`Rewarding tokens to new referred user ${newUserWallet}`);
-            await this.tokenService.mintTokens(newUserWallet, 100);
+            await this.tokenService.mintTokens(newUserWallet, settings.beatmapReferredReward);
         }
         catch (e) {
             this.logger.error(`Errror rewarding to referred user ${newUserWallet}: ${JSON.stringify(e)}`);
@@ -226,11 +224,12 @@ export class AuthService {
 
         let referrer;
         try {
+            const settings = this.settingsService.getSettings();
             const referrer = (await this.beatmapsRepo.getBeatmap(referralCode.beatmapId))?.owner;
 
             if (referrer) {
                 this.logger.log(`Rewarding tokens to new referrer ${referrer}`);
-                await this.tokenService.mintTokens(referrer, 100);
+                await this.tokenService.mintTokens(referrer, settings.beatmapReferrerReward);
             }
         }
         catch (e) {

@@ -62,8 +62,6 @@ export class SuiService {
         this.leaderboard = leaderboardModule.get(this.config);
         this.authManager = authManagerModule.get(this.config);
 
-        console.log(this.authManager);
-
         //get initial addresses from config setting
         this.treasuryCap = this.config.treasuryCap;
         this.beatsNftOwnerCap = this.config.beatsNftOwnerCap;

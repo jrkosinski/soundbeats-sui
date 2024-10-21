@@ -20,7 +20,12 @@ export class SettingsService {
         this.network = this.config.suiNetwork;
     }
 
-    async getSettings(): Promise<any> {
+    getSettings(): {
+        perfectHit: number,
+        beatmapReferrerReward: number,
+        beatmapReferredReward: number,
+        network: string
+    } {
         //TODO: store these values in config 
         return {
             perfectHit: 5,
