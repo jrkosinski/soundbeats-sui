@@ -2,8 +2,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IAuthManager, IAuthRecord, IAuthSession } from '../repositories/auth/IAuthManager';
 import { ConfigSettings } from '../config';
 import { AppLogger } from '../app.logger';
-import { AuthManagerModule, ConfigSettingsModule, LeaderboardModule, ReferralModule } from '../app.module';
+import { AuthManagerModule, BeatmapsModule, ConfigSettingsModule, ReferralModule } from '../app.module';
 import { IReferralCode, IReferralRepo } from 'src/repositories/referral/IReferralManager';
+import { TokenService } from './tokens.service';
+import { IBeatmapsRepo } from 'src/repositories/beatmaps/IBeatmaps';
+import { SettingsService } from './settings.service';
 
 @Injectable()
 export class AuthService {
@@ -11,13 +14,17 @@ export class AuthService {
     logger: AppLogger;
     authManager: IAuthManager;
     referralRepo: IReferralRepo;
+    beatmapsRepo: IBeatmapsRepo;
+    tokenService: TokenService;
+    settingsService: SettingsService;
     config: ConfigSettings;
     noncesToWallets: { [key: string]: string };
 
     constructor(
         @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
         @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
-        @Inject('ReferralModule') referralModule: ReferralModule
+        @Inject('ReferralModule') referralModule: ReferralModule,
+        @Inject('BeatmapsModule') beatmapsModule: BeatmapsModule
     ) {
         this.config = configSettingsModule.get();
         this.logger = new AppLogger('auth.service');
@@ -26,7 +33,11 @@ export class AuthService {
         this.network = this.config.suiNetwork;
         this.authManager = authManagerModule.get(this.config);
         this.referralRepo = referralModule.get(this.config);
+        this.beatmapsRepo = beatmapsModule.get(this.config);
         this.noncesToWallets = {};
+
+        this.tokenService = new TokenService(configSettingsModule, beatmapsModule, authManagerModule);
+        this.settingsService = new SettingsService(configSettingsModule);
 
         console.log(this.authManager);
     }
@@ -190,16 +201,40 @@ export class AuthService {
             if (referral) {
                 console.log(referral);
                 output.referralBeatmap = referral.beatmapId;
+
+                //here, we must reward both the referral and the referred
+                await this.rewardReferral(referral, output.authId);
             }
             else
-                console.log('referral not found');
-        } else {
-            console.log('no referral code');
+                this.logger.log(`referral code ${referralCode} not found`);
         }
 
         //add nonce token
         if (output.authId && output.authId.length) this.noncesToWallets[nonceToken] = output.authId;
 
         return output;
+    }
+
+    private async rewardReferral(referralCode: IReferralCode, newUserWallet: string) {
+        try {
+            this.logger.log(`Rewarding tokens to new referred user ${newUserWallet}`);
+            await this.tokenService.mintTokens(newUserWallet, 100);
+        }
+        catch (e) {
+            this.logger.error(`Errror rewarding to referred user ${newUserWallet}: ${JSON.stringify(e)}`);
+        }
+
+        let referrer;
+        try {
+            const referrer = (await this.beatmapsRepo.getBeatmap(referralCode.beatmapId))?.owner;
+
+            if (referrer) {
+                this.logger.log(`Rewarding tokens to new referrer ${referrer}`);
+                await this.tokenService.mintTokens(referrer, 100);
+            }
+        }
+        catch (e) {
+            this.logger.error(`Errror rewarding to referrer ${referrer ? referrer : ''}: ${JSON.stringify(e)}`);
+        }
     }
 }

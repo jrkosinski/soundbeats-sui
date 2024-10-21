@@ -1,20 +1,19 @@
 import {
-    Body,
     Controller,
     Get,
-    Post,
-    Put,
     Query,
     HttpCode,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { AppLogger } from '../app.logger';
+import { SettingsService } from 'src/services/settings.service';
 
 @Controller()
 export class SettingsController {
     logger: AppLogger;
 
     constructor(
+        private readonly settingsService: SettingsService,
     ) {
         this.logger = new AppLogger('settings.controller');
     }
@@ -33,11 +32,6 @@ export class SettingsController {
         beatmapReferredReward: number,
         network: string
     }> {
-        return {
-            perfectHit: 5,
-            network: 'testnet',
-            beatmapReferrerReward: 100,
-            beatmapReferredReward: 50
-        };
+        return this.settingsService.getSettings();
     }
 }

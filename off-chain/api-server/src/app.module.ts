@@ -24,6 +24,7 @@ import { ReferralService } from './services/referral.service';
 import { IReferralRepo } from './repositories/referral/IReferralManager';
 import { ReferralDynamoDb } from './repositories/referral/ReferralDynamoDb';
 import { VersionController } from './controllers/version.controller';
+import { SettingsService } from './services/settings.service';
 
 @Module({})
 export class AuthManagerModule {
@@ -135,7 +136,7 @@ export class ConfigSettingsModule {
         ReferralModule.register()
     ],
     controllers: [AppController, LeaderboardController, TokenController, AuthController, VersionController, SettingsController, ReferralController],
-    providers: [AppService, SuiService, LeaderboardService, TokenService, AuthService, ReferralService],
+    providers: [AppService, SuiService, LeaderboardService, TokenService, AuthService, ReferralService, SettingsService],
 })
 
 export class AppModule { }

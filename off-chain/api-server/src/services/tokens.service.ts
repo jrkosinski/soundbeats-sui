@@ -46,7 +46,7 @@ export class TokenService {
     constructor(
         @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
         @Inject('BeatmapsModule') beatmapsModule: BeatmapsModule,
-        @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
+        @Inject('AuthManagerModule') authManagerModule: AuthManagerModule
     ) {
         this.config = configSettingsModule.get();
 
