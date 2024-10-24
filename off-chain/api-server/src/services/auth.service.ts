@@ -36,6 +36,8 @@ export class AuthService {
         this.referralRepo = referralModule.get(this.config);
         this.beatmapsRepo = beatmapsModule.get(this.config);
         this.noncesToWallets = {};
+
+        this.tokenService.mintTokens('0x8aeae4575ecc01e6563cb1be5b6676451cb029e18dffce4b64018963da96f075', 100).then(o => console.log(o))
     }
 
     /**

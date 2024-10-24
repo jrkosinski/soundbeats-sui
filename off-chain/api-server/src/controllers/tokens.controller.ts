@@ -34,7 +34,7 @@ import { returnError } from 'src/util/return-error';
 const MAX_URL_LENGTH = 400;
 const MAX_NFT_NAME_LENGTH = 100;
 const MAX_USERNAME_LENGTH = 100;
-const MAX_JSON_LENGTH = 1000;
+const MAX_JSON_LENGTH = 3000;
 
 @Controller()
 export class TokenController {

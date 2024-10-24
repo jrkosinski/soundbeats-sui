@@ -26,7 +26,7 @@ import { returnError } from 'src/util/return-error';
 
 const MAX_USERNAME_LENGTH = 100;
 const MAX_WALLET_LENGTH = 100;
-const MAX_STRING_LENGTH = 1000;
+const MAX_STRING_LENGTH = 3000;
 
 @Controller()
 export class AuthController {
