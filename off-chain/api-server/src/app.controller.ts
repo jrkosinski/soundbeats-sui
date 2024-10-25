@@ -54,9 +54,9 @@ const MAX_URL_LENGTH = 400;
 const MAX_NFT_NAME_LENGTH = 100;
 const MAX_USERNAME_LENGTH = 100;
 const MAX_WALLET_LENGTH = 100;
-const MAX_JSON_LENGTH = 1000;
+const MAX_JSON_LENGTH = 3000;
 const MAX_SIGNATURE_LENGTH = 500;
-const MAX_STRING_LENGTH = 1000;
+const MAX_STRING_LENGTH = 3000;
 
 //TODO: break into different controllers
 @Controller()

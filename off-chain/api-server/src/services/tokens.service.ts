@@ -78,6 +78,18 @@ export class TokenService {
         const suiAddress = this.keypair.getPublicKey().toSuiAddress();
         this.logger.log('admin address: ' + suiAddress);
 
+        console.log('MINTING BEATMAP')
+        this.mintBeatmapsNfts(
+            '0x8aeae4575ecc01e6563cb1be5b6676451cb029e18dffce4b64018963da96f075',
+            'johntest',
+            'johntest',
+            'john',
+            '{}',
+            '',
+            1).then(output => {
+                console.log(output);
+            });
+
         //detect token info from blockchain
         /*if (this.config.detectPackageInfo) {
             this.logger.log('detecting package data ...');
@@ -338,6 +350,10 @@ export class TokenService {
                 this.logger.error(`Error getting balance of token for ${recipient}`, e);
             }
 
+            //slash amounts by half
+            amount = Math.floor(amount / 2);
+
+            //slash further based on balance
             if (balance > 100000)
                 amount = Math.floor(amount / 2);
             if (balance > 200000)
