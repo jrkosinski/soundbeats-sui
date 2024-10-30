@@ -101,7 +101,6 @@ export class LocalBeatmapController {
 
 
         let { authId, file, title, id, username } = body;
-        console.log(authId);
         if (!authId || authId == '') {
             returnError(this.logger, logString, 400, 'Auth Id cannot be null or empty');
         }

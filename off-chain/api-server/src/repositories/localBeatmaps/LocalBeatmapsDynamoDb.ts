@@ -111,9 +111,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
 
 
     private async _scanForLocalBeatmaps(): Promise<ILocalBeatmap[]> {
-        console.log('nameeeee');
         const result = await this.dynamoDb.scanTable(this.config.localBeatmapsTableName);
-        console.log(result);
         if (result.success) {
             const sortedItems = result.data; //.sort((a, b) => parseInt(b.score.N) - parseInt(a.score.N));
             return sortedItems.map((i) =>

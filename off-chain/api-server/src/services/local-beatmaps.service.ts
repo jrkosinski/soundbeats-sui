@@ -104,9 +104,6 @@ export class LocalBeatmapsService {
         const output = { title: '', status: '', username: '', file: '', id: '' };
         const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, 'sui');
 
-        console.log('-------');
-        console.log(authRecord);
-        console.log('++++');
 
 
         if (authRecord == null) {
