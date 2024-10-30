@@ -13,6 +13,7 @@ import { ConfigSettings, IConfigSettings } from './config';
 import { ILeaderboard } from './repositories/leaderboard/ILeaderboard';
 import { LeaderboardDynamoDb } from './repositories/leaderboard/LeaderboardDynamoDb';
 import { BeatmapsDynamoDb } from './repositories/beatmaps/BeatmapsDynamoDb';
+import { LocalBeatmapsDynamoDb} from './repositories/localBeatmaps/LocalBeatmapsDynamoDb';
 import { LeaderboardMock } from './repositories/leaderboard/LeaderboardMock';
 import { LeaderboardService } from './services/leaderboard.service';
 import { TokenService } from './services/tokens.service';
@@ -24,6 +25,9 @@ import { ReferralService } from './services/referral.service';
 import { IReferralRepo } from './repositories/referral/IReferralManager';
 import { ReferralDynamoDb } from './repositories/referral/ReferralDynamoDb';
 import { VersionController } from './controllers/version.controller';
+import { ILocalBeatmapsRepo } from './repositories/localBeatmaps/ILocalBeatmaps';
+import { LocalBeatmapsService } from './services/local-beatmaps.service';
+import { LocalBeatmapController } from './controllers/local-beatmap.controller';
 
 @Module({})
 export class AuthManagerModule {
@@ -85,6 +89,27 @@ export class BeatmapsModule {
     }
 }
 
+
+@Module({})
+export class LocalBeatmapsModule {
+    static register(): DynamicModule {
+        let provider = {
+            provide: 'LocalBeatmapsModule',
+            useClass: LocalBeatmapsModule,
+        };
+
+        return {
+            module: LocalBeatmapsModule,
+            providers: [provider],
+            exports: [provider],
+        };
+    }
+
+    get(config: IConfigSettings): ILocalBeatmapsRepo {
+        return config.testMode ? new LocalBeatmapsDynamoDb(config) : new LocalBeatmapsDynamoDb(config);
+    }
+}
+
 @Module({})
 export class ReferralModule {
     static register(): DynamicModule {
@@ -132,10 +157,11 @@ export class ConfigSettingsModule {
         ConfigSettingsModule.register(),
         LeaderboardModule.register(),
         BeatmapsModule.register(),
-        ReferralModule.register()
+        LocalBeatmapsModule.register(),
+        ReferralModule.register(),
     ],
-    controllers: [AppController, LeaderboardController, TokenController, AuthController, VersionController, SettingsController, ReferralController],
-    providers: [AppService, SuiService, LeaderboardService, TokenService, AuthService, ReferralService],
+    controllers: [AppController, LeaderboardController, TokenController, AuthController, VersionController, SettingsController, ReferralController, LocalBeatmapController],
+    providers: [AppService, SuiService, LeaderboardService, TokenService, AuthService, ReferralService, LocalBeatmapsService],
 })
 
 export class AppModule { }
