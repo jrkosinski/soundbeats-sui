@@ -31,9 +31,10 @@ export class ReferralService {
         this.network = this.config.suiNetwork;
     }
 
-    async generateReferralCode(beatmapId: string): Promise<{ code: string, message: string, success: boolean }> {
+    async generateReferralCode(beatmapId: string): Promise<{ code: string, short_code: string, message: string, success: boolean }> {
         const output = {
             code: '',
+            short_code: '',
             message: '',
             success: false
         }
@@ -45,6 +46,7 @@ export class ReferralService {
             const referralCode = await this.referralRepo.generateReferralCode(beatmapId);
             output.success = referralCode?.code?.length ? true : false;
             output.code = referralCode?.code ?? '';
+            output.short_code = referralCode?.shortCode ?? '';
         }
 
         return output;
