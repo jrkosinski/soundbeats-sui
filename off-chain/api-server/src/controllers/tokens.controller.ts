@@ -121,9 +121,9 @@ export class TokenController {
         if (!beatmapJson || beatmapJson == '') {
             returnError(this.logger, logString, 400, 'beatmapJson cannot be null or empty');
         }
-        if (beatmapJson.length > MAX_JSON_LENGTH) {
+        /*if (beatmapJson.length > MAX_JSON_LENGTH) {
             returnError(this.logger, logString, 400, `beatmapJson exceeded max length of ${MAX_JSON_LENGTH}`);
-        }
+        }*/
         if (!imageUrl || imageUrl == '') {
             returnError(this.logger, logString, 400, 'imageUrl cannot be null or empty');
         }
