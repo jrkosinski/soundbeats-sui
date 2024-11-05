@@ -46,7 +46,7 @@ export class TokenService {
     constructor(
         @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
         @Inject('BeatmapsModule') beatmapsModule: BeatmapsModule,
-        @Inject('AuthManagerModule') authManagerModule: AuthManagerModule
+        @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
     ) {
         this.config = configSettingsModule.get();
 
@@ -77,18 +77,6 @@ export class TokenService {
         //get admin address
         const suiAddress = this.keypair.getPublicKey().toSuiAddress();
         this.logger.log('admin address: ' + suiAddress);
-
-        console.log('MINTING BEATMAP')
-        this.mintBeatmapsNfts(
-            '0x8aeae4575ecc01e6563cb1be5b6676451cb029e18dffce4b64018963da96f075',
-            'johntest',
-            'johntest',
-            'john',
-            '{}',
-            '',
-            1).then(output => {
-                console.log(output);
-            });
 
         //detect token info from blockchain
         /*if (this.config.detectPackageInfo) {
@@ -184,10 +172,9 @@ export class TokenService {
                 addresses,
                 network: this.network,
                 success: true,
-                message: ''
+                message: '',
             };
-        }
-        catch (e) {
+        } catch (e) {
             return {
                 signature: '',
                 addresses: [],
@@ -266,7 +253,7 @@ export class TokenService {
             const signature = result.effects.transactionDigest;
             const addresses = result.effects.created?.map((obj) => obj.reference.objectId) ?? [];
 
-            //add to beatmaps repository 
+            //add to beatmaps repository
             let message = '';
             try {
                 await this.beatmapsRepo.addBeatmap({
@@ -278,9 +265,8 @@ export class TokenService {
                     artist,
                     username,
                 });
-            }
-            catch (e) {
-                message = 'Minted successfully, but failed to add to database'
+            } catch (e) {
+                message = 'Minted successfully, but failed to add to database';
             }
 
             return {
@@ -345,8 +331,7 @@ export class TokenService {
 
             try {
                 balance = (await this.getTokenBalance(recipient))?.balance ?? 0;
-            }
-            catch (e) {
+            } catch (e) {
                 this.logger.error(`Error getting balance of token for ${recipient}`, e);
             }
 
@@ -354,10 +339,8 @@ export class TokenService {
             amount = Math.floor(amount / 2);
 
             //slash further based on balance
-            if (balance > 100000)
-                amount = Math.floor(amount / 2);
-            if (balance > 200000)
-                amount = Math.floor(amount / 2);
+            if (balance > 100000) amount = Math.floor(amount / 2);
+            if (balance > 200000) amount = Math.floor(amount / 2);
 
             const signature = result.effects?.transactionDigest;
             return {
@@ -365,7 +348,7 @@ export class TokenService {
                 network: this.network,
                 success: true,
                 message: '',
-                balance
+                balance,
             };
         } catch (e) {
             return {
@@ -468,7 +451,7 @@ export class TokenService {
                 let metadata: any = {};
                 try {
                     metadata = JSON.parse(nft.data.content['fields']['metadata']);
-                } catch { }
+                } catch {}
                 output.nfts.push({
                     username: metadata.username ?? '',
                     artist: metadata.artist ?? '',
@@ -476,7 +459,7 @@ export class TokenService {
                     beatmapJson: '',
                     address: nft.data.objectId,
                     uniqueUserCount: 0,
-                    owner: nft.owner
+                    owner: nft.owner,
                 });
             }
         }
@@ -513,12 +496,12 @@ export class TokenService {
                 address: nft.address,
                 uniqueUserCount: 0,
                 owner: nft.owner,
-                timestamp: nft.timestamp
+                timestamp: nft.timestamp,
             });
         }
 
         //sort
-        output.nfts = output.nfts.sort((a, b) => (a.timestamp - b.timestamp));
+        output.nfts = output.nfts.sort((a, b) => a.timestamp - b.timestamp);
 
         return output;
     }
@@ -538,12 +521,9 @@ export class TokenService {
             network: string;
         } = { nfts: [], network: this.network };
 
-        let nfts = address
-            ? [await this.beatmapsRepo.getBeatmap(address)]
-            : await this.beatmapsRepo.getAllBeatmaps();
+        let nfts = address ? [await this.beatmapsRepo.getBeatmap(address)] : await this.beatmapsRepo.getAllBeatmaps();
 
-        if (nfts.length == 1 && !nfts[0])
-            nfts = [];
+        if (nfts.length == 1 && !nfts[0]) nfts = [];
 
         for (let nft of nfts) {
             output.nfts.push({
@@ -554,12 +534,12 @@ export class TokenService {
                 address: nft.address,
                 uniqueUserCount: 0,
                 owner: nft.owner,
-                timestamp: nft.timestamp
+                timestamp: nft.timestamp,
             });
         }
 
         //sort
-        output.nfts = output.nfts.sort((a, b) => (a.timestamp - b.timestamp));
+        output.nfts = output.nfts.sort((a, b) => a.timestamp - b.timestamp);
 
         return output;
     }

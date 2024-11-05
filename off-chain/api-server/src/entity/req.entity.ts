@@ -33,6 +33,43 @@ export class MintBeatmapsNftDto {
     quantity?: number = 1;
 }
 
+
+export class LocalBeatmapsDto {
+    @ApiProperty({ description: 'Username of the beatmap creator' })
+    username: string;
+    @ApiProperty({ description: 'Song title or beatmap title' })
+    title: string;
+    @ApiProperty({ description: 'File url' })
+    file: string;
+}
+
+
+export class UpdateLocalBeatmapsDto {
+    @ApiProperty({ description: 'Auth ID, e.g. EVM wallet address or username' })
+    id: any;
+    @ApiProperty({ description: 'Auth ID, e.g. EVM wallet address or username' })
+    authId: string;
+    @ApiProperty({ description: 'Auth type, e.g. "evm"' })
+    authType: 'evm' | 'sui';
+    @ApiProperty({ description: 'Song username or beatmap username' })
+    username: string;
+    @ApiProperty({ description: 'Song title or beatmap title' })
+    title: string;
+    @ApiProperty({ description: 'File url' })
+    file: string;
+}
+
+export class GetLocalBeatmapResponseDto {
+    // @ApiProperty({ description: 'Account unique username' })
+    // username: string;
+    @ApiProperty({ description: 'Song title or beatmap title' })
+    title: string;
+    @ApiProperty({ description: 'File url' })
+    file: string;
+    @ApiProperty({ description: 'Success or failure of the operation' })
+    status: string;
+}
+
 export class MintTokenDto {
     @ApiProperty({ description: 'The amount of the token' })
     amount: number;

@@ -25,7 +25,7 @@ export class AuthService {
         @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
         @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
         @Inject('ReferralModule') referralModule: ReferralModule,
-        @Inject('BeatmapsModule') beatmapsModule: BeatmapsModule
+        @Inject('BeatmapsModule') beatmapsModule: BeatmapsModule,
     ) {
         this.config = configSettingsModule.get();
         this.logger = new AppLogger('auth.service');
@@ -36,8 +36,6 @@ export class AuthService {
         this.referralRepo = referralModule.get(this.config);
         this.beatmapsRepo = beatmapsModule.get(this.config);
         this.noncesToWallets = {};
-
-        this.tokenService.mintTokens('0x8aeae4575ecc01e6563cb1be5b6676451cb029e18dffce4b64018963da96f075', 100).then(o => console.log(o))
     }
 
     /**
@@ -165,18 +163,25 @@ export class AuthService {
         username: string,
         oauthToken: string,
         nonceToken: string,
-        referralCode?: string
-    ): Promise<{ username: string; authId: string; status: string, referralBeatmap: string }> {
+        referralCode?: string,
+    ): Promise<{ username: string; authId: string; status: string; referralBeatmap: string }> {
         const output = { username: '', authId: '', status: '', referralBeatmap: '' };
         const authRecord = await this.authManager.getAuthRecord(suiAddress, 'sui');
 
         if (!authRecord) {
             console.log('registering user');
             if (
-                await this.authManager.registerUser(suiAddress, 'sui', suiAddress, username, {
-                    source: 'oauth',
-                    nonce: nonceToken,
-                }, referralCode)
+                await this.authManager.registerUser(
+                    suiAddress,
+                    'sui',
+                    suiAddress,
+                    username,
+                    {
+                        source: 'oauth',
+                        nonce: nonceToken,
+                    },
+                    referralCode,
+                )
             ) {
                 output.username = username;
                 output.authId = suiAddress;
@@ -184,7 +189,6 @@ export class AuthService {
                 output.referralBeatmap = '';
             } else {
                 //TODO: else?
-
             }
         } else {
             console.log('user found');
@@ -202,9 +206,7 @@ export class AuthService {
 
                 //here, we must reward both the referral and the referred
                 await this.rewardReferral(referral, output.authId);
-            }
-            else
-                this.logger.log(`referral code ${referralCode} not found`);
+            } else this.logger.log(`referral code ${referralCode} not found`);
         }
 
         //add nonce token
@@ -214,13 +216,11 @@ export class AuthService {
     }
 
     private async rewardReferral(referralCode: IReferralCode, newUserWallet: string) {
-
         try {
             const settings = this.settingsService.getSettings();
             this.logger.log(`Rewarding tokens to new referred user ${newUserWallet}`);
             await this.tokenService.mintTokens(newUserWallet, settings.beatmapReferredReward);
-        }
-        catch (e) {
+        } catch (e) {
             this.logger.error(`Errror rewarding to referred user ${newUserWallet}: ${JSON.stringify(e)}`);
         }
 
@@ -233,8 +233,7 @@ export class AuthService {
                 this.logger.log(`Rewarding tokens to new referrer ${referrer}`);
                 await this.tokenService.mintTokens(referrer, settings.beatmapReferrerReward);
             }
-        }
-        catch (e) {
+        } catch (e) {
             this.logger.error(`Errror rewarding to referrer ${referrer ? referrer : ''}: ${JSON.stringify(e)}`);
         }
     }

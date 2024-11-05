@@ -93,6 +93,7 @@ export interface IConfigSettings {
     get sprintsTableName(): string;
     get scoresTableName(): string;
     get beatmapsTableName(): string;
+    get localBeatmapsTableName(): string;
     get referralTableName(): string;
     get authTableName(): string;
     get authSessionTableName(): string;
@@ -149,6 +150,9 @@ export class ConfigSettings implements IConfigSettings {
     }
     get beatmapsTableName(): string {
         return process.env.DBTABLE_NAME_BEATMAPS;
+    }
+    get localBeatmapsTableName(): string {
+        return process.env.DBTABLE_LOCAL_BEATMAP;
     }
     get referralTableName(): string {
         return process.env.DBTABLE_NAME_REFERRAL;
@@ -238,6 +242,9 @@ export class TestConfigSettings implements IConfigSettings {
         return '';
     }
     get beatmapsTableName(): string {
+        return '';
+    }
+    get localBeatmapsTableName(): string {
         return '';
     }
     get referralTableName(): string {
