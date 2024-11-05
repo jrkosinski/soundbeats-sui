@@ -1,7 +1,6 @@
 
 export interface IReferralCode {
     code: string;
-    shortCode: string;
     beatmapId: string;
     maxUses: number;
     uses: number;
@@ -12,5 +11,5 @@ export interface IReferralCode {
 export interface IReferralRepo {
     generateReferralCode(beatmapId: string): Promise<IReferralCode>;
     getReferralCode(code: string): Promise<IReferralCode>;
-    exists(shortCode: string): Promise<boolean>;
+    exists(code: string): Promise<boolean>;
 }

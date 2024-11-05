@@ -30,7 +30,7 @@ export class ReferralController {
     @ApiOperation({ summary: 'Post a new referral code' })
     @Post('/api/v2/referral')
     @HttpCode(201)
-    async generateReferralCode(@Body() body: { beatmapId: string }): Promise<{ code: string, short_code: string }> {
+    async generateReferralCode(@Body() body: { beatmapId: string }): Promise<{ code: string }> {
 
         const logString = `POST /api/v2/referral ${JSON.stringify(body)}`;
         this.logger.log(logString);
@@ -54,7 +54,6 @@ export class ReferralController {
         }
 
         return {
-            short_code: referralCode?.short_code,
             code: referralCode?.code
         };
     }
