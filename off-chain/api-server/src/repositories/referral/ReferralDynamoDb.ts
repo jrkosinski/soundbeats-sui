@@ -18,19 +18,29 @@ export class ReferralDynamoDb implements IReferralRepo {
         this.dynamoDb = new DynamoDbAccess();
     }
 
+    async exists(code: string): Promise<boolean> {
+        const beatmap = await this.getReferralCode(code);
+        return beatmap?.code === code;
+    }
+
     async getReferralCode(code: string): Promise<IReferralCode> {
         return await this._dataAccess_getReferral(code);
     }
 
     async generateReferralCode(beatmapId: string): Promise<IReferralCode> {
+        let randomCode = this._getRandomString(5).toLowerCase();
+        while (await this.exists(randomCode)) {
+            randomCode = this._getRandomString(5).toLowerCase();
+        }
+
         const output = {
             beatmapId: beatmapId,
-            code: ethers.keccak256(ethers.randomBytes(32)),
+            code: randomCode,
             generatedAt: getTimestamp(),
             lastRedeemedAt: 0,
             maxUses: 0,
-            uses: 0
-        }
+            uses: 0,
+        };
 
         await this.updateReferralCode(output);
 
@@ -38,18 +48,15 @@ export class ReferralDynamoDb implements IReferralRepo {
     }
 
     async updateReferralCode(referralCode: IReferralCode): Promise<void> {
-        await this._dataAccess_putReferral(
-            referralCode
-        );
+        await this._dataAccess_putReferral(referralCode);
     }
 
     //data access methods
 
     _mapRecord(record: any): IReferralCode {
-        if (!record?.data)
-            return null;
+        if (!record) return null;
 
-        const data = record.data;
+        const data = record;
 
         return {
             code: data.code?.S ?? '',
@@ -62,12 +69,14 @@ export class ReferralDynamoDb implements IReferralRepo {
     }
 
     private async _dataAccess_getReferral(code: string): Promise<IReferralCode> {
-        return this._mapRecord(await this.dynamoDb.getItem({
+        const paramsForLongCode = {
             TableName: this.config.referralTableName,
             Key: {
                 code: { S: code },
             },
-        }));
+        };
+
+        return this._mapRecord((await this.dynamoDb.getItem(paramsForLongCode)).data);
     }
 
     private async _dataAccess_putReferral(referral: IReferralCode): Promise<IDynamoResult> {
@@ -82,5 +91,15 @@ export class ReferralDynamoDb implements IReferralRepo {
                 lastRedeemedAt: { N: referral.lastRedeemedAt.toString() },
             },
         });
+    }
+
+    private _getRandomString(length: any): string {
+        let result = '';
+        const characters = 'abcdefghijklmnpqrstuvwxyz023456789';
+        for (let i = 0; i < length; i++) {
+            const randomInd = Math.floor(Math.random() * characters.length);
+            result += characters.charAt(randomInd);
+        }
+        return result;
     }
 }

@@ -11,4 +11,5 @@ export interface IReferralCode {
 export interface IReferralRepo {
     generateReferralCode(beatmapId: string): Promise<IReferralCode>;
     getReferralCode(code: string): Promise<IReferralCode>;
+    exists(code: string): Promise<boolean>;
 }
