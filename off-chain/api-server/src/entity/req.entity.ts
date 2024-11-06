@@ -75,6 +75,8 @@ export class MintTokenDto {
     amount: number;
     @ApiProperty({ description: 'The address of the recipient' })
     recipient: string;
+    @ApiProperty({ description: 'Optional username of the referral owner' })
+    referralOwnerUsername?: string;
 }
 
 export class GetTokenBalanceDto {

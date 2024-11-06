@@ -40,13 +40,44 @@ export class AuthManagerDynamoDb implements IAuthManager {
         }
 
         //write it to the database
-        const result = await this._dataAccess_putAuthRecord(authId, authType, suiWallet, username, 0, extraData, referralCode);
+        const result = await this._dataAccess_putAuthRecord(
+            authId,
+            authType,
+            suiWallet,
+            username,
+            0,
+            extraData,
+            referralCode,
+        );
 
         return result.success;
     }
 
     async exists(authId: string, authType: 'evm' | 'sui'): Promise<boolean> {
         return (await this.getAuthRecord(authId, authType)) != null;
+    }
+
+    async getAuthRecordByName(username: string): Promise<any> {
+        let output: IAuthRecord = null;
+
+        const existing = await this._dataAccess_getAuthRecordByName(username);
+        if (existing.data) {
+            output = {
+                authId: existing.data[0].authId.S,
+                authType: existing.data[0].authType.S,
+                extraData: null,
+                level: parseInt(existing.data[0].level.N?.toString() ?? '0'),
+                suiWallet: existing.data[0].suiWallet.S,
+                username: existing.data[0].username?.S ?? '',
+            };
+
+            if (existing.data[0].extraData && existing.data[0].extraData.S && existing.data[0].extraData.S.length > 0) {
+                output.extraData = JSON.parse(existing.data[0].extraData.S);
+            }
+        }
+
+
+        return output;
     }
 
     async getAuthRecord(authId: string, authType: 'evm' | 'sui'): Promise<IAuthRecord> {
@@ -234,6 +265,19 @@ export class AuthManagerDynamoDb implements IAuthManager {
                 updateTimestamp: { N: unixTimestamp().toString() },
             },
         });
+    }
+
+    async _dataAccess_getAuthRecordByName(username: string): Promise<IDynamoResult> {
+        const params = {
+            TableName: 'auth-dev',
+            IndexName: 'GSI_USERNAME',
+            KeyConditionExpression: 'username = :username',
+            ExpressionAttributeValues: {
+                ':username': { S: username },
+            },
+        };
+        let result =  await this.dynamoDb.query(params)
+        return result;
     }
 
     async _dataAccess_getAuthRecord(authId: string, authType: string): Promise<IDynamoResult> {

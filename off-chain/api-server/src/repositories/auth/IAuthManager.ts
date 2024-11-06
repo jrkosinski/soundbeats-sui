@@ -61,6 +61,15 @@ export interface IAuthManager {
      */
     getAuthRecord(authId: string, authType: 'evm' | 'sui'): Promise<IAuthRecord>;
 
+
+
+    /**
+     * Gets the record identified by the auth id and auth type.
+     *
+     * @param username
+     */
+    getAuthRecordByName(username: string): Promise<IAuthRecord>;
+
     /**
      * Gets all auth records in the database.
      */
