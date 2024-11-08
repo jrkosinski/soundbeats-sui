@@ -3,7 +3,7 @@ import { IAuthManager } from '../repositories/auth/IAuthManager';
 import { ConfigSettings } from '../config';
 import { AppLogger } from '../app.logger';
 import { AuthManagerModule, BeatmapsModule, ConfigSettingsModule, LeaderboardModule, ReferralModule } from '../app.module';
-import { IReferralRepo } from 'src/repositories/referral/IReferralManager';
+import { IReferralCode, IReferralRepo } from 'src/repositories/referral/IReferralManager';
 import { IBeatmapsRepo } from 'src/repositories/beatmaps/IBeatmaps';
 
 @Injectable()
@@ -46,6 +46,19 @@ export class ReferralService {
             output.success = referralCode?.code?.length ? true : false;
             output.code = referralCode?.code ?? '';
         }
+
+        return output;
+    }
+
+    async checkReferralCode(referralCode: string): Promise<{ referralCode: IReferralCode}> {
+        const output = {
+            referralCode: null
+        }
+
+        const referral: IReferralCode = await this.referralRepo.getReferralCode(referralCode);
+        if (referral) {
+            output.referralCode = referral;
+        } else this.logger.log(`referral code ${referralCode} not found`);
 
         return output;
     }

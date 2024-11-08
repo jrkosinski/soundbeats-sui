@@ -215,7 +215,7 @@ export class AuthService {
         return output;
     }
 
-    private async rewardReferral(referralCode: IReferralCode, newUserWallet: string) {
+    async rewardReferral(referralCode: IReferralCode, newUserWallet: string) {
         try {
             const settings = this.settingsService.getSettings();
             this.logger.log(`Rewarding tokens to new referred user ${newUserWallet}`);

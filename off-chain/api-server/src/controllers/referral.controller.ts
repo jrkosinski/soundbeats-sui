@@ -11,12 +11,16 @@ import { ApiOperation } from '@nestjs/swagger';
 import { AppLogger } from '../app.logger';
 import { ReferralService } from 'src/services/referral.service';
 import { returnError } from 'src/util/return-error';
+import { IReferralCode } from '../repositories/referral/IReferralManager';
+import { AuthService } from '../services/auth.service';
 
 @Controller()
 export class ReferralController {
     logger: AppLogger;
 
+
     constructor(
+        private readonly authService: AuthService,
         private readonly referralService: ReferralService,
     ) {
         this.logger = new AppLogger('referral.controller');
@@ -56,5 +60,27 @@ export class ReferralController {
         return {
             code: referralCode?.code
         };
+    }
+
+
+
+    @ApiOperation({ summary: 'Check referral code without authentication' })
+    @Post('/api/v2/verify-referral')
+    async checkReferralCode(@Body() body: { referralCode: string, authId: string }): Promise<{ referralBeatmap: string}> {
+        const logString = `POST /api/v2/referral ${JSON.stringify(body)}`;
+        const output = { referralBeatmap: ''};
+        const { referralCode, authId } = body;
+
+        const result = await this.referralService.checkReferralCode(referralCode);
+
+        if (result) {
+            console.log('referral found');
+            output.referralBeatmap = result.referralCode.beatmapId
+            await this.authService.rewardReferral(result.referralCode, authId);
+        }else {
+            returnError(this.logger, logString, 404, `Referral Code ${referralCode} not found`);
+        }
+
+        return output;
     }
 }
