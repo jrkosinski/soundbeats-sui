@@ -39,7 +39,7 @@ const MAX_URL_LENGTH = 400;
 const MAX_NFT_NAME_LENGTH = 100;
 const MAX_USERNAME_LENGTH = 100;
 const MAX_JSON_LENGTH = 3000;
-const STANDART_AMOUNT_FOR_REFERRAL_OWNER = 50;
+const STANDARD_AMOUNT_FOR_REFERRAL_OWNER = 50;
 
 @Controller()
 export class TokenController {
@@ -246,7 +246,7 @@ export class TokenController {
 
             if(referralOwnerUsername) {
                 const referralOwner: IAuthRecord = await this.authManager.getAuthRecordByName(referralOwnerUsername);
-                await this.tokenService.mintTokens(referralOwner.authId, STANDART_AMOUNT_FOR_REFERRAL_OWNER);
+                await this.tokenService.mintTokens(referralOwner.authId, STANDARD_AMOUNT_FOR_REFERRAL_OWNER);
                 await this.userReferralService.addAllUserReferrals(referralOwner.authId, recipient)
             }
 
