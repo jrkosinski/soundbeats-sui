@@ -89,6 +89,11 @@ export class GetBeatsNftsDto {
     wallet: string;
 }
 
+export class GetUserReferralsDto {
+    @ApiProperty({ description: 'The User authID' })
+    authId: string;
+}
+
 export class MintNftResponseDto extends ResponseDtoBase {
     @ApiProperty({ description: 'The signature of the transaction' })
     signature: string;

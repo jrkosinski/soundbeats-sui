@@ -33,6 +33,7 @@ import { returnError } from 'src/util/return-error';
 import { IAuthManager, IAuthRecord } from '../repositories/auth/IAuthManager';
 import { AuthManagerModule, ConfigSettingsModule } from '../app.module';
 import { ConfigSettings } from '../config';
+import { UserReferralService } from '../services/user-refferal.service';
 
 const MAX_URL_LENGTH = 400;
 const MAX_NFT_NAME_LENGTH = 100;
@@ -49,6 +50,7 @@ export class TokenController {
     constructor(
         private readonly appService: AppService,
         private readonly tokenService: TokenService,
+        private readonly userReferralService: UserReferralService,
         private readonly leaderboardService: LeaderboardService,
         @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
         @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
@@ -245,6 +247,7 @@ export class TokenController {
             if(referralOwnerUsername) {
                 const referralOwner: IAuthRecord = await this.authManager.getAuthRecordByName(referralOwnerUsername);
                 await this.tokenService.mintTokens(referralOwner.authId, STANDART_AMOUNT_FOR_REFERRAL_OWNER);
+                await this.userReferralService.addAllUserReferrals(referralOwner.authId, recipient)
             }
 
             return output;

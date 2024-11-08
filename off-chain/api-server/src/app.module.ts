@@ -29,6 +29,10 @@ import { SettingsService } from './services/settings.service';
 import { ILocalBeatmapsRepo } from './repositories/localBeatmaps/ILocalBeatmaps';
 import { LocalBeatmapsService } from './services/local-beatmaps.service';
 import { LocalBeatmapController } from './controllers/local-beatmap.controller';
+import { UserReferralsDynamoDb } from './repositories/userReferrals/UserReferralsDynamoDb';
+import { IUserReferralsRepo } from './repositories/userReferrals/IUserReferralsManager';
+import { UserReferralService } from './services/user-refferal.service';
+import { UserReferralsController } from './controllers/user-referrals.controller';
 
 @Module({})
 export class AuthManagerModule {
@@ -130,6 +134,27 @@ export class ReferralModule {
     }
 }
 
+
+
+@Module({})
+export class UserReferralsModule {
+    static register(): DynamicModule {
+        let provider = {
+            provide: 'UserReferralsModule',
+            useClass: UserReferralsModule,
+        };
+
+        return {
+            module: UserReferralsModule,
+            providers: [provider],
+            exports: [provider],
+        };
+    }
+    get(config: IConfigSettings): IUserReferralsRepo {
+        return config.testMode ? new UserReferralsDynamoDb(config) : new UserReferralsDynamoDb(config);
+    }
+}
+
 @Module({})
 export class ConfigSettingsModule {
     static register(): DynamicModule {
@@ -159,6 +184,7 @@ export class ConfigSettingsModule {
         BeatmapsModule.register(),
         LocalBeatmapsModule.register(),
         ReferralModule.register(),
+        UserReferralsModule.register()
     ],
     controllers: [
         AppController,
@@ -169,6 +195,7 @@ export class ConfigSettingsModule {
         SettingsController,
         ReferralController,
         LocalBeatmapController,
+        UserReferralsController
     ],
     providers: [
         AppService,
@@ -179,6 +206,7 @@ export class ConfigSettingsModule {
         ReferralService,
         SettingsService,
         LocalBeatmapsService,
+        UserReferralService
     ],
 })
 export class AppModule {}
