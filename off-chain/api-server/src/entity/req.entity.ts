@@ -75,6 +75,8 @@ export class MintTokenDto {
     amount: number;
     @ApiProperty({ description: 'The address of the recipient' })
     recipient: string;
+    @ApiProperty({ description: 'Optional username of the referral owner' })
+    referralOwnerUsername?: string;
 }
 
 export class GetTokenBalanceDto {
@@ -85,6 +87,11 @@ export class GetTokenBalanceDto {
 export class GetBeatsNftsDto {
     @ApiProperty({ description: 'The address of the wallet' })
     wallet: string;
+}
+
+export class GetUserReferralsDto {
+    @ApiProperty({ description: 'The User authID' })
+    authId: string;
 }
 
 export class MintNftResponseDto extends ResponseDtoBase {

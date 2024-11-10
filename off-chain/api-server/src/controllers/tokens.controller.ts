@@ -10,7 +10,7 @@ import {
     UnauthorizedException,
     InternalServerErrorException,
     Param,
-    NotFoundException,
+    NotFoundException, Inject,
 } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { AppService } from '../app.service';
@@ -30,22 +30,36 @@ import { TokenService } from '../services/tokens.service';
 import { AppLogger } from '../app.logger';
 import { LeaderboardService } from 'src/services/leaderboard.service';
 import { returnError } from 'src/util/return-error';
+import { IAuthManager, IAuthRecord } from '../repositories/auth/IAuthManager';
+import { AuthManagerModule, ConfigSettingsModule } from '../app.module';
+import { ConfigSettings } from '../config';
+import { UserReferralService } from '../services/user-refferal.service';
 
 const MAX_URL_LENGTH = 400;
 const MAX_NFT_NAME_LENGTH = 100;
 const MAX_USERNAME_LENGTH = 100;
 const MAX_JSON_LENGTH = 3000;
+const STANDARD_AMOUNT_FOR_REFERRAL_OWNER = 50;
 
 @Controller()
 export class TokenController {
     logger: AppLogger;
+    authManager: IAuthManager;
+    config: ConfigSettings;
 
     constructor(
         private readonly appService: AppService,
         private readonly tokenService: TokenService,
-        private readonly leaderboardService: LeaderboardService
-    ) {
+        private readonly userReferralService: UserReferralService,
+        private readonly leaderboardService: LeaderboardService,
+        @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
+        @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
+
+) {
+        this.config = configSettingsModule.get();
         this.logger = new AppLogger('tokens.controller');
+        this.authManager = authManagerModule.get(this.config);
+
     }
 
     @Get('/')
@@ -218,7 +232,7 @@ export class TokenController {
     async mintBeatsToken(@Body() body: MintTokenDto): Promise<MintTokenResponseDto> {
         const logString = `POST /api/v2/token ${JSON.stringify(body)}`;
         this.logger.log(logString);
-        const { amount, recipient } = body;
+        const { amount, recipient, referralOwnerUsername} = body;
         if (!amount || amount <= 0) {
             returnError(this.logger, logString, 400, 'amount cannot be null, zero or negative');
         }
@@ -229,6 +243,13 @@ export class TokenController {
         try {
             const output = await this.tokenService.mintTokens(recipient, amount);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
+
+            if(referralOwnerUsername) {
+                const referralOwner: IAuthRecord = await this.authManager.getAuthRecordByName(referralOwnerUsername);
+                await this.tokenService.mintTokens(referralOwner.authId, STANDARD_AMOUNT_FOR_REFERRAL_OWNER);
+                await this.userReferralService.addAllUserReferrals(referralOwner.authId, recipient)
+            }
+
             return output;
         } catch (e) {
             returnError(this.logger, logString, 500, e);

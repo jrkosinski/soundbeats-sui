@@ -90,4 +90,10 @@ export class AuthManagerMock implements IAuthManager {
         }
         return output;
     }
+
+
+    async getAuthRecordByName(username: string): Promise<IAuthRecord> {
+        return
+    }
 }
+
