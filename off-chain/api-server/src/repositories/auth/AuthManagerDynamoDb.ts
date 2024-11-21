@@ -26,7 +26,7 @@ export class AuthManagerDynamoDb implements IAuthManager {
         suiWallet: string,
         username: string,
         extraData: any = null,
-        referralCode?: string
+        referralCode?: string,
     ): Promise<boolean> {
         //make sure it doesn't already exist
         const existing = await this._dataAccess_getAuthRecord(authId, authType);
@@ -48,6 +48,7 @@ export class AuthManagerDynamoDb implements IAuthManager {
             0,
             extraData,
             referralCode,
+            Math.floor(Date.now() / 1000),
         );
 
         return result.success;
@@ -75,7 +76,6 @@ export class AuthManagerDynamoDb implements IAuthManager {
                 output.extraData = JSON.parse(existing.data[0].extraData.S);
             }
         }
-
 
         return output;
     }
@@ -241,8 +241,7 @@ export class AuthManagerDynamoDb implements IAuthManager {
         for (let auth of authRecords) {
             if (auth.suiWallet?.length) {
                 output.push(auth.suiWallet);
-            }
-            else if (auth.authType === 'sui' && auth.authId?.length) {
+            } else if (auth.authType === 'sui' && auth.authId?.length) {
                 output.push(auth.authId);
             }
         }
@@ -276,7 +275,7 @@ export class AuthManagerDynamoDb implements IAuthManager {
                 ':username': { S: username },
             },
         };
-        let result =  await this.dynamoDb.query(params)
+        let result = await this.dynamoDb.query(params);
         return result;
     }
 
@@ -322,7 +321,8 @@ export class AuthManagerDynamoDb implements IAuthManager {
         username: string,
         level: number,
         extraData: any = null,
-        referralCode?: string
+        referralCode?: string,
+        timestamp: number = 0,
     ): Promise<IDynamoResult> {
         //get the core data items
         const data: any = {
@@ -331,12 +331,16 @@ export class AuthManagerDynamoDb implements IAuthManager {
             suiWallet: { S: suiWallet },
             username: { S: username },
             level: { N: level.toString() },
-            referralCode: { S: referralCode ?? '' }
+            referralCode: { S: referralCode ?? '' },
         };
 
         //add extra data if any
         if (extraData) {
             data.extraData = { S: JSON.stringify(extraData) };
+        }
+
+        if (timestamp) {
+            data.timestamp = timestamp;
         }
 
         //write to DB & return result
