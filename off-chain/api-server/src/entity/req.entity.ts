@@ -33,7 +33,6 @@ export class MintBeatmapsNftDto {
     quantity?: number = 1;
 }
 
-
 export class LocalBeatmapsDto {
     @ApiProperty({ description: 'Username of the beatmap creator' })
     username: string;
@@ -42,7 +41,6 @@ export class LocalBeatmapsDto {
     @ApiProperty({ description: 'File url' })
     file: string;
 }
-
 
 export class UpdateLocalBeatmapsDto {
     @ApiProperty({ description: 'Auth ID, e.g. EVM wallet address or username' })
@@ -371,4 +369,4 @@ export class GetUserOAuthDto {
     nonceToken: string;
 }
 
-export class GetUserOAuthResponseDto extends GetAccountResponseDto { }
+export class GetUserOAuthResponseDto extends GetAccountResponseDto {}

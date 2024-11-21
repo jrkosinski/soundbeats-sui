@@ -1,10 +1,11 @@
-import { Body, Controller, Get, HttpCode, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Put, Query } from '@nestjs/common';
 import { AppLogger } from '../app.logger';
 import { AppService } from '../app.service';
 import { ApiOperation } from '@nestjs/swagger';
 import {
     GetLeaderboardDto,
-    GetLeaderboardResponseDto, GetLocalBeatmapResponseDto,
+    GetLeaderboardResponseDto,
+    GetLocalBeatmapResponseDto,
     LocalBeatmapsDto,
     UpdateLocalBeatmapsDto,
 } from '../entity/req.entity';
@@ -14,15 +15,11 @@ import { LocalBeatmapsService } from '../services/local-beatmaps.service';
 const MAX_URL_LENGTH = 400;
 const MAX_USERNAME_LENGTH = 100;
 
-
 @Controller()
 export class LocalBeatmapController {
     logger: AppLogger;
 
-    constructor(
-        private readonly appService: AppService,
-        private readonly localBeatmapsService: LocalBeatmapsService
-    ) {
+    constructor(private readonly appService: AppService, private readonly localBeatmapsService: LocalBeatmapsService) {
         this.logger = new AppLogger('leaderboard.controller');
     }
 
@@ -31,10 +28,10 @@ export class LocalBeatmapController {
         return 'ok';
     }
 
-    @ApiOperation({ summary: 'Get a user score from the leaderboard' })
+    @ApiOperation({ summary: 'Get a list of all local beatmaps' })
     @Get('/api/v2/local-beatmaps')
-    async getLeaderboardScore(@Query() query: GetLeaderboardDto): Promise<GetLeaderboardResponseDto> {
-        const logString = `GET /api/v2/local-beatmaps ${JSON.stringify(query)}`;
+    async getLocalBeatmaps(): Promise<GetLocalBeatmapResponseDto> {
+        const logString = `GET /api/v2/local-beatmaps`;
         this.logger.log(logString);
         try {
             let output = await this.localBeatmapsService.getAllLocalBeatmaps();
@@ -46,7 +43,25 @@ export class LocalBeatmapController {
         }
     }
 
+    @ApiOperation({ summary: 'Get a single local beatmap' })
+    @Get('/api/v2/local-beatmaps/:id')
+    async getLocalBeatmap(@Param('id') id): Promise<GetLocalBeatmapResponseDto> {
+        const logString = `GET /api/v2/local-beatmaps/${id}`;
+        this.logger.log(logString);
 
+        if (!id?.length) {
+            returnError(this.logger, logString, 400, 'id cannot be null or empty');
+        }
+
+        try {
+            let output = await this.localBeatmapsService.getLocalBeatmap(id);
+            this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
+
+            return output;
+        } catch (e) {
+            returnError(this.logger, logString, 500, e);
+        }
+    }
 
     @ApiOperation({ summary: 'Mint instances of BEATMAPS NFT to the given recipient' })
     @Post('/api/v2/local-beatmaps')
@@ -54,11 +69,11 @@ export class LocalBeatmapController {
     async addLocalBeatmap(@Body() body: LocalBeatmapsDto): Promise<{
         network: string;
         message: string;
-        success: boolean
+        success: boolean;
     }> {
         const logString = `POST /api/v2/nfts/beatmaps ${JSON.stringify(body)}`;
         this.logger.log(logString);
-        let {  username, title, file } = body;
+        let { username, title, file } = body;
 
         if (!username || username == '') {
             returnError(this.logger, logString, 400, 'username cannot be null or empty');
@@ -78,19 +93,13 @@ export class LocalBeatmapController {
         }
 
         try {
-            const output = await this.localBeatmapsService.addLocalBeatmap(
-                username,
-                title,
-                file
-            );
+            const output = await this.localBeatmapsService.addLocalBeatmap(username, title, file);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
         } catch (e) {
             returnError(this.logger, logString, 500, e);
         }
     }
-
-
 
     @ApiOperation({ summary: "Update local-beatmap's values." })
     @Put('/api/v2/local-beatmaps')
@@ -99,14 +108,13 @@ export class LocalBeatmapController {
         let output = { title: '', status: '', file: '' };
         this.logger.log(logString);
 
-
         let { authId, file, title, id, username } = body;
         if (!authId || authId == '') {
             returnError(this.logger, logString, 400, 'Auth Id cannot be null or empty');
         }
 
         try {
-            output = await this.localBeatmapsService.updateLocalBeatmap(id,username, authId, file, title);
+            output = await this.localBeatmapsService.updateLocalBeatmap(id, username, authId, file, title);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             if (output.status === 'success') {
                 return output;

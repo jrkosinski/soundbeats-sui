@@ -1,4 +1,4 @@
-export interface ILocalBeatmap{
+export interface ILocalBeatmap {
     id: any;
     username: string;
     title: string;
@@ -8,8 +8,8 @@ export interface ILocalBeatmap{
 
 export interface ILocalBeatmapsRepo {
     getAllLocalBeatmaps(): Promise<ILocalBeatmap[]>;
-    // getLocalBeatmap(address: string): Promise<ILocalBeatmap>;
+    getLocalBeatmap(id: any): Promise<ILocalBeatmap>;
     getLocalBeatmapsByOwner(ownerAddress: string): Promise<ILocalBeatmap[]>;
     addLocalBeatmap(beatmap: ILocalBeatmap): Promise<void>;
-    updateLocalBeatmap( id: any, username: string, title: string, file: string): Promise<any>;
+    updateLocalBeatmap(id: any, username: string, title: string, file: string): Promise<any>;
 }
