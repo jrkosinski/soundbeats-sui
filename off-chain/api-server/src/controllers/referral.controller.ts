@@ -49,6 +49,7 @@ export class ReferralController {
         };
     }
 
+    //TODO: should be GET /api/v2/referral/verify/<code>
     @ApiOperation({ summary: 'Check referral code without authentication' })
     @Post('/api/v2/verify-referral')
     async checkReferralCode(
