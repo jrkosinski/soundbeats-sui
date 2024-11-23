@@ -51,6 +51,7 @@ export class LocalBeatmapsService {
 
     async addLocalBeatmap(
         username: string,
+        artist: string,
         title: string,
         file: string,
         // timestamp: number,
@@ -72,6 +73,7 @@ export class LocalBeatmapsService {
 
                 await this.localBeatmap.addLocalBeatmap({
                     id: uniqueId,
+                    artist,
                     timestamp: unixDate(),
                     title,
                     file,
@@ -98,6 +100,7 @@ export class LocalBeatmapsService {
     async updateLocalBeatmap(
         id: any,
         username: string,
+        artist: string,
         authId: string,
         file: string,
         title: string,
@@ -107,13 +110,13 @@ export class LocalBeatmapsService {
         status: string;
         title: string;
     }> {
-        const output = { title: '', status: '', username: '', file: '', id: '' };
+        const output = { title: '', status: '', artist: '', username: '', file: '', id: '' };
         const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, 'sui');
 
         if (authRecord == null) {
             output.status = 'notfound';
         } else {
-            await this.localBeatmap.updateLocalBeatmap(id, username, title, file);
+            await this.localBeatmap.updateLocalBeatmap(id, username, artist, title, file);
 
             output.username = username;
             output.file = file;

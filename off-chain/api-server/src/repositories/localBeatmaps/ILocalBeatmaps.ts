@@ -1,6 +1,7 @@
 export interface ILocalBeatmap {
     id: any;
     username: string;
+    artist: string;
     title: string;
     file: string;
     timestamp: number;
@@ -11,5 +12,5 @@ export interface ILocalBeatmapsRepo {
     getLocalBeatmap(id: any): Promise<ILocalBeatmap>;
     getLocalBeatmapsByOwner(ownerAddress: string): Promise<ILocalBeatmap[]>;
     addLocalBeatmap(beatmap: ILocalBeatmap): Promise<void>;
-    updateLocalBeatmap(id: any, username: string, title: string, file: string): Promise<any>;
+    updateLocalBeatmap(id: any, username: string, artist: string, title: string, file: string): Promise<any>;
 }

@@ -40,6 +40,8 @@ export class LocalBeatmapsDto {
     title: string;
     @ApiProperty({ description: 'File url' })
     file: string;
+    @ApiProperty({ description: 'Song artist' })
+    artist: string;
 }
 
 export class UpdateLocalBeatmapsDto {
@@ -55,6 +57,8 @@ export class UpdateLocalBeatmapsDto {
     title: string;
     @ApiProperty({ description: 'File url' })
     file: string;
+    @ApiProperty({ description: 'Song artist' })
+    artist: string;
 }
 
 export class GetLocalBeatmapResponseDto {

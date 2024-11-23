@@ -30,14 +30,14 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
         }
     }
 
-    async updateLocalBeatmap(id: any, username: string, title: string, file: string): Promise<any> {
+    async updateLocalBeatmap(id: any, username: string, artist: string, title: string, file: string): Promise<any> {
         const record: IAuthRecord = await this.getLocalBeatmap(id);
 
         if (!record) {
             throw new Error(`not found.`);
         }
 
-        await this._dataAccess_putAuthRecord(id, username, title, file);
+        await this._dataAccess_putRecord(id, username, artist, title, file);
     }
 
     async getLocalBeatmapsByOwner(ownerAddress: string): Promise<ILocalBeatmap[]> {
@@ -55,6 +55,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
             id: record.id?.S ?? '',
             timestamp: record.timestamp?.N ?? 0,
             username: record.username?.S ?? '',
+            artist: record.artist?.S ?? '',
             title: record.title?.S ?? '',
             file: record.title?.S ?? '',
         };
@@ -82,12 +83,19 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
         return [];
     }
 
-    async _dataAccess_putAuthRecord(id: string, username: string, title: string, file: string): Promise<IDynamoResult> {
+    async _dataAccess_putRecord(
+        id: string,
+        username: string,
+        artist: string,
+        title: string,
+        file: string,
+    ): Promise<IDynamoResult> {
         //get the core data items
         const data: any = {
             id: { S: id },
             username: { S: username },
             title: { S: title },
+            artist: { S: artist },
             file: { S: file },
         };
 
@@ -127,6 +135,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
                 title: { S: beatmap.title },
                 username: { S: beatmap.username },
                 file: { S: beatmap.file },
+                artist: { S: beatmap.artist },
                 timestamp: { N: beatmap.timestamp.toString() },
             },
         });
