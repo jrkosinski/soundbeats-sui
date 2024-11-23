@@ -109,6 +109,7 @@ export class LocalBeatmapsService {
         file: string;
         status: string;
         title: string;
+        artist: string;
     }> {
         const output = { title: '', status: '', artist: '', username: '', file: '', id: '' };
         const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, 'sui');
@@ -118,9 +119,12 @@ export class LocalBeatmapsService {
         } else {
             await this.localBeatmap.updateLocalBeatmap(id, username, artist, title, file);
 
+            //TODO: this should return by getting the new record from the database,
+            //not just manually updating the output!
             output.username = username;
             output.file = file;
             output.title = title;
+            output.artist = artist;
             output.status = 'success';
         }
 
