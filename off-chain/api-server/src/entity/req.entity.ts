@@ -68,6 +68,8 @@ export class GetLocalBeatmapResponseDto {
     title: string;
     @ApiProperty({ description: 'File url' })
     file: string;
+    @ApiProperty({ description: 'Song artist' })
+    artist: string;
     @ApiProperty({ description: 'Success or failure of the operation' })
     status: string;
 }
