@@ -1,12 +1,4 @@
-import {
-    Body,
-    Controller,
-    Get,
-    Post,
-    Put,
-    Query,
-    HttpCode,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Query, HttpCode } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { AppLogger } from '../app.logger';
 import { ReferralService } from 'src/services/referral.service';
@@ -18,11 +10,7 @@ import { AuthService } from '../services/auth.service';
 export class ReferralController {
     logger: AppLogger;
 
-
-    constructor(
-        private readonly authService: AuthService,
-        private readonly referralService: ReferralService,
-    ) {
+    constructor(private readonly authService: AuthService, private readonly referralService: ReferralService) {
         this.logger = new AppLogger('referral.controller');
     }
 
@@ -35,7 +23,6 @@ export class ReferralController {
     @Post('/api/v2/referral')
     @HttpCode(201)
     async generateReferralCode(@Body() body: { beatmapId: string }): Promise<{ code: string }> {
-
         const logString = `POST /api/v2/referral ${JSON.stringify(body)}`;
         this.logger.log(logString);
         const { beatmapId } = body;
@@ -58,26 +45,25 @@ export class ReferralController {
         }
 
         return {
-            code: referralCode?.code
+            code: referralCode?.code,
         };
     }
 
-
-
     @ApiOperation({ summary: 'Check referral code without authentication' })
     @Post('/api/v2/verify-referral')
-    async checkReferralCode(@Body() body: { referralCode: string, authId: string }): Promise<{ referralBeatmap: string}> {
+    async checkReferralCode(
+        @Body() body: { referralCode: string; authId: string },
+    ): Promise<{ referralBeatmap: string }> {
         const logString = `POST /api/v2/referral ${JSON.stringify(body)}`;
-        const output = { referralBeatmap: ''};
+        const output = { referralBeatmap: '' };
         const { referralCode, authId } = body;
 
         const result = await this.referralService.checkReferralCode(referralCode);
 
-        if (result) {
-            console.log('referral found');
-            output.referralBeatmap = result.referralCode.beatmapId
+        if (result?.referralCode) {
+            output.referralBeatmap = result.referralCode.beatmapId;
             await this.authService.rewardReferral(result.referralCode, authId);
-        }else {
+        } else {
             returnError(this.logger, logString, 404, `Referral Code ${referralCode} not found`);
         }
 
