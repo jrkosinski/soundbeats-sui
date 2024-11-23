@@ -105,7 +105,7 @@ export class LocalBeatmapController {
     @Put('/api/v2/local-beatmaps')
     async updateLocalBeatmap(@Body() body: UpdateLocalBeatmapsDto): Promise<GetLocalBeatmapResponseDto> {
         const logString = `POST /api/v2/level ${JSON.stringify(body)}`;
-        let output = { title: '', status: '', file: '' };
+        let output = { title: '', status: '', file: '', artist: '' };
         this.logger.log(logString);
 
         let { authId, file, title, artist, id, username } = body;
