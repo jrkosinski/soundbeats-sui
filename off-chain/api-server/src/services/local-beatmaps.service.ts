@@ -102,8 +102,8 @@ export class LocalBeatmapsService {
         username: string,
         artist: string,
         authId: string,
-        file: string,
         title: string,
+        file: string,
     ): Promise<{
         username: string;
         file: string;

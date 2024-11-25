@@ -58,7 +58,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
             username: record.username?.S ?? '',
             artist: record.artist?.S ?? '',
             title: record.title?.S ?? '',
-            file: record.title?.S ?? '',
+            file: record.file?.S ?? '',
         };
     }
 

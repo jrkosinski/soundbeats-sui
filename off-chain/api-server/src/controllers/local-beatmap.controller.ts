@@ -111,7 +111,7 @@ export class LocalBeatmapController {
         }
 
         try {
-            output = await this.localBeatmapsService.updateLocalBeatmap(id, username, artist, authId, file, title);
+            output = await this.localBeatmapsService.updateLocalBeatmap(id, username, artist, authId, title, file);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             if (output.status === 'success') {
                 return output;
