@@ -88,9 +88,6 @@ export class LocalBeatmapController {
         if (!file || file == '') {
             returnError(this.logger, logString, 400, 'file cannot be null or empty');
         }
-        if (file.length > MAX_URL_LENGTH) {
-            returnError(this.logger, logString, 400, `file exceeded max length of ${MAX_URL_LENGTH}`);
-        }
 
         try {
             const output = await this.localBeatmapsService.addLocalBeatmap(username, artist, title, file);

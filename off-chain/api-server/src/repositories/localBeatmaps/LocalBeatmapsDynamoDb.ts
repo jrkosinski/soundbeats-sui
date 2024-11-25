@@ -26,6 +26,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
             console.log('getting local beatmap by', id);
             return await this._dataAccess_getLocalBeatmap(id);
         } catch (e) {
+            console.log(e);
             throw new Error(`not found.`);
         }
     }
@@ -117,13 +118,14 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
     }
 
     async _dataAccess_getLocalBeatmap(id: string): Promise<IDynamoResult> {
-        console.log('getting local beatmap by', id);
-        return await this.dynamoDb.getItem({
-            TableName: process.env.DBTABLE_LOCAL_BEATMAP,
-            Key: {
-                id: { S: id },
-            },
-        });
+        const allBeatmaps = await this.getAllLocalBeatmaps();
+        const beatmap = allBeatmaps.find((b) => b.id === id);
+
+        return {
+            success: beatmap ? true : false,
+            data: beatmap,
+            error: null,
+        };
     }
 
     private async _dataAccess_putBeatmap(beatmap: ILocalBeatmap): Promise<IDynamoResult> {
