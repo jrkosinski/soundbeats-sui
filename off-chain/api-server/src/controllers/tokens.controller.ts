@@ -195,7 +195,7 @@ export class TokenController {
 
             const uniqueUsers = await this.leaderboardService.getLeaderboardUniqueUsers();
 
-            //get user counts
+            //get user counts and remove beatmaps json
             for (let nft of output.nfts) {
                 delete nft.beatmapJson;
                 nft.uniqueUserCount = uniqueUsers.items.find((i) => i.identifier === nft.address)?.count ?? 0;

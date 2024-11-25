@@ -36,7 +36,7 @@ export class LocalBeatmapsService {
 
     async getAllLocalBeatmaps(includeFile: boolean = false): Promise<any> {
         const output = await this.localBeatmap.getAllLocalBeatmaps();
-        if (!output && !includeFile) {
+        if (output && !includeFile) {
             for (let beatmap of output) {
                 delete beatmap.file;
             }
