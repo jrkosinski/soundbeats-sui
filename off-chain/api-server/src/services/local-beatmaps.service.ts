@@ -34,14 +34,24 @@ export class LocalBeatmapsService {
         this.authManager = authManagerModule.get(this.config);
     }
 
-    async getAllLocalBeatmaps(
-    ): Promise<any> {
-        return await this.localBeatmap.getAllLocalBeatmaps();
+    async getAllLocalBeatmaps(includeFile: boolean = false): Promise<any> {
+        const output = await this.localBeatmap.getAllLocalBeatmaps();
+        if (output && !includeFile) {
+            for (let beatmap of output) {
+                delete beatmap.file;
+            }
+        }
+
+        return output;
     }
 
+    async getLocalBeatmap(id: any): Promise<any> {
+        return await this.localBeatmap.getLocalBeatmap(id);
+    }
 
     async addLocalBeatmap(
         username: string,
+        artist: string,
         title: string,
         file: string,
         // timestamp: number,
@@ -54,17 +64,16 @@ export class LocalBeatmapsService {
             //mint nft to recipient
             const tx = new TransactionBlock();
 
-
             //check results
 
             //add to beatmaps repository
             let message = '';
             try {
-
                 const uniqueId = uuidv4();
 
                 await this.localBeatmap.addLocalBeatmap({
                     id: uniqueId,
+                    artist,
                     timestamp: unixDate(),
                     title,
                     file,
@@ -88,43 +97,37 @@ export class LocalBeatmapsService {
         }
     }
 
-
     async updateLocalBeatmap(
         id: any,
         username: string,
+        artist: string,
         authId: string,
+        title: string,
         file: string,
-        title: string
     ): Promise<{
         username: string;
         file: string;
         status: string;
         title: string;
+        artist: string;
     }> {
-        const output = { title: '', status: '', username: '', file: '', id: '' };
+        const output = { title: '', status: '', artist: '', username: '', file: '', id: '' };
         const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, 'sui');
-
-
 
         if (authRecord == null) {
             output.status = 'notfound';
         } else {
-            await this.localBeatmap.updateLocalBeatmap(
-                id,
-                username,
-                title,
-                file
-            );
+            await this.localBeatmap.updateLocalBeatmap(id, username, artist, title, file);
 
-
+            //TODO: this should return by getting the new record from the database,
+            //not just manually updating the output!
             output.username = username;
             output.file = file;
             output.title = title;
+            output.artist = artist;
             output.status = 'success';
         }
 
         return output;
     }
-
-
 }

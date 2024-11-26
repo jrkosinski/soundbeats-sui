@@ -23,24 +23,22 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
 
     async getLocalBeatmap(id: any): Promise<any> {
         try {
-            return  await this._dataAccess_getLocalBeatmap(id);
-        }catch (e){
+            console.log('getting local beatmap by', id);
+            return await this._dataAccess_getLocalBeatmap(id);
+        } catch (e) {
+            console.log(e);
             throw new Error(`not found.`);
         }
     }
-    async updateLocalBeatmap(
-        id: any,
-        username: string,
-        title: string,
-        file: string
-    ): Promise<any> {
+
+    async updateLocalBeatmap(id: any, username: string, artist: string, title: string, file: string): Promise<any> {
         const record: IAuthRecord = await this.getLocalBeatmap(id);
 
         if (!record) {
             throw new Error(`not found.`);
         }
 
-        await this._dataAccess_putAuthRecord(id, username, title, file);
+        await this._dataAccess_putRecord(id, username, artist, title, file);
     }
 
     async getLocalBeatmapsByOwner(ownerAddress: string): Promise<ILocalBeatmap[]> {
@@ -48,9 +46,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
     }
 
     async addLocalBeatmap(beatmap: ILocalBeatmap): Promise<void> {
-        await this._dataAccess_putBeatmap(
-            beatmap
-        );
+        await this._dataAccess_putBeatmap(beatmap);
     }
 
     //data access methods
@@ -60,8 +56,9 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
             id: record.id?.S ?? '',
             timestamp: record.timestamp?.N ?? 0,
             username: record.username?.S ?? '',
+            artist: record.artist?.S ?? '',
             title: record.title?.S ?? '',
-            file: record.title?.S ?? '',
+            file: record.file?.S ?? '',
         };
     }
 
@@ -74,8 +71,8 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
                 ':owner_val': { S: owner },
             },
             ExpressionAttributeNames: {
-                "#owner": "owner"
-            }
+                '#owner': 'owner',
+            },
         };
 
         const result = await this.dynamoDb.query(params);
@@ -87,20 +84,21 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
         return [];
     }
 
-    async _dataAccess_putAuthRecord(
+    async _dataAccess_putRecord(
         id: string,
         username: string,
+        artist: string,
         title: string,
         file: string,
     ): Promise<IDynamoResult> {
         //get the core data items
         const data: any = {
             id: { S: id },
-            username: { S: username},
+            username: { S: username },
             title: { S: title },
+            artist: { S: artist },
             file: { S: file },
         };
-
 
         //write to DB & return result
         return await this.dynamoDb.putItem({
@@ -109,28 +107,25 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
         });
     }
 
-
     private async _scanForLocalBeatmaps(): Promise<ILocalBeatmap[]> {
         const result = await this.dynamoDb.scanTable(this.config.localBeatmapsTableName);
         if (result.success) {
             const sortedItems = result.data; //.sort((a, b) => parseInt(b.score.N) - parseInt(a.score.N));
-            return sortedItems.map((i) =>
-                this._mapRecord(i)
-            );
+            return sortedItems.map((i) => this._mapRecord(i));
         }
 
         return [];
     }
 
-
     async _dataAccess_getLocalBeatmap(id: string): Promise<IDynamoResult> {
+        const allBeatmaps = await this.getAllLocalBeatmaps();
+        const beatmap = allBeatmaps.find((b) => b.id === id);
 
-        return await this.dynamoDb.getItem({
-            TableName: process.env.DBTABLE_LOCAL_BEATMAP,
-            Key: {
-                id: { S: id },
-            },
-        });
+        return {
+            success: beatmap ? true : false,
+            data: beatmap,
+            error: null,
+        };
     }
 
     private async _dataAccess_putBeatmap(beatmap: ILocalBeatmap): Promise<IDynamoResult> {
@@ -142,6 +137,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
                 title: { S: beatmap.title },
                 username: { S: beatmap.username },
                 file: { S: beatmap.file },
+                artist: { S: beatmap.artist },
                 timestamp: { N: beatmap.timestamp.toString() },
             },
         });
