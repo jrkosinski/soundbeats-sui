@@ -34,14 +34,24 @@ export class LocalBeatmapsService {
         this.authManager = authManagerModule.get(this.config);
     }
 
-    async getAllLocalBeatmaps(
-    ): Promise<any> {
-        return await this.localBeatmap.getAllLocalBeatmaps();
+    async getAllLocalBeatmaps(includeFile: boolean = false): Promise<any> {
+        const output = await this.localBeatmap.getAllLocalBeatmaps();
+        if (output && !includeFile) {
+            for (let beatmap of output) {
+                delete beatmap.file;
+            }
+        }
+
+        return output;
     }
 
+    async getLocalBeatmap(id: any): Promise<any> {
+        return await this.localBeatmap.getLocalBeatmap(id);
+    }
 
     async addLocalBeatmap(
         username: string,
+        artist: string,
         title: string,
         file: string,
         // timestamp: number,
@@ -65,6 +75,7 @@ export class LocalBeatmapsService {
 
                 await this.localBeatmap.addLocalBeatmap({
                     id: uniqueId,
+                    artist,
                     timestamp: unixDate(),
                     title,
                     file,
@@ -97,17 +108,17 @@ export class LocalBeatmapsService {
         title: string,
         artist: string,
     ): Promise<{
-        id: string;
         username: string;
         file: string;
         status: boolean;
         title: string;
-        artist: string;
     }> {
         const output = { title: '', status: false, username: '', file: '', id: '', artist: '' };
+
         const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, 'sui');
 
         if (authRecord == null) {
+
             output.status = false;
             return output;
         } else {

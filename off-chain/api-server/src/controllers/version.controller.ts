@@ -1,9 +1,4 @@
-import {
-    Controller,
-    Get,
-    Query,
-    HttpCode,
-} from '@nestjs/common';
+import { Controller, Get, Query, HttpCode } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { AppLogger } from '../app.logger';
 
@@ -11,8 +6,7 @@ import { AppLogger } from '../app.logger';
 export class VersionController {
     logger: AppLogger;
 
-    constructor(
-    ) {
+    constructor() {
         this.logger = new AppLogger('version.controller');
     }
 
@@ -25,17 +19,17 @@ export class VersionController {
     @Get('/api/v2/buildversion')
     @HttpCode(200)
     async getBuildVersion(@Query() query: {}): Promise<{
-        major: number,
-        minor: number,
-        revision: number,
-        value: string,
-        note: string
+        major: number;
+        minor: number;
+        revision: number;
+        value: string;
+        note: string;
     }> {
         const version = {
             major: 2,
-            minor: 1,
+            minor: 4,
             revision: 0,
-            note: 'Oct 21 2024, Recommended APK version 0.5.0'
+            note: 'Nov 21 2024, Recommended APK version 0.5.0',
         };
 
         return { value: `${version.major}.${version.minor}.${version.revision}`, ...version };

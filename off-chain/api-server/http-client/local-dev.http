@@ -64,6 +64,15 @@ Content-Type: application/json
     "beatmapId": "noodles"
 }
 
+###
+POST http://localhost:3000/api/v2/verify-referral
+Content-Type: application/json
+
+{
+    "referralCode": "12",
+    "authId": "12"
+}
+
 
 
 

@@ -351,6 +351,8 @@ export class TokenService {
                 balance,
             };
         } catch (e) {
+            console.error(e);
+            console.log(e);
             return {
                 signature: '',
                 network: this.network,
