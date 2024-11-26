@@ -94,36 +94,45 @@ export class LocalBeatmapsService {
         username: string,
         authId: string,
         file: string,
-        title: string
+        title: string,
+        artist: string,
     ): Promise<{
+        id: string;
         username: string;
         file: string;
-        status: string;
+        status: boolean;
         title: string;
+        artist: string;
     }> {
-        const output = { title: '', status: '', username: '', file: '', id: '' };
+        const output = { title: '', status: false, username: '', file: '', id: '', artist: '' };
         const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, 'sui');
 
-
-
         if (authRecord == null) {
-            output.status = 'notfound';
+            output.status = false;
+            return output;
         } else {
-            await this.localBeatmap.updateLocalBeatmap(
-                id,
-                username,
-                title,
-                file
-            );
+            try {
+                await this.localBeatmap.updateLocalBeatmap(
+                    id,
+                    username,
+                    title,
+                    file,
+                    artist
+                );
+                output.id = id;
+                output.username = username;
+                output.file = file;
+                output.title = title;
+                output.artist = artist;
+                output.status = true;
+                return output;
 
+            } catch (e) {
+                output.status = false;
+                return output;
 
-            output.username = username;
-            output.file = file;
-            output.title = title;
-            output.status = 'success';
+            }
         }
-
-        return output;
     }
 
 

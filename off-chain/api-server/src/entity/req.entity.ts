@@ -55,8 +55,10 @@ export class UpdateLocalBeatmapsDto {
     username: string;
     @ApiProperty({ description: 'Song title or beatmap title' })
     title: string;
-    @ApiProperty({ description: 'File url' })
+    @ApiProperty({ description: 'File information' })
     file: string;
+    @ApiProperty({ description: 'Artist name' })
+    artist: string;
 }
 
 export class GetLocalBeatmapResponseDto {
@@ -67,7 +69,7 @@ export class GetLocalBeatmapResponseDto {
     @ApiProperty({ description: 'File url' })
     file: string;
     @ApiProperty({ description: 'Success or failure of the operation' })
-    status: string;
+    status: boolean;
 }
 
 export class MintTokenDto {

@@ -2,7 +2,6 @@ import { ILocalBeatmapsRepo, ILocalBeatmap } from './ILocalBeatmaps';
 import { IDynamoResult } from '../dataAccess/IDynamoResult';
 import { Config, IConfigSettings } from 'src/config';
 import { DynamoDbAccess } from '../dataAccess/DynamoDbAccess';
-import { IAuthRecord } from '../auth/IAuthManager';
 import { v4 as uuidv4 } from 'uuid';
 
 const GSI_OWNER_NAME = 'GSI_OWNER';
@@ -32,15 +31,16 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
         id: any,
         username: string,
         title: string,
-        file: string
+        file: string,
+        artist: string
     ): Promise<any> {
-        const record: IAuthRecord = await this.getLocalBeatmap(id);
+        const record: any = await this.getLocalBeatmap(id);
 
-        if (!record) {
+        if (!record.data) {
             throw new Error(`not found.`);
         }
 
-        await this._dataAccess_putAuthRecord(id, username, title, file);
+        await this._dataAccess_putAuthRecord(id, username, title, file, artist);
     }
 
     async getLocalBeatmapsByOwner(ownerAddress: string): Promise<ILocalBeatmap[]> {
@@ -92,13 +92,15 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
         username: string,
         title: string,
         file: string,
+        artist: string
     ): Promise<IDynamoResult> {
         //get the core data items
         const data: any = {
             id: { S: id },
             username: { S: username},
             title: { S: title },
-            file: { S: file },
+            file: { S: JSON.stringify(file) },
+            artist: { S: artist },
         };
 
 
@@ -128,7 +130,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
         return await this.dynamoDb.getItem({
             TableName: process.env.DBTABLE_LOCAL_BEATMAP,
             Key: {
-                id: { S: id },
+                id: { S: id }
             },
         });
     }
