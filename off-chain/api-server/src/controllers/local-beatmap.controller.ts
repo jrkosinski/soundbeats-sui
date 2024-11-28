@@ -99,33 +99,18 @@ export class LocalBeatmapController {
     }
 
     @ApiOperation({ summary: "Update local-beatmap's values." })
-    @Put('/api/v2/local-beatmaps')
-    async updateLocalBeatmap(@Body() body: UpdateLocalBeatmapsDto): Promise<GetLocalBeatmapResponseDto | object> {
+    @Put('/api/v2/local-beatmaps/:id')
+    async updateLocalBeatmap(@Param('id') id: string, @Body() body: UpdateLocalBeatmapsDto): Promise<GetLocalBeatmapResponseDto | object> {
         const logString = `POST /api/v2/level ${JSON.stringify(body)}`;
         this.logger.log(logString);
 
-        let { authId, file, title, id, username, artist } = body;
+        let { authId, file, title, username, artist } = body;
         if (!authId || authId == '') {
             returnError(this.logger, logString, 400, 'Auth Id cannot be null or empty');
         }
 
-        if (!artist || artist == '') {
-            returnError(this.logger, logString, 400, 'artist cannot be null or empty');
-        }
-
-        if (!title || title == '') {
-            returnError(this.logger, logString, 400, 'title cannot be null or empty');
-        }
-
-        if (!username || username == '') {
-            returnError(this.logger, logString, 400, 'username cannot be null or empty');
-        }
-
-        if (!file || file == '') {
-            returnError(this.logger, logString, 400, 'file cannot be null or empty');
-        }
-
         let output = await this.localBeatmapsService.updateLocalBeatmap(id,username, authId, file, title, artist);
+
         this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
 
         if (output.status === true) {

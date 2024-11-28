@@ -43,7 +43,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
             throw new Error(`not found.`);
         }
 
-        await this._dataAccess_putRecord(id, username, artist, title, file);
+        return  await this._dataAccess_putRecord(username, artist, title, file, record.data);
     }
 
     async getLocalBeatmapsByOwner(ownerAddress: string): Promise<ILocalBeatmap[]> {
@@ -90,27 +90,40 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
     }
 
     async _dataAccess_putRecord(
-        id: string,
         username: string,
         artist: string,
         title: string,
         file: string,
-    ): Promise<IDynamoResult> {
-        //get the core data items
-        const data: any = {
-            id: { S: id },
-            username: { S: username },
-            title: { S: title },
-            file: { S: JSON.stringify(file) },
-            artist: { S: artist }
-        };
+        record: ILocalBeatmap
+    ): Promise<ILocalBeatmap> {
 
+        if(record.username != username && username) {
+            record.username = username
+        }
+        if(record.artist != artist && artist) {
+            record.artist = artist
+        }
+        if(record.title != title && title) {
+            record.title = title
+        }
+        if(record.file != file && file) {
+            record.file = JSON.stringify(file)
+        }
 
-        //write to DB & return result
-        return await this.dynamoDb.putItem({
+        const result = await this.dynamoDb.putItem({
             TableName: process.env.DBTABLE_LOCAL_BEATMAP,
-            Item: data,
+            Item: {
+                id: { S: record.id },
+                username: { S: record.username },
+                title: { S: record.title },
+                file: { S: record.file },
+                artist: { S: record.artist }
+            },
         });
+
+        if (result.success) {
+            return this._mapRecord(result.data.Item);
+        }
     }
 
 

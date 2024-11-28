@@ -108,6 +108,7 @@ export class LocalBeatmapsService {
         title: string,
         artist: string,
     ): Promise<{
+        id: string,
         username: string;
         file: string;
         status: boolean;
@@ -123,18 +124,18 @@ export class LocalBeatmapsService {
             return output;
         } else {
             try {
-                await this.localBeatmap.updateLocalBeatmap(
+                let updatedLocalBeatmap = await this.localBeatmap.updateLocalBeatmap(
                     id,
                     username,
                     title,
                     file,
                     artist
                 );
-                output.id = id;
-                output.username = username;
-                output.file = file;
-                output.title = title;
-                output.artist = artist;
+                output.id = updatedLocalBeatmap.id;
+                output.username = updatedLocalBeatmap.username;
+                output.file = updatedLocalBeatmap.file;
+                output.title = updatedLocalBeatmap.title;
+                output.artist = updatedLocalBeatmap.artist;
                 output.status = true;
                 return output;
 
