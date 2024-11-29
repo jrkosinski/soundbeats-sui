@@ -75,8 +75,10 @@ export class GetLocalBeatmapResponseDto {
 }
 
 export class MintTokenDto {
+    @ApiProperty({ description: 'Address of the beatmap' })
+    beatmapAddress: string;
     @ApiProperty({ description: 'The amount of the token' })
-    amount: number;
+    amount?: number;
     @ApiProperty({ description: 'The address of the recipient' })
     recipient: string;
     @ApiProperty({ description: 'Optional username of the referral owner' })
