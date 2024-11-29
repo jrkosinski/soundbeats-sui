@@ -64,11 +64,13 @@ export class LocalBeatmapsService {
             //mint nft to recipient
             const tx = new TransactionBlock();
 
+
             //check results
 
             //add to beatmaps repository
             let message = '';
             try {
+
                 const uniqueId = uuidv4();
 
                 await this.localBeatmap.addLocalBeatmap({
@@ -97,37 +99,53 @@ export class LocalBeatmapsService {
         }
     }
 
+
     async updateLocalBeatmap(
         id: any,
         username: string,
-        artist: string,
         authId: string,
-        title: string,
         file: string,
+        title: string,
+        artist: string,
     ): Promise<{
+        id: string,
         username: string;
         file: string;
-        status: string;
+        status: boolean;
         title: string;
-        artist: string;
     }> {
-        const output = { title: '', status: '', artist: '', username: '', file: '', id: '' };
+        const output = { title: '', status: false, username: '', file: '', id: '', artist: '' };
+
         const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, 'sui');
 
         if (authRecord == null) {
-            output.status = 'notfound';
+
+            output.status = false;
+            return output;
         } else {
-            await this.localBeatmap.updateLocalBeatmap(id, username, artist, title, file);
+            try {
+                let updatedLocalBeatmap = await this.localBeatmap.updateLocalBeatmap(
+                    id,
+                    username,
+                    title,
+                    file,
+                    artist
+                );
+                output.id = updatedLocalBeatmap.id;
+                output.username = updatedLocalBeatmap.username;
+                output.file = updatedLocalBeatmap.file;
+                output.title = updatedLocalBeatmap.title;
+                output.artist = updatedLocalBeatmap.artist;
+                output.status = true;
+                return output;
 
-            //TODO: this should return by getting the new record from the database,
-            //not just manually updating the output!
-            output.username = username;
-            output.file = file;
-            output.title = title;
-            output.artist = artist;
-            output.status = 'success';
+            } catch (e) {
+                output.status = false;
+                return output;
+
+            }
         }
-
-        return output;
     }
+
+
 }

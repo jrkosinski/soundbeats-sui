@@ -33,6 +33,7 @@ export class MintBeatmapsNftDto {
     quantity?: number = 1;
 }
 
+
 export class LocalBeatmapsDto {
     @ApiProperty({ description: 'Username of the beatmap creator' })
     username: string;
@@ -43,6 +44,7 @@ export class LocalBeatmapsDto {
     @ApiProperty({ description: 'Song artist' })
     artist: string;
 }
+
 
 export class UpdateLocalBeatmapsDto {
     @ApiProperty({ description: 'Auth ID, e.g. EVM wallet address or username' })
@@ -55,9 +57,9 @@ export class UpdateLocalBeatmapsDto {
     username: string;
     @ApiProperty({ description: 'Song title or beatmap title' })
     title: string;
-    @ApiProperty({ description: 'File url' })
+    @ApiProperty({ description: 'File information' })
     file: string;
-    @ApiProperty({ description: 'Song artist' })
+    @ApiProperty({ description: 'Artist name' })
     artist: string;
 }
 
@@ -68,10 +70,8 @@ export class GetLocalBeatmapResponseDto {
     title: string;
     @ApiProperty({ description: 'File url' })
     file: string;
-    @ApiProperty({ description: 'Song artist' })
-    artist: string;
     @ApiProperty({ description: 'Success or failure of the operation' })
-    status: string;
+    status: boolean;
 }
 
 export class MintTokenDto {
@@ -375,4 +375,4 @@ export class GetUserOAuthDto {
     nonceToken: string;
 }
 
-export class GetUserOAuthResponseDto extends GetAccountResponseDto {}
+export class GetUserOAuthResponseDto extends GetAccountResponseDto { }

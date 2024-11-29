@@ -26,7 +26,7 @@ export class AuthManagerDynamoDb implements IAuthManager {
         suiWallet: string,
         username: string,
         extraData: any = null,
-        referralCode?: string,
+        referralCode?: string
     ): Promise<boolean> {
         //make sure it doesn't already exist
         const existing = await this._dataAccess_getAuthRecord(authId, authType);
