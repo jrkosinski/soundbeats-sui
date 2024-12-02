@@ -10,6 +10,7 @@ import {
 } from '../app.module';
 import { IBeatmapsRepo } from 'src/repositories/beatmaps/IBeatmaps';
 import { IUserReferral, IUserReferralsRepo } from '../repositories/userReferrals/IUserReferralsManager';
+import { SettingsService } from './settings.service';
 
 @Injectable()
 export class UserReferralService {
@@ -41,6 +42,10 @@ export class UserReferralService {
     async addAllUserReferrals(
         authId: string,
         playerId: string,
+        beatmapReferredReward: number,
+        beatmapReferrerReward: number,
+        beatmapAddress: string
+
     ): Promise<{
         success: boolean;
     }> {
@@ -48,7 +53,7 @@ export class UserReferralService {
             success: false,
         };
 
-        await this.userReferralsRepo.addAllUserReferrals(authId, playerId);
+        await this.userReferralsRepo.addAllUserReferrals(authId, playerId, beatmapReferredReward, beatmapReferrerReward, beatmapAddress);
         output.success =  true
 
         return output;

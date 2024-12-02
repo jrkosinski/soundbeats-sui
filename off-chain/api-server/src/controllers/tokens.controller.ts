@@ -30,12 +30,12 @@ import { IAuthManager, IAuthRecord } from '../repositories/auth/IAuthManager';
 import { AuthManagerModule, ConfigSettingsModule } from '../app.module';
 import { ConfigSettings } from '../config';
 import { UserReferralService } from '../services/user-refferal.service';
+import { SettingsService } from '../services/settings.service';
 
 const MAX_URL_LENGTH = 400;
 const MAX_NFT_NAME_LENGTH = 100;
 const MAX_USERNAME_LENGTH = 100;
 const MAX_JSON_LENGTH = 3000;
-const STANDARD_AMOUNT_FOR_REFERRAL_OWNER = 50;
 
 @Controller()
 export class TokenController {
@@ -48,6 +48,7 @@ export class TokenController {
         private readonly tokenService: TokenService,
         private readonly userReferralService: UserReferralService,
         private readonly leaderboardService: LeaderboardService,
+        readonly settingsService: SettingsService,
         @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
         @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
     ) {
@@ -227,27 +228,30 @@ export class TokenController {
     async mintBeatsToken(@Body() body: MintTokenDto): Promise<MintTokenResponseDto> {
         const logString = `POST /api/v2/token ${JSON.stringify(body)}`;
         this.logger.log(logString);
-        const { amount, recipient, referralOwnerUsername } = body;
-        if (!amount || amount <= 0) {
-            returnError(this.logger, logString, 400, 'amount cannot be null, zero or negative');
-        }
+        const settings = this.settingsService.getSettings();
+        const { recipient, beatmapAddress, referralOwnerUsername } = body;
+
         if (!recipient || recipient == '') {
             returnError(this.logger, logString, 400, 'recipient cannot be null or empty');
         }
+        if (!beatmapAddress || recipient == '') {
+            returnError(this.logger, logString, 400, 'beatmapAddress cannot be null or empty');
+        }
+
 
         try {
-            const output = await this.tokenService.mintTokens(recipient, amount);
+            const output = await this.tokenService.mintTokens(recipient, settings.beatmapReferrerReward);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
 
             if (referralOwnerUsername) {
                 const referralOwner: IAuthRecord = await this.authManager.getAuthRecordByName(referralOwnerUsername);
-                await this.tokenService.mintTokens(referralOwner.authId, STANDARD_AMOUNT_FOR_REFERRAL_OWNER);
-                await this.userReferralService.addAllUserReferrals(referralOwner.authId, recipient);
+                await this.tokenService.mintTokens(referralOwner.authId, settings.beatmapReferredReward);
+                await this.userReferralService.addAllUserReferrals(referralOwner.authId, recipient, settings.beatmapReferredReward, settings.beatmapReferrerReward, beatmapAddress);
             }
 
             return output;
         } catch (e) {
-            returnError(this.logger, logString, 500, e);
+            returnError(this.logger, logString, 500, e.toString());
         }
     }
 

@@ -219,7 +219,7 @@ export class AuthService {
         try {
             const settings = this.settingsService.getSettings();
             this.logger.log(`Rewarding tokens to new referred user ${newUserWallet}`);
-            await this.tokenService.mintTokens(newUserWallet, settings.beatmapReferredReward);
+            await this.tokenService.mintTokens(newUserWallet, settings.beatmapReferrerReward);
         } catch (e) {
             this.logger.error(`Errror rewarding to referred user ${newUserWallet}: ${JSON.stringify(e)}`);
         }
@@ -231,7 +231,7 @@ export class AuthService {
 
             if (referrer) {
                 this.logger.log(`Rewarding tokens to new referrer ${referrer}`);
-                await this.tokenService.mintTokens(referrer, settings.beatmapReferrerReward);
+                await this.tokenService.mintTokens(referrer, settings.beatmapReferredReward);
             }
         } catch (e) {
             this.logger.error(`Errror rewarding to referrer ${referrer ? referrer : ''}: ${JSON.stringify(e)}`);
