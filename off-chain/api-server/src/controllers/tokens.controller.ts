@@ -230,7 +230,7 @@ export class TokenController {
     @ApiOperation({ summary: 'Request BEATS token' })
     @Post('/api/v2/token')
     @HttpCode(200)
-    async mintBeatsToken(@Body() body: MintTokenDto): Promise<any> {
+    async mintBeatsToken(@Body() body: MintTokenDto): Promise<MintTokenResponseDto> {
         const logString = `POST /api/v2/token ${JSON.stringify(body)}`;
         this.logger.log(logString);
         const settings = this.settingsService.getSettings();
