@@ -8,6 +8,7 @@ import { TokenService } from './tokens.service';
 import { IBeatmapsRepo } from 'src/repositories/beatmaps/IBeatmaps';
 import { SettingsService } from './settings.service';
 import { Tokens } from 'aws-sdk/clients/kendraranking';
+import { UserReferralService } from './user-refferal.service';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +23,7 @@ export class AuthService {
     constructor(
         readonly settingsService: SettingsService,
         readonly tokenService: TokenService,
+        private readonly userReferralService: UserReferralService,
         @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
         @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
         @Inject('ReferralModule') referralModule: ReferralModule,
@@ -227,14 +229,18 @@ export class AuthService {
         let referrer;
         try {
             const settings = this.settingsService.getSettings();
-            const referrer = (await this.beatmapsRepo.getBeatmap(referralCode.beatmapId))?.owner;
+
+            const beatmap = await this.beatmapsRepo.getBeatmap(referralCode.beatmapId)
+            const referrer = beatmap?.owner;
 
             if (referrer) {
                 this.logger.log(`Rewarding tokens to new referrer ${referrer}`);
                 await this.tokenService.mintTokens(referrer, settings.beatmapReferredReward);
+                await this.userReferralService.addAllUserReferrals(referrer, newUserWallet, settings.beatmapReferredReward, settings.beatmapReferrerReward, beatmap.address);
             }
         } catch (e) {
             this.logger.error(`Errror rewarding to referrer ${referrer ? referrer : ''}: ${JSON.stringify(e)}`);
         }
+
     }
 }
