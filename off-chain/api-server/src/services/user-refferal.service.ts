@@ -40,11 +40,15 @@ export class UserReferralService {
     }
 
     async addAllUserReferrals(
-        authId: string,
+        ownerId: string,
         playerId: string,
+        ownerEmail: string,
+        playerEmail: string,
         beatmapReferredReward: number,
         beatmapReferrerReward: number,
-        beatmapAddress: string
+        beatmapAddress: string,
+        referralCode: string
+
 
     ): Promise<{
         success: boolean;
@@ -53,7 +57,7 @@ export class UserReferralService {
             success: false,
         };
 
-        await this.userReferralsRepo.addAllUserReferrals(authId, playerId, beatmapReferredReward, beatmapReferrerReward, beatmapAddress);
+        await this.userReferralsRepo.addAllUserReferrals(ownerId, playerId, ownerEmail, playerEmail, beatmapReferredReward, beatmapReferrerReward, beatmapAddress, referralCode);
         output.success =  true
 
         return output;
