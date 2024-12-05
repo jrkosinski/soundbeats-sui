@@ -243,12 +243,6 @@ export class TokenController {
             const output = await this.tokenService.mintTokens(recipient, settings.beatmapReferrerReward);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
 
-            if (referralOwnerUsername) {
-                const referralOwner: IAuthRecord = await this.authManager.getAuthRecordByName(referralOwnerUsername);
-                await this.tokenService.mintTokens(referralOwner.authId, settings.beatmapReferredReward);
-                await this.userReferralService.addAllUserReferrals(referralOwner.authId, recipient, settings.beatmapReferredReward, settings.beatmapReferrerReward, beatmapAddress);
-            }
-
             return output;
         } catch (e) {
             returnError(this.logger, logString, 500, e.toString());

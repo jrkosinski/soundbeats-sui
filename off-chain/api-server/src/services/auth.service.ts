@@ -207,7 +207,7 @@ export class AuthService {
                 output.referralBeatmap = referral.beatmapId;
 
                 //here, we must reward both the referral and the referred
-                await this.rewardReferral(referral, output.authId);
+                await this.rewardReferral(referral, output);
             } else this.logger.log(`referral code ${referralCode} not found`);
         }
 
@@ -217,7 +217,7 @@ export class AuthService {
         return output;
     }
 
-    async rewardReferral(referralCode: IReferralCode, newUserWallet: string) {
+    async rewardReferral(referralCode: IReferralCode, newUserWallet: any) {
         try {
             const settings = this.settingsService.getSettings();
             this.logger.log(`Rewarding tokens to new referred user ${newUserWallet}`);
@@ -231,12 +231,13 @@ export class AuthService {
             const settings = this.settingsService.getSettings();
 
             const beatmap = await this.beatmapsRepo.getBeatmap(referralCode.beatmapId)
-            const referrer = beatmap?.owner;
+            referrer = await this.authManager.getAuthRecord(beatmap.owner, 'sui');
 
             if (referrer) {
                 this.logger.log(`Rewarding tokens to new referrer ${referrer}`);
                 await this.tokenService.mintTokens(referrer, settings.beatmapReferredReward);
-                await this.userReferralService.addAllUserReferrals(referrer, newUserWallet, settings.beatmapReferredReward, settings.beatmapReferrerReward, beatmap.address);
+
+                await this.userReferralService.addAllUserReferrals(referrer.authId, newUserWallet.authId, referrer.username, newUserWallet.username,  settings.beatmapReferredReward, settings.beatmapReferrerReward, beatmap.address, referralCode.code);
             }
         } catch (e) {
             this.logger.error(`Errror rewarding to referrer ${referrer ? referrer : ''}: ${JSON.stringify(e)}`);

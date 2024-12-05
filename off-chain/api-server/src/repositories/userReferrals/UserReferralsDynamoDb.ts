@@ -22,13 +22,16 @@ export class UserReferralsDynamoDb implements IUserReferralsRepo {
         return await this._dataAccess_getUserReferral(authId);
     }
 
-    async addAllUserReferrals(authId: string, playerId: string, beatmapReferredReward: number, beatmapReferrerReward: number, beatmapAddress: string): Promise<IUserReferral> {
+    async addAllUserReferrals(ownerId: string, playerId: string, ownerEmail : string, playerEmail: string, beatmapReferredReward: number, beatmapReferrerReward: number, beatmapAddress: string, referralCode: string): Promise<IUserReferral> {
         const output = {
             uuid: uuidv4(),
             beatmapAddress: beatmapAddress,
-            referralOwner: authId,
+            referralOwner: ownerId,
+            referralOwnerEmail: ownerEmail,
+            referralCode: referralCode,
             ownerReward: beatmapReferredReward,
             player: playerId,
+            playerEmail: playerEmail,
             playerReward: beatmapReferrerReward,
             generatedAt: getTimestamp(),
             lastRedeemedAt: 0,
@@ -49,8 +52,11 @@ export class UserReferralsDynamoDb implements IUserReferralsRepo {
         return {
             uuid: record.uuid?.S ?? '',
             beatmapAddress: record.beatmapAddress?.S ?? '',
+            referralCode:  record.referralCode?.S ?? '',
             referralOwner: record.referralOwner?.S ?? '',
+            referralOwnerEmail: record.referralOwnerEmail?.S ?? '',
             ownerReward: record.ownerReward?.S ?? 0,
+            playerEmail: record.playerEmail?.S ?? '',
             player: record.player?.S ?? '',
             playerReward: record.playerReward?.S ?? 0,
             generatedAt: record.generatedAt?.N ?? 0,
@@ -86,9 +92,12 @@ export class UserReferralsDynamoDb implements IUserReferralsRepo {
             Item: {
                 uuid: { S: referral.uuid },
                 beatmapAddress:  { S: referral.beatmapAddress },
+                referralCode: { S: referral.referralCode },
                 referralOwner: { S: referral.referralOwner },
+                referralOwnerEmail: { S: referral.referralOwnerEmail },
                 ownerReward: { S: referral.ownerReward.toString() },
                 player: { S: referral.player },
+                playerEmail: { S: referral.playerEmail },
                 playerReward: { S: referral.playerReward.toString() },
                 generatedAt: { N: referral.generatedAt.toString() },
                 lastRedeemedAt: { N: referral.lastRedeemedAt.toString() },

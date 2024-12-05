@@ -1,17 +1,25 @@
-import { Body, Controller, Get, Post, Put, Query, HttpCode } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Query, HttpCode, Inject } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { AppLogger } from '../app.logger';
 import { ReferralService } from 'src/services/referral.service';
 import { returnError } from 'src/util/return-error';
 import { IReferralCode } from '../repositories/referral/IReferralManager';
 import { AuthService } from '../services/auth.service';
+import { IAuthManager, IAuthRecord } from '../repositories/auth/IAuthManager';
+import { AuthManagerModule, ConfigSettingsModule } from '../app.module';
+import { ConfigSettings } from '../config';
 
 @Controller()
 export class ReferralController {
     logger: AppLogger;
+    authManager: IAuthManager;
+    config: ConfigSettings;
 
-    constructor(private readonly authService: AuthService, private readonly referralService: ReferralService) {
+    constructor(private readonly authService: AuthService, private readonly referralService: ReferralService, @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,         @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
+    ) {
         this.logger = new AppLogger('referral.controller');
+        this.config = configSettingsModule.get();
+        this.authManager = authManagerModule.get(this.config);
     }
 
     @Get('/')
@@ -63,7 +71,8 @@ export class ReferralController {
 
         if (result?.referralCode) {
             output.referralBeatmap = result.referralCode.beatmapId;
-            await this.authService.rewardReferral(result.referralCode, authId);
+            const authInfo: IAuthRecord = await this.authManager.getAuthRecord(authId, 'sui');
+            await this.authService.rewardReferral(result.referralCode, authInfo);
         } else {
             returnError(this.logger, logString, 404, `Referral Code ${referralCode} not found`);
         }
