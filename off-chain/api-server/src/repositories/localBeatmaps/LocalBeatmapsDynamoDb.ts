@@ -107,7 +107,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
             record.title = title
         }
         if(record.file != file && file) {
-            record.file = JSON.stringify(file)
+            record.file = file
         }
 
         const result = await this.dynamoDb.putItem({
@@ -117,7 +117,8 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
                 username: { S: record.username },
                 title: { S: record.title },
                 file: { S: record.file },
-                artist: { S: record.artist }
+                artist: { S: record.artist },
+                timestamp: { N: record.timestamp },
             },
         });
 
