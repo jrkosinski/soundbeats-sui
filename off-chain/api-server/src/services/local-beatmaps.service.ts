@@ -112,9 +112,10 @@ export class LocalBeatmapsService {
         username: string;
         file: string;
         status: boolean;
+        timestamp: number;
         title: string;
     }> {
-        const output = { title: '', status: false, username: '', file: '', id: '', artist: '' };
+        const output = { title: '', status: false, username: '', file: '', id: '', artist: '', timestamp: 0 };
 
         const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, 'sui');
 
@@ -136,6 +137,7 @@ export class LocalBeatmapsService {
                 output.file = updatedLocalBeatmap.file;
                 output.title = updatedLocalBeatmap.title;
                 output.artist = updatedLocalBeatmap.artist;
+                output.timestamp = updatedLocalBeatmap.timestamp
                 output.status = true;
                 return output;
 
