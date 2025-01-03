@@ -1,13 +1,4 @@
-import {
-    Body,
-    Controller,
-    Get,
-    Post,
-    Query,
-    HttpCode,
-    Param,
-    Inject,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, HttpCode, Param, Inject } from '@nestjs/common';
 import { ApiOperation } from '@nestjs/swagger';
 import { AppService } from '../app.service';
 import {
@@ -234,10 +225,9 @@ export class TokenController {
         if (!recipient || recipient == '') {
             returnError(this.logger, logString, 400, 'recipient cannot be null or empty');
         }
-        if (!beatmapAddress || recipient == '') {
-            returnError(this.logger, logString, 400, 'beatmapAddress cannot be null or empty');
-        }
-
+        //if (!beatmapAddress || recipient == '') {
+        //    returnError(this.logger, logString, 400, 'beatmapAddress cannot be null or empty');
+        //}
 
         try {
             const output = await this.tokenService.mintTokens(recipient, settings.beatmapReferrerReward);
