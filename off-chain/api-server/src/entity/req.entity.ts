@@ -33,7 +33,6 @@ export class MintBeatmapsNftDto {
     quantity?: number = 1;
 }
 
-
 export class LocalBeatmapsDto {
     @ApiProperty({ description: 'Username of the beatmap creator' })
     username: string;
@@ -43,8 +42,11 @@ export class LocalBeatmapsDto {
     file: string;
     @ApiProperty({ description: 'Song artist' })
     artist: string;
+    @ApiProperty({ description: 'Where the beatmap is from' })
+    source: string;
+    @ApiProperty({ description: 'Image url' })
+    image: string;
 }
-
 
 export class UpdateLocalBeatmapsDto {
     @ApiProperty({ description: 'Auth ID, e.g. EVM wallet address or username' })
@@ -61,6 +63,10 @@ export class UpdateLocalBeatmapsDto {
     file: string;
     @ApiProperty({ description: 'Artist name' })
     artist: string;
+    @ApiProperty({ description: 'Where the beatmap is from' })
+    source: string;
+    @ApiProperty({ description: 'Image url' })
+    image: string;
 }
 
 export class GetLocalBeatmapResponseDto {
@@ -70,6 +76,10 @@ export class GetLocalBeatmapResponseDto {
     title: string;
     @ApiProperty({ description: 'File url' })
     file: string;
+    @ApiProperty({ description: 'Image url' })
+    image: string;
+    @ApiProperty({ description: 'Source: where the beatmap came from' })
+    source: string;
     @ApiProperty({ description: 'Success or failure of the operation' })
     status: boolean;
 }
@@ -377,4 +387,4 @@ export class GetUserOAuthDto {
     nonceToken: string;
 }
 
-export class GetUserOAuthResponseDto extends GetAccountResponseDto { }
+export class GetUserOAuthResponseDto extends GetAccountResponseDto {}

@@ -4,8 +4,6 @@ import { AppLogger } from '../app.logger';
 import { ConfigSettings } from '../config';
 import { AuthManagerModule, ConfigSettingsModule, LeaderboardModule, LocalBeatmapsModule } from '../app.module';
 import { ILocalBeatmap, ILocalBeatmapsRepo } from '../repositories/localBeatmaps/ILocalBeatmaps';
-import { ILeaderboard } from '../repositories/leaderboard/ILeaderboard';
-import { IBeatmapsRepo } from '../repositories/beatmaps/IBeatmaps';
 import { TransactionBlock } from '@mysten/sui.js/transactions';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -34,7 +32,7 @@ export class LocalBeatmapsService {
         this.authManager = authManagerModule.get(this.config);
     }
 
-    async getAllLocalBeatmaps(includeFile: boolean = false): Promise<any> {
+    async getAllLocalBeatmaps(includeFile: boolean = false): Promise<any[]> {
         const output = await this.localBeatmap.getAllLocalBeatmaps();
         if (output && !includeFile) {
             for (let beatmap of output) {
@@ -54,6 +52,8 @@ export class LocalBeatmapsService {
         artist: string,
         title: string,
         file: string,
+        source: string,
+        image: string,
         // timestamp: number,
     ): Promise<{
         network: string;
@@ -64,13 +64,11 @@ export class LocalBeatmapsService {
             //mint nft to recipient
             const tx = new TransactionBlock();
 
-
             //check results
 
             //add to beatmaps repository
             let message = '';
             try {
-
                 const uniqueId = uuidv4();
 
                 await this.localBeatmap.addLocalBeatmap({
@@ -79,6 +77,8 @@ export class LocalBeatmapsService {
                     timestamp: unixDate(),
                     title,
                     file,
+                    source,
+                    image,
                     username,
                 });
             } catch (e) {
@@ -99,7 +99,6 @@ export class LocalBeatmapsService {
         }
     }
 
-
     async updateLocalBeatmap(
         id: any,
         username: string,
@@ -107,20 +106,33 @@ export class LocalBeatmapsService {
         file: string,
         title: string,
         artist: string,
+        source: string,
+        image: string,
     ): Promise<{
-        id: string,
+        id: string;
         username: string;
         file: string;
+        source: string;
+        image: string;
         status: boolean;
         timestamp: number;
         title: string;
     }> {
-        const output = { title: '', status: false, username: '', file: '', id: '', artist: '', timestamp: 0 };
+        const output = {
+            title: '',
+            status: false,
+            username: '',
+            file: '',
+            id: '',
+            artist: '',
+            source: null,
+            image: null,
+            timestamp: 0,
+        };
 
         const authRecord: IAuthRecord = await this.authManager.getAuthRecord(authId, 'sui');
 
         if (authRecord == null) {
-
             output.status = false;
             return output;
         } else {
@@ -128,26 +140,27 @@ export class LocalBeatmapsService {
                 let updatedLocalBeatmap = await this.localBeatmap.updateLocalBeatmap(
                     id,
                     username,
+                    artist,
                     title,
                     file,
-                    artist
+                    source,
+                    image,
                 );
                 output.id = updatedLocalBeatmap.id;
                 output.username = updatedLocalBeatmap.username;
                 output.file = updatedLocalBeatmap.file;
                 output.title = updatedLocalBeatmap.title;
                 output.artist = updatedLocalBeatmap.artist;
-                output.timestamp = updatedLocalBeatmap.timestamp
+                output.timestamp = updatedLocalBeatmap.timestamp;
+                output.source = updatedLocalBeatmap.source;
+                output.image = updatedLocalBeatmap.image;
                 output.status = true;
-                return output;
 
+                return output;
             } catch (e) {
                 output.status = false;
                 return output;
-
             }
         }
     }
-
-
 }

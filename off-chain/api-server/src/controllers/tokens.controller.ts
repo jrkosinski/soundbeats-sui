@@ -257,4 +257,17 @@ export class TokenController {
             returnError(this.logger, logString, 500, e);
         }
     }
+
+    @ApiOperation({ summary: 'Get BEATS token stats' })
+    @Get('/api/v2/token/stats')
+    async getBeatsTokenStats(): Promise<any[]> {
+        const logString = `GET /api/v2/token/stats`;
+        this.logger.log(logString);
+
+        try {
+            return null;
+        } catch (e) {
+            returnError(this.logger, logString, 500, e);
+        }
+    }
 }
