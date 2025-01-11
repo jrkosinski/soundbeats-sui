@@ -53,7 +53,7 @@ export class LocalBeatmapsService {
         title: string,
         file: string,
         source: string,
-        image: string,
+        imageUrl: string,
         // timestamp: number,
     ): Promise<{
         network: string;
@@ -78,7 +78,7 @@ export class LocalBeatmapsService {
                     title,
                     file,
                     source,
-                    image,
+                    imageUrl,
                     username,
                 });
             } catch (e) {
@@ -107,13 +107,13 @@ export class LocalBeatmapsService {
         title: string,
         artist: string,
         source: string,
-        image: string,
+        imageUrl: string,
     ): Promise<{
         id: string;
         username: string;
         file: string;
         source: string;
-        image: string;
+        imageUrl: string;
         status: boolean;
         timestamp: number;
         title: string;
@@ -126,7 +126,7 @@ export class LocalBeatmapsService {
             id: '',
             artist: '',
             source: null,
-            image: null,
+            imageUrl: null,
             timestamp: 0,
         };
 
@@ -144,7 +144,7 @@ export class LocalBeatmapsService {
                     title,
                     file,
                     source,
-                    image,
+                    imageUrl,
                 );
                 output.id = updatedLocalBeatmap.id;
                 output.username = updatedLocalBeatmap.username;
@@ -153,7 +153,7 @@ export class LocalBeatmapsService {
                 output.artist = updatedLocalBeatmap.artist;
                 output.timestamp = updatedLocalBeatmap.timestamp;
                 output.source = updatedLocalBeatmap.source;
-                output.image = updatedLocalBeatmap.image;
+                output.imageUrl = updatedLocalBeatmap.imageUrl;
                 output.status = true;
 
                 return output;

@@ -202,6 +202,7 @@ export class TokenService {
         title: string,
         artist: string,
         beatmapJson: string,
+        source: string,
         imageUrl: string,
         quantity: number,
     ): Promise<{
@@ -214,6 +215,16 @@ export class TokenService {
         try {
             //mint nft to recipient
             const tx = new TransactionBlock();
+
+            //add source & imageUrl to json
+            try {
+                const json = JSON.parse(beatmapJson);
+                if (source) json.source = source;
+                if (imageUrl) json.imageUrl = imageUrl;
+                beatmapJson = JSON.stringify(json);
+            } catch (e: any) {
+                this.logger.error(`Error parsing json`, e);
+            }
 
             const metadata = {
                 beatmap: beatmapJson,
@@ -264,6 +275,8 @@ export class TokenService {
                     title,
                     artist,
                     username,
+                    source,
+                    imageUrl,
                 });
             } catch (e) {
                 message = 'Minted successfully, but failed to add to database';

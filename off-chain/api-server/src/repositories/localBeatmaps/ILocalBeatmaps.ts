@@ -5,7 +5,7 @@ export interface ILocalBeatmap {
     title: string;
     file: string;
     source: string;
-    image: string;
+    imageUrl: string;
     timestamp: number;
 }
 
@@ -21,6 +21,6 @@ export interface ILocalBeatmapsRepo {
         title: string,
         file: string,
         source: string,
-        image: string,
+        imageUrl: string,
     ): Promise<any>;
 }

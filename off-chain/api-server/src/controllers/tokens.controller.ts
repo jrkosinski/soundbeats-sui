@@ -101,7 +101,7 @@ export class TokenController {
     async mintBeatmapsNfts(@Body() body: MintBeatmapsNftDto): Promise<MintNftResponseDto> {
         const logString = `POST /api/v2/nfts/beatmaps ${JSON.stringify(body)}`;
         this.logger.log(logString);
-        let { recipient, username, title, artist, beatmapJson, imageUrl, quantity } = body;
+        let { recipient, username, title, artist, beatmapJson, imageUrl, quantity, source } = body;
 
         if (!username || username == '') {
             returnError(this.logger, logString, 400, 'username cannot be null or empty');
@@ -138,6 +138,7 @@ export class TokenController {
                 title,
                 artist,
                 beatmapJson,
+                source,
                 imageUrl,
                 quantity ?? 1,
             );

@@ -73,7 +73,7 @@ export class LocalBeatmapController {
     }> {
         const logString = `POST /api/v2/nfts/beatmaps ${JSON.stringify(body)}`;
         this.logger.log(logString);
-        let { username, title, artist, file, source, image } = body;
+        let { username, title, artist, file, source, imageUrl } = body;
 
         if (!username || username == '') {
             returnError(this.logger, logString, 400, 'username cannot be null or empty');
@@ -96,7 +96,7 @@ export class LocalBeatmapController {
                 title,
                 file,
                 source,
-                image,
+                imageUrl,
             );
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
             return output;
@@ -114,7 +114,7 @@ export class LocalBeatmapController {
         const logString = `POST /api/v2/level ${JSON.stringify(body)}`;
         this.logger.log(logString);
 
-        let { authId, file, title, username, artist, source, image } = body;
+        let { authId, file, title, username, artist, source, imageUrl } = body;
         if (!authId || authId == '') {
             returnError(this.logger, logString, 400, 'Auth Id cannot be null or empty');
         }
@@ -127,7 +127,7 @@ export class LocalBeatmapController {
             title,
             artist,
             source,
-            image,
+            imageUrl,
         );
 
         this.logger.log(`${logString} returning ${JSON.stringify(output)}`);

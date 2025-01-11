@@ -37,7 +37,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
         title: string,
         file: string,
         source: string,
-        image: string,
+        imageUrl: string,
     ): Promise<any> {
         const record: any = await this.getLocalBeatmap(id);
 
@@ -45,7 +45,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
             throw new Error(`not found.`);
         }
 
-        return await this._dataAccess_putRecord(username, artist, title, file, source, image, record.data);
+        return await this._dataAccess_putRecord(username, artist, title, file, source, imageUrl, record.data);
     }
 
     async getLocalBeatmapsByOwner(ownerAddress: string): Promise<ILocalBeatmap[]> {
@@ -68,7 +68,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
             title: record.title?.S ?? '',
             file: record.file?.S ?? '',
             source: record.source?.S ?? '',
-            image: record.image?.S ?? '',
+            imageUrl: record.imageUrl?.S ?? '',
         };
 
         return output;
@@ -102,7 +102,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
         title: string,
         file: string,
         source: string,
-        image: string,
+        imageUrl: string,
         record: ILocalBeatmap,
     ): Promise<ILocalBeatmap> {
         if (record.username != username && username) {
@@ -120,8 +120,8 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
         if (record.source != source && source) {
             record.source = source;
         }
-        if (record.image != image && image) {
-            record.image = image;
+        if (record.imageUrl != imageUrl && imageUrl) {
+            record.imageUrl = imageUrl;
         }
 
         const result = await this.dynamoDb.putItem({
@@ -133,7 +133,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
                 file: { S: record.file },
                 artist: { S: record.artist },
                 source: { S: record.source },
-                image: { S: record.image },
+                imageUrl: { S: record.imageUrl },
                 timestamp: { N: record.timestamp },
             },
         });
@@ -177,7 +177,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
                 file: { S: beatmap.file },
                 artist: { S: beatmap.artist },
                 source: { S: beatmap.source },
-                image: { S: beatmap.image },
+                imageUrl: { S: beatmap.imageUrl },
                 timestamp: { N: beatmap.timestamp.toString() },
             },
         });

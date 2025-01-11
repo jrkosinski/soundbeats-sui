@@ -29,6 +29,8 @@ export class MintBeatmapsNftDto {
     beatmapJson: string;
     @ApiProperty({ description: 'NFT image url' })
     imageUrl: string;
+    @ApiProperty({ description: 'Where the beatmap is from' })
+    source: string;
     @ApiProperty({ description: 'Number of NFT to be minted' })
     quantity?: number = 1;
 }
@@ -45,7 +47,7 @@ export class LocalBeatmapsDto {
     @ApiProperty({ description: 'Where the beatmap is from' })
     source: string;
     @ApiProperty({ description: 'Image url' })
-    image: string;
+    imageUrl: string;
 }
 
 export class UpdateLocalBeatmapsDto {
@@ -66,7 +68,7 @@ export class UpdateLocalBeatmapsDto {
     @ApiProperty({ description: 'Where the beatmap is from' })
     source: string;
     @ApiProperty({ description: 'Image url' })
-    image: string;
+    imageUrl: string;
 }
 
 export class GetLocalBeatmapResponseDto {
@@ -77,7 +79,7 @@ export class GetLocalBeatmapResponseDto {
     @ApiProperty({ description: 'File url' })
     file: string;
     @ApiProperty({ description: 'Image url' })
-    image: string;
+    imageUrl: string;
     @ApiProperty({ description: 'Source: where the beatmap came from' })
     source: string;
     @ApiProperty({ description: 'Success or failure of the operation' })
