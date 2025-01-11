@@ -22,7 +22,6 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
 
     async getLocalBeatmap(id: any): Promise<any> {
         try {
-            console.log('getting local beatmap by', id);
             return await this._dataAccess_getLocalBeatmap(id);
         } catch (e) {
             console.log(e);
