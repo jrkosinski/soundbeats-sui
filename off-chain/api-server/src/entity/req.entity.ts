@@ -155,6 +155,8 @@ export class BeatmapsNftDto {
     username: string;
     title: string;
     artist: string;
+    source: string;
+    imageUrl: string;
     beatmapJson: string;
     uniqueUserCount: number;
     owner: string;
