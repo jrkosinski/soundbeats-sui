@@ -505,6 +505,8 @@ export class TokenService {
                 uniqueUserCount: number;
                 owner: string;
                 timestamp: number;
+                source: string;
+                imageUrl: string;
             }[];
             network: string;
         } = { nfts: [], network: this.network };
@@ -523,6 +525,8 @@ export class TokenService {
                 uniqueUserCount: 0,
                 owner: nft.owner,
                 timestamp: nft.timestamp,
+                source: nft.source,
+                imageUrl: nft.imageUrl,
             });
         }
 
