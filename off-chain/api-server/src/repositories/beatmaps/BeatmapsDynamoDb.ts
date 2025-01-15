@@ -133,7 +133,7 @@ export class BeatmapsDynamoDb implements IBeatmapsRepo {
             try {
                 const json = JSON.parse(beatmap.json);
                 if (beatmap.source) json.source = beatmap.source;
-                if (beatmap.imageUrl) json.source = beatmap.imageUrl;
+                if (beatmap.imageUrl) json.imageUrl = beatmap.imageUrl;
                 beatmap.json = JSON.stringify(json);
             } catch (e: any) {}
         }
