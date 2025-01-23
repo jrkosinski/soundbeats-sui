@@ -1,0 +1,4 @@
+<div class="form-group">
+    <label for="{{name}}_id" class="control-label mb-1">{{title}}</label>
+    <input {{#if disabled}}disabled{{/if}} id="{{position}}{{id}}" name="{{name}}" type="{{#if type}}{{type}}{{else}}text{{/if}}" class="form-control {{class}}" placeholder="{{#if placeholder}}{{placeholder}}{{else}}{{/if}}" aria-invalid="false" value="{{value}}" required="required">
+</div>

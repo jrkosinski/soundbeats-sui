@@ -1,4 +1,4 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { DynamicModule, MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { LeaderboardController } from './controllers/leaderboard.controller';
@@ -33,6 +33,16 @@ import { UserReferralsDynamoDb } from './repositories/userReferrals/UserReferral
 import { IUserReferralsRepo } from './repositories/userReferrals/IUserReferralsManager';
 import { UserReferralService } from './services/user-refferal.service';
 import { UserReferralsController } from './controllers/user-referrals.controller';
+import { AdminController } from './controllers/admin/admin.controller';
+import { IAdminRepo } from './repositories/admin/IAdmin';
+import { AdminDynamoDb } from './repositories/admin/AdminDynamoDb';
+import { AdminAuthService } from './services/admin/admin.auth.service';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { JwtService } from '@nestjs/jwt';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 
 @Module({})
 export class AuthManagerModule {
@@ -114,6 +124,49 @@ export class LocalBeatmapsModule {
     }
 }
 
+
+@Module({})
+export class RewardsModule {
+    static register(): DynamicModule {
+        let provider = {
+            provide: 'RewardsModule',
+            useClass: RewardsModule,
+        };
+
+        return {
+            module: RewardsModule,
+            providers: [provider],
+            exports: [provider],
+        };
+    }
+
+    get(config: IConfigSettings): IRewardRepo {
+        return new RewardDynamoDb(config);
+    }
+}
+
+@Module({})
+export class UserGameStatsModule {
+    static register(): DynamicModule {
+        let provider = {
+            provide: 'UserGameStatsModule',
+            useClass: UserGameStatsModule,
+        };
+
+        return {
+            module: UserGameStatsModule,
+            providers: [provider],
+            exports: [provider],
+        };
+    }
+
+    get(config: IConfigSettings): IUserGameStatsRepo {
+        return new UserGameStatsDynamoDb(config);
+    }
+}
+
+
+
 @Module({})
 export class ReferralModule {
     static register(): DynamicModule {
@@ -134,6 +187,27 @@ export class ReferralModule {
     }
 }
 
+
+@Module({})
+export class AdminModule {
+    static register(): DynamicModule {
+        let provider = {
+            provide: 'AdminModule',
+            useClass: AdminModule,
+        };
+
+        return {
+            module: AdminModule,
+            providers: [provider],
+            exports: [provider],
+        };
+    }
+
+
+    get(config: IConfigSettings): IAdminRepo {
+        return new AdminDynamoDb(config);
+    }
+}
 
 
 @Module({})
@@ -175,8 +249,41 @@ export class ConfigSettingsModule {
     }
 }
 
+
+import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
+import { RewardDynamoDb } from './repositories/reward/RewardDynamoDb';
+import { IRewardRepo } from './repositories/reward/IReward';
+import { RewardService } from './services/reward.service';
+import { RewardsController } from './controllers/admin/rewards.controller';
+import { AdminAuthController } from './controllers/admin/admin.auth.controller';
+import { UserGameStatsDynamoDb } from './repositories/userGameStats/UserGameStatsDynamoDb';
+import { IUserGameStatsRepo } from './repositories/userGameStats/IUserGameStats';
+import { UserGameStatsService } from './services/user-game-stats.service';
+import { S3Service } from './services/s3.service';
+
+@Injectable()
+export class JwtAuthMiddleware implements NestMiddleware {
+    constructor(private readonly authService: AuthService) {}
+
+    async use(req: Request, res: Response, next: NextFunction) {
+        const token = req.cookies?.jwt;
+
+        if(token && req.url === '/admin/login') {
+            req.url = req.url.replace(/^\/admin\/login/, '/admin');
+        }else if (!token && req.url.startsWith('/admin') && req.url !== '/admin/login') {
+            req.url ='/admin/login';
+        }
+
+        next()
+    }
+}
 @Module({
     imports: [
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '..', '/public'),
+            serveStaticOptions: { index: false },
+        }),
         ConfigModule.forRoot(),
         AuthManagerModule.register(),
         ConfigSettingsModule.register(),
@@ -184,20 +291,28 @@ export class ConfigSettingsModule {
         BeatmapsModule.register(),
         LocalBeatmapsModule.register(),
         ReferralModule.register(),
-        UserReferralsModule.register()
+        AdminModule.register(),
+        UserReferralsModule.register(),
+        RewardsModule.register(),
+        UserGameStatsModule.register()
     ],
     controllers: [
         AppController,
+        AdminAuthController,
+        RewardsController,
         LeaderboardController,
         TokenController,
         AuthController,
         VersionController,
         SettingsController,
         ReferralController,
+        AdminController,
         LocalBeatmapController,
         UserReferralsController
     ],
     providers: [
+        JwtService,
+        // AdminService,
         AppService,
         SuiService,
         LeaderboardService,
@@ -206,7 +321,17 @@ export class ConfigSettingsModule {
         ReferralService,
         SettingsService,
         LocalBeatmapsService,
-        UserReferralService
+        UserReferralService,
+        AdminAuthService,
+        RewardService,
+        UserGameStatsService,
+        S3Service
     ],
 })
-export class AppModule {}
+export class AppModule {
+    configure(consumer: MiddlewareConsumer) {
+        consumer
+            .apply(JwtAuthMiddleware)
+            .forRoutes({ path: '/admin*', method: RequestMethod.GET }, { path: '/admin/login', method: RequestMethod.GET });
+    }
+}

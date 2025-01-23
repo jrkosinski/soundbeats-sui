@@ -4,6 +4,11 @@ import { AppModule } from './app.module';
 import { Config, ConfigSettings } from './config';
 import * as fs from 'fs';
 import { ConfigService } from 'aws-sdk';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
+import hbs = require('hbs');
+const cookieParser = require('cookie-parser')
+
 
 async function bootstrap() {
     const appConfig = {};
@@ -23,7 +28,26 @@ async function bootstrap() {
     }
 
     //create app
-    const app = await NestFactory.create(AppModule, appConfig);
+    // const app = await NestFactory.create(AppModule, appConfig);
+
+    const app = await NestFactory.create<NestExpressApplication>(AppModule, appConfig);
+    app.use(cookieParser());
+
+    const helpers = {
+        first: (index: number) => index === 0 ? true : false,
+        lastValue: (index: number, text: any) => index === 3 ? '∞' : text,
+        last: (index: number) => index === 3 ? true : false,
+
+    };
+
+
+    hbs.registerHelper(helpers);
+    app.useStaticAssets(join(__dirname, '..', 'public'));
+    app.setBaseViewsDir(join(__dirname, '..', 'resources/views/admin/pages/admins'));
+    app.setViewEngine('hbs');
+
+    hbs.registerPartials(join(__dirname, '..', 'resources/views/admin/pages/admins', 'partials'));
+
 
     //use cors if specified
     if (useCors) {

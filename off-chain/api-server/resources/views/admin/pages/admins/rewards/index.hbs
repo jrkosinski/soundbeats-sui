@@ -1,0 +1,73 @@
+<div class="container-fluid">
+    <div class="row">
+       <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Rewards</h3>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-striped projects">
+                        <thead>
+                        <tr>
+                            <th style="width: 1%">#</th>
+                            <th style="width: 20%">Type</th>
+                            <th style="width: 20%" class="collapsable">reward</th>
+                            <th style="width: 20%" class="text-right">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {{#each rewards}}
+                        <tr style="background: white">
+                            <td>1</td>
+                            <td>
+                                <a>{{this.type}}</a>
+                                <br>
+                            </td>
+                            <td class="collapsable">{{this.reward}}</td>
+                            <td class="project-actions text-right actions">
+                                <a class="btn btn-info btn-sm" style="margin-bottom: 3px;" href="/admin/rewards/edit/{{ this.type}}">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {{/each}}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Are you sure?</p>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form method="post" action="">
+                    {{!-- No need to handle @method and @csrf in Handlebars, use appropriate backend form handling --}}
+                </form>
+                <button href="" onclick="this.closest('form').submit()" type="button" class="btn btn-danger">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     var removeModal = document.getElementById('removeModal');
+    //     removeModal.addEventListener('show.bs.modal', function (e) {
+    //         var form = removeModal.querySelector('form');
+    //         form.setAttribute('action', e.relatedTarget.getAttribute('data-href'));
+    //     });
+    // });
+</script>

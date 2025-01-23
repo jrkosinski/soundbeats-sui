@@ -1,0 +1,78 @@
+@media ( min-width: 768px ) {
+    .grid-divider {
+        position: relative;
+        padding: 0;
+    }
+    .grid-divider>[class*='col-'] {
+        position: static;
+    }
+    .grid-divider>[class*='col-']:nth-child(n+2):before {
+        content: "";
+        border-left: 1px solid #DDD;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+    }
+    .col-padding {
+        padding: 0 15px;
+    }
+}
+
+
+.color-images-panel .img-upload-btn {
+    position: relative !important;
+    overflow: hidden !important;
+    padding-top: 95% !important;
+}
+
+.color-images-panel .img-upload-btn input[type=file] {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    font-size: 100px !important;
+    text-align: right !important;
+    filter: alpha(opacity=0) !important;
+    opacity: 0 !important;
+    outline: none !important;
+    background: white !important;
+    cursor: inherit !important;
+    display: block !important;
+}
+
+.color-images-panel .img-upload-btn i {
+    position: absolute !important;
+    height: 16px !important;
+    width: 16px !important;
+    top: 50% !important;
+    left: 50% !important;
+    margin-top: -8px !important;
+    margin-left: -8px !important;
+}
+
+.color-images-panel .btn-radio {
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+.color-images-panel .btn-radio input[type=radio] {
+    position: absolute !important;
+    top: 0 !important;
+    right: 0 !important;
+    min-width: 100% !important;
+    min-height: 100% !important;
+    font-size: 100px !important;
+    text-align: right !important;
+    filter: alpha(opacity=0) !important;
+    opacity: 0 !important;
+    outline: none !important;
+    background: white !important;
+    cursor: inherit !important;
+    display: block !important;
+}
+
+
+.color-images-panel .img-picker img {
+    width: 100%;
+}

@@ -1,0 +1,260 @@
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3HHtbWP0YOKPQw2EyJfYP9qZkgxMY3qs&libraries=places"></script>
+<style>
+    .autocomplete {
+        border: 1px solid silver;
+    }
+
+    .autocomplete-suggestion {
+        cursor: pointer;
+        background-color: white;
+        padding: 4px;
+        border: 1px solid silver;
+    }
+
+    #sortable {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+    }
+
+    #sortable li {
+        margin: 3px 3px 3px 0;
+        float: left;
+        width: 100px;
+        height: 90px;
+        font-size: 4em;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        position: relative;
+        overflow: hidden;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-secondary">
+                <div class="card-header">
+                    <h3 class="card-title">{{ $itemName }}</h3>
+                </div>
+
+
+                {{#if showForm}}
+                    <form action='/admin/rewards/edit/{{type}}' method="post"
+                          enctype="multipart/form-data" role="form">
+                        <div class="card-body">
+                            {{>text title='Reward *' name="reward" value='reward' type='number'}}
+                        </div>
+
+                        <div class="card-footer">
+                            {{> submit inline=true type="" value="Submit"}}
+                        </div>
+                    </form>
+                {{else}}
+                    <form id="interval">
+                        <div class="card-body">
+                            <div class="sufee-alert alert with-close alert-danger alert-dismissible fade show"
+                                 id="error" style="display: none">
+                                <span id="errorText"></span>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">×</span>
+                                </button>
+                            </div>
+                            <div style="display: flex">
+                                <div>
+                                    {{#each interval}}
+                                        <div style="display: flex; gap: 20px">
+                                            {{> text
+                                                title="from"
+                                                name="interval"
+                                                value=this.[0]
+                                                placeholder=this.[0]
+                                                position="interval_first_"
+                                                id=@index
+                                                disabled=(first @index)
+                                            }}
+                                            {{>text
+                                                title="to"
+                                                name="interval"
+                                                value=(lastValue @index this.[1])
+                                                placeholder=this.[1]
+                                                position="interval_second_"
+                                                id=@index
+                                                disabled=(last @index )
+                                            }}
+                                        </div>
+                                    {{/each}}
+                                </div>
+                                <div style="margin-left: 20px; flex-direction: column; display: flex">
+                                    {{#each reward}}
+                                        {{>text title="reward"  name="param" value=this.param placeholder=this.param type='number'}}
+                                    {{/each}}
+                                </div>
+                                <div
+                                    style="margin-left: 20px; flex-direction: column; display: flex; justify-items: center; justify-content: center">
+                                    {{#each usersStatsInRange}}
+                                        <div style="margin-left: 20px; height: 80px; display: flex; justify-content: center; align-items: center;">
+                                            <div id="info-window-{{@index}}" style="min-width: 100px; height: 25px; background: #495057; border-radius: 20px; padding: 5px;  display: flex; justify-content: center; align-items: center;">
+                                                <p style="font-size: 1rem; font-weight: 400;line-height: 1.5;color: white; margin: 0">
+                                                    {{this}} users
+                                                </p>
+                                            </div>
+                                        </div>
+                                    {{/each}}
+                                </div>
+                            </div>
+                            {{> submit inline=true type="" value="Submit" id="subm"}}
+                        </div>
+                    </form>
+
+                {{/if}}
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).on('keydown', '[id^="interval"]', function(e) {
+        if('interval' < $(this).attr('id')) {
+            return
+        }
+        let id = ($(this).attr('id').match(/(\d+)\s*(?:$|\s)/))
+
+        if(id) {
+            $(`#info-window-${id[1]} p`).text(`0 users`);
+        }
+
+    });
+
+
+    $(document).on('change', '[id^="interval"]', function(e) {
+        if(!$(this).attr('id').match(/^[^_]+_([^_]+)/)) {
+            return
+        }
+        let id = ($(this).attr('id').match(/(\d+)\s*(?:$|\s)/)[1]);
+        let intervalsArray = [{{interval}}];
+        let firstOrSecond = $(this).attr('id').match(/^[^_]+_([^_]+)/)[1];
+
+
+        const result = [];
+        for (let i = 0; i < intervalsArray.length - 1; i += 2) {
+            result.push([intervalsArray[i], intervalsArray[i + 1]]);
+        }
+
+
+        $.ajax({
+            type: 'GET',
+            url: '/admin/rewards/users-stats-in-range',
+            data: {
+                from: firstOrSecond === 'first' ? $(this).val() : $(`#interval_first_${id}`).val(),
+                to: firstOrSecond === 'second' ? $(this).val() : $(`#interval_second_${id}`).val() === '∞'? 10000000: $(`#interval_second_${id}`).val(),
+            },
+            cache: false,
+            success: function(result) {
+                $(`#info-window-${id}`).show();
+                $(`#info-window-${id} p`).text(`${result} users`);
+            },
+        });
+    });
+
+
+    $('.info').on('mouseenter', function(e) {
+        const match = e.target.id.match(/\d+$/);
+        const lastNumber = parseInt(match[0], 10);
+        $(`#info-window-${lastNumber}`).show();
+    }).on('mouseleave', function(e) {
+        const match = e.target.id.match(/\d+$/);
+        const lastNumber = parseInt(match[0], 10);
+        $(`#info-window-${lastNumber}`).hide();
+    });
+
+
+    $(document).ready(function() {
+        $('#error').hide();
+        $('#subm').click(function() {
+            let error = $('#error');
+            error.hide();
+            var body = $('#interval').serializeArray();
+            let intervals = [];
+            let param = [];
+            let showError = false;
+
+
+            body = [{name: 'interval', value: '0'}].concat(body)
+            let endNumberExist = false
+
+            body.forEach((data, index) => {
+                if(body[index + 1].name !=='interval' && !endNumberExist){
+                    body = [
+                        ...body.slice(0, index + 1),
+                        {name: 'interval', value: '10000000'},
+                        ...body.slice(index + 1)
+                    ];
+                    endNumberExist = true
+                }
+
+                if (data.name === 'interval') {
+                    if (index % 2 === 0) {
+                        if ((data.value !== body[index + 1].value) && body[index + 1].name === 'interval') {
+                            intervals.push({ name: 'interval', value: `${data.value}-${body[index + 1].value}` });
+                        }
+                    }
+                }
+                if (data.name === 'param') param.push(data);
+            });
+            console.log(body);
+
+
+
+            intervals.forEach((interval, index) => {
+                if (intervals[index + 1]) {
+                    if (interval.value.match(/\d+-(\d+)/)[1] !== intervals[index + 1].value.match(/(\d+)-\d+/)[1]) {
+                        showError = true;
+                    }
+                    if (Number(interval.value.match(/(\d+)-\d+/)[1]) > Number(intervals[index + 1].value.match(/(\d+)-\d+/)[1])) {
+                        showError = true;
+                    }
+                }
+            });
+
+
+            if (showError) {
+                $('#errorText').text('wrong sequence');
+                error.show();
+                return;
+            }
+
+
+            $.ajax({
+                type: 'POST',
+                url: '/admin/rewards/edit/perfectHit',
+                data: { interval: intervals, param: param },
+                cache: false,
+                success: function(result) {
+                },
+            });
+
+        });
+
+        $('#interval').on('submit', function(e) {
+            e.preventDefault();
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+

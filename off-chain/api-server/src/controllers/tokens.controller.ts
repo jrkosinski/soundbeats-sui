@@ -1,5 +1,16 @@
-import { Body, Controller, Get, Post, Query, HttpCode, Param, Inject } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import {
+    Body,
+    Controller,
+    Get,
+    Post,
+    Query,
+    HttpCode,
+    Param,
+    Inject,
+    UseInterceptors,
+    UploadedFile, HttpException, HttpStatus,
+} from '@nestjs/common';
+import { ApiConsumes, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AppService } from '../app.service';
 import {
     MintBeatsNftDto,
@@ -22,6 +33,10 @@ import { AuthManagerModule, ConfigSettingsModule } from '../app.module';
 import { ConfigSettings } from '../config';
 import { UserReferralService } from '../services/user-refferal.service';
 import { SettingsService } from '../services/settings.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Readable } from 'stream';
+import axios from 'axios';
+import { S3Service } from '../services/s3.service';
 
 const MAX_URL_LENGTH = 400;
 const MAX_NFT_NAME_LENGTH = 100;
@@ -35,6 +50,7 @@ export class TokenController {
     config: ConfigSettings;
 
     constructor(
+        private readonly s3Service: S3Service,
         private readonly appService: AppService,
         private readonly tokenService: TokenService,
         private readonly userReferralService: UserReferralService,
@@ -219,17 +235,19 @@ export class TokenController {
     async mintBeatsToken(@Body() body: MintTokenDto): Promise<MintTokenResponseDto> {
         const logString = `POST /api/v2/token ${JSON.stringify(body)}`;
         this.logger.log(logString);
-        const settings = this.settingsService.getSettings();
         const { recipient, beatmapAddress, referralOwnerUsername } = body;
+
 
         if (!recipient || recipient == '') {
             returnError(this.logger, logString, 400, 'recipient cannot be null or empty');
         }
-        //if (!beatmapAddress || recipient == '') {
-        //    returnError(this.logger, logString, 400, 'beatmapAddress cannot be null or empty');
-        //}
+        if (!beatmapAddress || recipient == '') {
+           returnError(this.logger, logString, 400, 'beatmapAddress cannot be null or empty');
+        }
 
         try {
+            const settings = await this.settingsService.getSettings(recipient);
+
             const output = await this.tokenService.mintTokens(recipient, settings.beatmapReferrerReward);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
 
@@ -257,4 +275,104 @@ export class TokenController {
             returnError(this.logger, logString, 500, e);
         }
     }
+
+
+    @Post('/api/v2/create-track-and-get-link')
+    @ApiOperation({ summary: 'Create a music track and retrieve the download link' })
+    @ApiConsumes('multipart/form-data')
+    @ApiResponse({ status: 200, description: 'Download link or error message' })
+    @UseInterceptors(FileInterceptor('file'))
+    async createTrackAndGetLink(
+        @Body('duration') duration: number,
+        @UploadedFile() file: Express.Multer.File,
+        @Body('format') format?: string,
+        @Body('bitrate') bitrate?: number,
+        @Body('intensity') intensity?: string,
+        @Body('mode') mode?: string
+    ): Promise<any> {
+        if (!file || (file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/png')) {
+            throw new HttpException('Invalid file type. Only JPEG and PNG are allowed.', HttpStatus.BAD_REQUEST);
+        }
+
+        if (file.size > 10 * 1024 * 1024) {
+            throw new HttpException('File size exceeds 10 MB limit.', HttpStatus.BAD_REQUEST);
+        }
+
+        const formData = new FormData();
+        formData.append('pat', this.config.mubertSettings);
+        formData.append('duration', duration.toString());
+        formData.append('method', 'ITMRecordTrack');
+
+        if (format) formData.append('format', format.toLowerCase());
+        if (bitrate) formData.append('bitrate', bitrate.toString());
+        if (intensity) formData.append('intensity', intensity.toLowerCase());
+        if (mode) formData.append('mode', mode.toLowerCase());
+
+        const blob = new Blob([file.buffer], { type: file.mimetype });
+        formData.append('file', blob, file.originalname);
+        try {
+            const response = await axios.post('https://api-b2b.mubert.com/v2/ITMRecordTrack', formData, {
+                // headers: formData.getHeaders(),
+                timeout: 60000,
+            });
+
+            const responseData = response.data;
+
+            if (responseData.error) {
+                return { error: responseData.error };
+            }
+
+            if (!responseData.data || !responseData.data.tasks) {
+                return { error: { code: 500, text: 'No task data found in response.' } };
+            }
+
+            const taskId = responseData.data.tasks[0].task_id;
+            let url =await this.pollTrackStatus(taskId);
+            const downloadedFile = await axios.get(url, { responseType: "stream" });
+            let s3Response = await this.s3Service.uploadFile(downloadedFile.data);
+
+            return  {download_link: s3Response};
+
+        } catch (error) {
+            throw new HttpException(
+                `Error communicating with ITMRecordTrack API: ${error.message}`,
+                HttpStatus.BAD_GATEWAY
+            );
+        }
+    }
+
+    private async pollTrackStatus(taskId: string): Promise<any> {
+        return new Promise<void>((resolve, reject) => {
+            let interval = setInterval(async () => {
+                const response = await axios.post('https://api-b2b.mubert.com/v2/TrackStatus', {
+                    headers: { 'Content-Type': 'application/json' },
+                    method: 'TrackStatus',
+                    params: {
+                        pat: this.config.mubertSettings
+                    },
+                    timeout: 60,
+                });
+
+                if (response.data && response.data?.data?.tasks) {
+                    for (const task of response.data.data.tasks) {
+                        if (task.task_id === taskId) {
+                            if (task.task_status_code === 2) {
+                                clearInterval(interval);
+                                resolve(task.download_link);
+                            } else if (task.task_status_code === 3) {
+                                return { error: { code: task.task_status_code, text: task.task_status_text } };
+                            }
+                        }
+                    }
+                } else {
+                    console.warn('No tasks found in TrackStatus response.');
+                    clearInterval(interval);
+                    reject('No tasks found in TrackStatus response.');
+                }
+
+            }, 5000);
+        });
+    }
 }
+
+

@@ -1,0 +1,68 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Statistics</h3>
+                </div>
+
+
+                <div class="card-body "  style="display: flex; justify-items: center; justify-content: start;">
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-success">
+                            <div class="inner">
+                                <h3>{{usersPlayed}}</h3>
+
+                                <p>Total Users Played</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-stats-bars"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">Statistics</a>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-6">
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3>{{usersCount}}</h3>
+
+                                <p>Users Count</p>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-person-add"></i>
+                            </div>
+                            <a href="#" class="small-box-footer">Statistics</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="removeModal" tabindex="-1" role="dialog" aria-labelledby="staticModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body text-center">
+                <p>Are you sure?</p>
+            </div>
+            <div class="modal-footer text-center">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <form method="post" action="">
+                    {{!-- No need to handle @method and @csrf in Handlebars, use appropriate backend form handling --}}
+                </form>
+                <button href="" onclick="this.closest('form').submit()" type="button" class="btn btn-danger">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>
