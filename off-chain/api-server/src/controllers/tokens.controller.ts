@@ -117,7 +117,7 @@ export class TokenController {
     async mintBeatmapsNfts(@Body() body: MintBeatmapsNftDto): Promise<MintNftResponseDto> {
         const logString = `POST /api/v2/nfts/beatmaps ${JSON.stringify(body)}`;
         this.logger.log(logString);
-        let { recipient, username, title, artist, beatmapJson, imageUrl, quantity } = body;
+        let { recipient, username, title, artist, beatmapJson, imageUrl, quantity, source } = body;
 
         if (!username || username == '') {
             returnError(this.logger, logString, 400, 'username cannot be null or empty');
@@ -154,6 +154,7 @@ export class TokenController {
                 title,
                 artist,
                 beatmapJson,
+                source,
                 imageUrl,
                 quantity ?? 1,
             );
@@ -276,6 +277,18 @@ export class TokenController {
         }
     }
 
+    @ApiOperation({ summary: 'Get BEATS token stats' })
+    @Get('/api/v2/token/stats')
+    async getBeatsTokenStats(): Promise<any[]> {
+        const logString = `GET /api/v2/token/stats`;
+        this.logger.log(logString);
+
+        try {
+            return null;
+        } catch (e) {
+            returnError(this.logger, logString, 500, e);
+        }
+    }
 
     @Post('/api/v2/create-track-and-get-link')
     @ApiOperation({ summary: 'Create a music track and retrieve the download link' })
@@ -374,5 +387,3 @@ export class TokenController {
         });
     }
 }
-
-

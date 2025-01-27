@@ -29,10 +29,11 @@ export class MintBeatmapsNftDto {
     beatmapJson: string;
     @ApiProperty({ description: 'NFT image url' })
     imageUrl: string;
+    @ApiProperty({ description: 'Where the beatmap is from' })
+    source: string;
     @ApiProperty({ description: 'Number of NFT to be minted' })
     quantity?: number = 1;
 }
-
 
 export class LocalBeatmapsDto {
     @ApiProperty({ description: 'Username of the beatmap creator' })
@@ -43,8 +44,11 @@ export class LocalBeatmapsDto {
     file: string;
     @ApiProperty({ description: 'Song artist' })
     artist: string;
+    @ApiProperty({ description: 'Where the beatmap is from' })
+    source: string;
+    @ApiProperty({ description: 'Image url' })
+    imageUrl: string;
 }
-
 
 export class UpdateLocalBeatmapsDto {
     @ApiProperty({ description: 'Auth ID, e.g. EVM wallet address or username' })
@@ -61,6 +65,10 @@ export class UpdateLocalBeatmapsDto {
     file: string;
     @ApiProperty({ description: 'Artist name' })
     artist: string;
+    @ApiProperty({ description: 'Where the beatmap is from' })
+    source: string;
+    @ApiProperty({ description: 'Image url' })
+    imageUrl: string;
 }
 
 export class GetLocalBeatmapResponseDto {
@@ -70,6 +78,10 @@ export class GetLocalBeatmapResponseDto {
     title: string;
     @ApiProperty({ description: 'File url' })
     file: string;
+    @ApiProperty({ description: 'Image url' })
+    imageUrl: string;
+    @ApiProperty({ description: 'Source: where the beatmap came from' })
+    source: string;
     @ApiProperty({ description: 'Success or failure of the operation' })
     status: boolean;
 }
@@ -143,6 +155,8 @@ export class BeatmapsNftDto {
     username: string;
     title: string;
     artist: string;
+    source: string;
+    imageUrl: string;
     beatmapJson: string;
     uniqueUserCount: number;
     owner: string;
@@ -377,4 +391,4 @@ export class GetUserOAuthDto {
     nonceToken: string;
 }
 
-export class GetUserOAuthResponseDto extends GetAccountResponseDto { }
+export class GetUserOAuthResponseDto extends GetAccountResponseDto {}

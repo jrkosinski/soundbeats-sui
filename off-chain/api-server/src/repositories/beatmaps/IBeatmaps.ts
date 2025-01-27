@@ -1,10 +1,11 @@
-
 export interface IBeatmap {
     address: string;
     owner: string;
     username: string;
     title: string;
     artist: string;
+    imageUrl: string;
+    source: string;
     timestamp: number;
     json: string;
 }

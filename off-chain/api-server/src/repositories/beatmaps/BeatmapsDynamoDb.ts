@@ -29,19 +29,27 @@ export class BeatmapsDynamoDb implements IBeatmapsRepo {
     }
 
     async addBeatmap(beatmap: IBeatmap): Promise<void> {
-        await this._dataAccess_putBeatmap(
-            beatmap
-        );
+        await this._dataAccess_putBeatmap(beatmap);
     }
 
     async exists(address: string): Promise<boolean> {
         const beatmap = await this.getBeatmap(address);
-        return (beatmap?.address === address);
+        return beatmap?.address === address;
     }
 
     //data access methods
 
     _mapRecord(record: any): IBeatmap {
+        let source = '';
+        let imageUrl = '';
+        try {
+            if (record.json?.S) {
+                const json = JSON.parse(record.json.S);
+                source = json.source ?? '';
+                imageUrl = json.imageUrl ?? '';
+            }
+        } catch (e: any) {}
+
         return {
             address: record.address?.S ?? '',
             owner: record.owner?.S ?? '',
@@ -50,6 +58,8 @@ export class BeatmapsDynamoDb implements IBeatmapsRepo {
             username: record.username?.S ?? '',
             title: record.title?.S ?? '',
             artist: record.artist?.S ?? '',
+            imageUrl,
+            source,
         };
     }
 
@@ -62,8 +72,8 @@ export class BeatmapsDynamoDb implements IBeatmapsRepo {
                 ':owner_val': { S: owner },
             },
             ExpressionAttributeNames: {
-                "#owner": "owner"
-            }
+                '#owner': 'owner',
+            },
         };
 
         const result = await this.dynamoDb.query(params);
@@ -98,16 +108,13 @@ export class BeatmapsDynamoDb implements IBeatmapsRepo {
         const result = await this.dynamoDb.scanTable(this.config.beatmapsTableName);
         if (result.success) {
             const sortedItems = result.data; //.sort((a, b) => parseInt(b.score.N) - parseInt(a.score.N));
-            return sortedItems.map((i) =>
-                this._mapRecord(i)
-            );
+            return sortedItems.map((i) => this._mapRecord(i));
         }
 
         return [];
     }
 
     private async _dataAccess_getBeatmap(address: string): Promise<IBeatmap> {
-
         const beatmaps = await this._scanForBeatmapsByAddress(address);
         return beatmaps?.length ? beatmaps[0] : null;
         /*
@@ -122,6 +129,14 @@ export class BeatmapsDynamoDb implements IBeatmapsRepo {
     }
 
     private async _dataAccess_putBeatmap(beatmap: IBeatmap): Promise<IDynamoResult> {
+        if (beatmap.json) {
+            try {
+                const json = JSON.parse(beatmap.json);
+                if (beatmap.source) json.source = beatmap.source;
+                if (beatmap.imageUrl) json.imageUrl = beatmap.imageUrl;
+                beatmap.json = JSON.stringify(json);
+            } catch (e: any) {}
+        }
         return await this.dynamoDb.putItem({
             TableName: this.config.beatmapsTableName,
             Item: {

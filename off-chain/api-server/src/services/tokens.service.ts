@@ -206,6 +206,7 @@ export class TokenService {
         title: string,
         artist: string,
         beatmapJson: string,
+        source: string,
         imageUrl: string,
         quantity: number,
     ): Promise<{
@@ -218,6 +219,16 @@ export class TokenService {
         try {
             //mint nft to recipient
             const tx = new TransactionBlock();
+
+            //add source & imageUrl to json
+            try {
+                const json = JSON.parse(beatmapJson);
+                if (source) json.source = source;
+                if (imageUrl) json.imageUrl = imageUrl;
+                beatmapJson = JSON.stringify(json);
+            } catch (e: any) {
+                this.logger.error(`Error parsing json`, e);
+            }
 
             const metadata = {
                 beatmap: beatmapJson,
@@ -268,6 +279,8 @@ export class TokenService {
                     title,
                     artist,
                     username,
+                    source,
+                    imageUrl,
                 });
             } catch (e) {
                 message = 'Minted successfully, but failed to add to database';
@@ -439,6 +452,8 @@ export class TokenService {
                 username: string;
                 title: string;
                 artist: string;
+                source: string;
+                imageUrl: string;
                 beatmapJson: string;
                 address: string;
                 owner: string;
@@ -454,10 +469,17 @@ export class TokenService {
         //get list of unique names for all NFTs owned
         for (let i = 0; i < nfts.length; i++) {
             const nft = nfts[i];
+            let source = '';
+            let imageUrl = '';
             if (nft.data.content['fields'] && nft.data.content['fields']['metadata']) {
                 let metadata: any = {};
                 try {
                     metadata = JSON.parse(nft.data.content['fields']['metadata']);
+                    if (metadata?.json?.length) {
+                        const json = JSON.parse(metadata.json);
+                        if (json.source) source = json.source;
+                        if (json.imageUrl) imageUrl = json.imageUrl;
+                    }
                 } catch {}
                 output.nfts.push({
                     username: metadata.username ?? '',
@@ -467,6 +489,8 @@ export class TokenService {
                     address: nft.data.objectId,
                     uniqueUserCount: 0,
                     owner: nft.owner,
+                    source,
+                    imageUrl,
                 });
             }
         }
@@ -486,6 +510,8 @@ export class TokenService {
                 uniqueUserCount: number;
                 owner: string;
                 timestamp: number;
+                source: string;
+                imageUrl: string;
             }[];
             network: string;
         } = { nfts: [], network: this.network };
@@ -504,6 +530,8 @@ export class TokenService {
                 uniqueUserCount: 0,
                 owner: nft.owner,
                 timestamp: nft.timestamp,
+                source: nft.source,
+                imageUrl: nft.imageUrl,
             });
         }
 
@@ -519,6 +547,8 @@ export class TokenService {
                 username: string;
                 title: string;
                 artist: string;
+                imageUrl: string;
+                source: string;
                 beatmapJson: string;
                 address: string;
                 uniqueUserCount: number;
@@ -542,6 +572,8 @@ export class TokenService {
                 uniqueUserCount: 0,
                 owner: nft.owner,
                 timestamp: nft.timestamp,
+                imageUrl: nft.imageUrl,
+                source: nft.source,
             });
         }
 

@@ -22,7 +22,6 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
 
     async getLocalBeatmap(id: any): Promise<any> {
         try {
-            console.log('getting local beatmap by', id);
             return await this._dataAccess_getLocalBeatmap(id);
         } catch (e) {
             console.log(e);
@@ -33,9 +32,11 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
     async updateLocalBeatmap(
         id: any,
         username: string,
+        artist: string,
         title: string,
         file: string,
-        artist: string
+        source: string,
+        imageUrl: string,
     ): Promise<any> {
         const record: any = await this.getLocalBeatmap(id);
 
@@ -43,7 +44,7 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
             throw new Error(`not found.`);
         }
 
-        return  await this._dataAccess_putRecord(username, artist, title, file, record.data);
+        return await this._dataAccess_putRecord(username, artist, title, file, source, imageUrl, record.data);
     }
 
     async getLocalBeatmapsByOwner(ownerAddress: string): Promise<ILocalBeatmap[]> {
@@ -51,20 +52,25 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
     }
 
     async addLocalBeatmap(beatmap: ILocalBeatmap): Promise<void> {
+        //TODO: WHY HAVE TWO DIFFERENT PUT METHODS???
         await this._dataAccess_putBeatmap(beatmap);
     }
 
     //data access methods
 
     _mapRecord(record: any): ILocalBeatmap {
-        return {
+        const output = {
             id: record.id?.S ?? '',
             timestamp: record.timestamp?.N ?? 0,
             username: record.username?.S ?? '',
             artist: record.artist?.S ?? '',
             title: record.title?.S ?? '',
             file: record.file?.S ?? '',
+            source: record.source?.S ?? '',
+            imageUrl: record.imageUrl?.S ?? '',
         };
+
+        return output;
     }
 
     private async _scanForLocalBeatmapsByOwner(owner: string): Promise<ILocalBeatmap[]> {
@@ -94,20 +100,27 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
         artist: string,
         title: string,
         file: string,
-        record: ILocalBeatmap
+        source: string,
+        imageUrl: string,
+        record: ILocalBeatmap,
     ): Promise<ILocalBeatmap> {
-
-        if(record.username != username && username) {
-            record.username = username
+        if (record.username != username && username) {
+            record.username = username;
         }
-        if(record.artist != artist && artist) {
-            record.artist = artist
+        if (record.artist != artist && artist) {
+            record.artist = artist;
         }
-        if(record.title != title && title) {
-            record.title = title
+        if (record.title != title && title) {
+            record.title = title;
         }
-        if(record.file != file && file) {
-            record.file = file
+        if (record.file != file && file) {
+            record.file = file;
+        }
+        if (record.source != source && source) {
+            record.source = source;
+        }
+        if (record.imageUrl != imageUrl && imageUrl) {
+            record.imageUrl = imageUrl;
         }
 
         const result = await this.dynamoDb.putItem({
@@ -118,6 +131,8 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
                 title: { S: record.title },
                 file: { S: record.file },
                 artist: { S: record.artist },
+                source: { S: record.source },
+                imageUrl: { S: record.imageUrl },
                 timestamp: { N: record.timestamp },
             },
         });
@@ -126,7 +141,6 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
             return this._mapRecord(result.data.Item);
         }
     }
-
 
     private async _scanForLocalBeatmaps(): Promise<ILocalBeatmap[]> {
         const result = await this.dynamoDb.scanTable(this.config.localBeatmapsTableName);
@@ -140,6 +154,8 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
 
     async _dataAccess_getLocalBeatmap(id: string): Promise<IDynamoResult> {
         const allBeatmaps = await this.getAllLocalBeatmaps();
+
+        //TODO: doing a whole table scan to find a single record: NO
         const beatmap = allBeatmaps.find((b) => b.id === id);
 
         return {
@@ -159,6 +175,8 @@ export class LocalBeatmapsDynamoDb implements ILocalBeatmapsRepo {
                 username: { S: beatmap.username },
                 file: { S: beatmap.file },
                 artist: { S: beatmap.artist },
+                source: { S: beatmap.source },
+                imageUrl: { S: beatmap.imageUrl },
                 timestamp: { N: beatmap.timestamp.toString() },
             },
         });
