@@ -9,8 +9,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IAuthManager, IAuthRecord } from '../repositories/auth/IAuthManager';
 import { ConfigSettings } from '../config';
 import { AppLogger } from '../app.logger';
-import { AuthManagerModule, ConfigSettingsModule, BeatmapsModule } from '../app.module';
+import { AuthManagerModule, ConfigSettingsModule, BeatmapsModule, UserGameStatsModule } from '../app.module';
 import { IBeatmapsRepo } from 'src/repositories/beatmaps/IBeatmaps';
+import { IUserGameStatsRepo } from '../repositories/userGameStats/IUserGameStats';
 
 //TODO: replace 'success' with 'completed'
 // - delete table
@@ -39,6 +40,7 @@ export class TokenService {
     network: string;
     logger: AppLogger;
     authManager: IAuthManager;
+    userGameStats: IUserGameStatsRepo
     beatmapsRepo: IBeatmapsRepo;
     config: ConfigSettings;
     noncesToWallets: { [key: string]: string };
@@ -47,6 +49,7 @@ export class TokenService {
         @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
         @Inject('BeatmapsModule') beatmapsModule: BeatmapsModule,
         @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
+        @Inject('UserGameStatsModule') userGameStatsModule: UserGameStatsModule,
     ) {
         this.config = configSettingsModule.get();
 
@@ -60,6 +63,7 @@ export class TokenService {
         this.provider = this._createRpcProvider(this.network);
         this.signer = new RawSigner(this.keypair, this.provider);
         this.authManager = authManagerModule.get(this.config);
+        this.userGameStats = userGameStatsModule.get(this.config)
         this.beatmapsRepo = beatmapsModule.get(this.config);
 
         //get initial addresses from config setting
@@ -306,6 +310,7 @@ export class TokenService {
     }> {
         let balance = 0;
         try {
+
             //mint token to recipient
             const tx = new TransactionBlock();
             tx.moveCall({
@@ -335,12 +340,12 @@ export class TokenService {
                 this.logger.error(`Error getting balance of token for ${recipient}`, e);
             }
 
-            //slash amounts by half
-            amount = Math.floor(amount / 2);
-
-            //slash further based on balance
-            if (balance > 100000) amount = Math.floor(amount / 2);
-            if (balance > 200000) amount = Math.floor(amount / 2);
+            // //slash amounts by half
+            // amount = Math.floor(amount / 2);
+            //
+            // //slash further based on balance
+            // if (balance > 100000) amount = Math.floor(amount / 2);
+            // if (balance > 200000) amount = Math.floor(amount / 2);
 
             const signature = result.effects?.transactionDigest;
             return {

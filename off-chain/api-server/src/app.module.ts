@@ -1,4 +1,4 @@
-import { DynamicModule, Module } from '@nestjs/common';
+import { DynamicModule, MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { LeaderboardController } from './controllers/leaderboard.controller';
@@ -33,6 +33,16 @@ import { UserReferralsDynamoDb } from './repositories/userReferrals/UserReferral
 import { IUserReferralsRepo } from './repositories/userReferrals/IUserReferralsManager';
 import { UserReferralService } from './services/user-refferal.service';
 import { UserReferralsController } from './controllers/user-referrals.controller';
+import * as dotenv from 'dotenv';
+import { RewardService } from './services/reward.service';
+import { UserGameStatsService } from './services/user-game-stats.service';
+import { S3Service } from './services/s3.service';
+import { IUserGameStatsRepo } from './repositories/userGameStats/IUserGameStats';
+import { IRewardRepo } from './repositories/reward/IReward';
+import { RewardDynamoDb } from './repositories/reward/RewardDynamoDb';
+import { UserGameStatsDynamoDb } from './repositories/userGameStats/UserGameStatsDynamoDb';
+dotenv.config();
+
 
 @Module({})
 export class AuthManagerModule {
@@ -114,6 +124,49 @@ export class LocalBeatmapsModule {
     }
 }
 
+
+@Module({})
+export class RewardsModule {
+    static register(): DynamicModule {
+        let provider = {
+            provide: 'RewardsModule',
+            useClass: RewardsModule,
+        };
+
+        return {
+            module: RewardsModule,
+            providers: [provider],
+            exports: [provider],
+        };
+    }
+
+    get(config: IConfigSettings): IRewardRepo {
+        return new RewardDynamoDb(config);
+    }
+}
+
+@Module({})
+export class UserGameStatsModule {
+    static register(): DynamicModule {
+        let provider = {
+            provide: 'UserGameStatsModule',
+            useClass: UserGameStatsModule,
+        };
+
+        return {
+            module: UserGameStatsModule,
+            providers: [provider],
+            exports: [provider],
+        };
+    }
+
+    get(config: IConfigSettings): IUserGameStatsRepo {
+        return new UserGameStatsDynamoDb(config);
+    }
+}
+
+
+
 @Module({})
 export class ReferralModule {
     static register(): DynamicModule {
@@ -133,6 +186,8 @@ export class ReferralModule {
         return config.testMode ? new ReferralDynamoDb(config) : new ReferralDynamoDb(config);
     }
 }
+
+
 
 
 
@@ -175,6 +230,8 @@ export class ConfigSettingsModule {
     }
 }
 
+
+
 @Module({
     imports: [
         ConfigModule.forRoot(),
@@ -184,7 +241,9 @@ export class ConfigSettingsModule {
         BeatmapsModule.register(),
         LocalBeatmapsModule.register(),
         ReferralModule.register(),
-        UserReferralsModule.register()
+        UserReferralsModule.register(),
+        RewardsModule.register(),
+        UserGameStatsModule.register()
     ],
     controllers: [
         AppController,
@@ -198,6 +257,7 @@ export class ConfigSettingsModule {
         UserReferralsController
     ],
     providers: [
+        // AdminService,
         AppService,
         SuiService,
         LeaderboardService,
@@ -206,7 +266,10 @@ export class ConfigSettingsModule {
         ReferralService,
         SettingsService,
         LocalBeatmapsService,
-        UserReferralService
+        UserReferralService,
+        RewardService,
+        UserGameStatsService,
+        S3Service
     ],
 })
 export class AppModule {}
