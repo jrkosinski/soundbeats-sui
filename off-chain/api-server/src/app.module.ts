@@ -41,6 +41,7 @@ import { IUserGameStatsRepo } from './repositories/userGameStats/IUserGameStats'
 import { IRewardRepo } from './repositories/reward/IReward';
 import { RewardDynamoDb } from './repositories/reward/RewardDynamoDb';
 import { UserGameStatsDynamoDb } from './repositories/userGameStats/UserGameStatsDynamoDb';
+import { ProfitRecordsDynamoDb } from './repositories/profitRecords/ProfitRecordsDynamoDb';
 dotenv.config();
 
 
@@ -165,6 +166,26 @@ export class UserGameStatsModule {
     }
 }
 
+@Module({})
+export class ProfitRecordsModule {
+    static register(): DynamicModule {
+        let provider = {
+            provide: 'ProfitRecordsModule',
+            useClass: ProfitRecordsModule,
+        };
+
+        return {
+            module: ProfitRecordsModule,
+            providers: [provider],
+            exports: [provider],
+        };
+    }
+
+    get(config: IConfigSettings): ProfitRecordsDynamoDb {
+        return new ProfitRecordsDynamoDb(config);
+    }
+}
+
 
 
 @Module({})
@@ -243,7 +264,8 @@ export class ConfigSettingsModule {
         ReferralModule.register(),
         UserReferralsModule.register(),
         RewardsModule.register(),
-        UserGameStatsModule.register()
+        UserGameStatsModule.register(),
+        ProfitRecordsModule.register()
     ],
     controllers: [
         AppController,

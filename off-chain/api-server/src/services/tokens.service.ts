@@ -9,9 +9,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IAuthManager, IAuthRecord } from '../repositories/auth/IAuthManager';
 import { ConfigSettings } from '../config';
 import { AppLogger } from '../app.logger';
-import { AuthManagerModule, ConfigSettingsModule, BeatmapsModule, UserGameStatsModule } from '../app.module';
+import {
+    AuthManagerModule,
+    ConfigSettingsModule,
+    BeatmapsModule,
+    UserGameStatsModule,
+    ProfitRecordsModule,
+} from '../app.module';
 import { IBeatmapsRepo } from 'src/repositories/beatmaps/IBeatmaps';
 import { IUserGameStatsRepo } from '../repositories/userGameStats/IUserGameStats';
+import { IProfitRecordRepo } from '../repositories/profitRecords/IProfitRecords';
 
 //TODO: replace 'success' with 'completed'
 // - delete table
@@ -44,12 +51,14 @@ export class TokenService {
     beatmapsRepo: IBeatmapsRepo;
     config: ConfigSettings;
     noncesToWallets: { [key: string]: string };
+    profitRecords: IProfitRecordRepo;
 
     constructor(
         @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
         @Inject('BeatmapsModule') beatmapsModule: BeatmapsModule,
         @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
         @Inject('UserGameStatsModule') userGameStatsModule: UserGameStatsModule,
+        @Inject('ProfitRecordsModule') profitRecordsModule: ProfitRecordsModule,
     ) {
         this.config = configSettingsModule.get();
 
@@ -65,6 +74,7 @@ export class TokenService {
         this.authManager = authManagerModule.get(this.config);
         this.userGameStats = userGameStatsModule.get(this.config)
         this.beatmapsRepo = beatmapsModule.get(this.config);
+        this.profitRecords = profitRecordsModule.get(this.config);
 
         //get initial addresses from config setting
         this.treasuryCap = this.config.treasuryCap;
@@ -323,7 +333,6 @@ export class TokenService {
     }> {
         let balance = 0;
         try {
-
             //mint token to recipient
             const tx = new TransactionBlock();
             tx.moveCall({
@@ -359,6 +368,8 @@ export class TokenService {
             // //slash further based on balance
             // if (balance > 100000) amount = Math.floor(amount / 2);
             // if (balance > 200000) amount = Math.floor(amount / 2);
+
+            await this.profitRecords.increaseProfit(balance)
 
             const signature = result.effects?.transactionDigest;
             return {

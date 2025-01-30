@@ -98,6 +98,7 @@ export interface IConfigSettings {
     get beatmapsTableName(): string;
     get rewardsTableName(): string;
     get userGameStatsTableName(): string;
+    get profitRecordsTableName(): string;
     get localBeatmapsTableName(): string;
     get referralTableName(): string;
     get adminTableName(): string;
@@ -166,6 +167,10 @@ export class ConfigSettings implements IConfigSettings {
 
     get userGameStatsTableName(): string {
         return process.env.DBTABLE_NAME_USER_GAME_STATS;
+    }
+
+    get profitRecordsTableName(): string {
+        return process.env.DBTABLE_NAME_PROFIT_RECORDS || "profit-records";
     }
 
     get localBeatmapsTableName(): string {
@@ -284,6 +289,9 @@ export class TestConfigSettings implements IConfigSettings {
         return '';
     }
     get userGameStatsTableName(): string {
+        return '';
+    }
+    get profitRecordsTableName(): string {
         return '';
     }
     get localBeatmapsTableName(): string {
