@@ -9,8 +9,16 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IAuthManager, IAuthRecord } from '../repositories/auth/IAuthManager';
 import { ConfigSettings } from '../config';
 import { AppLogger } from '../app.logger';
-import { AuthManagerModule, ConfigSettingsModule, BeatmapsModule } from '../app.module';
+import {
+    AuthManagerModule,
+    ConfigSettingsModule,
+    BeatmapsModule,
+    UserGameStatsModule,
+    ProfitRecordsModule,
+} from '../app.module';
 import { IBeatmapsRepo } from 'src/repositories/beatmaps/IBeatmaps';
+import { IUserGameStatsRepo } from '../repositories/userGameStats/IUserGameStats';
+import { IProfitRecordRepo } from '../repositories/profitRecords/IProfitRecords';
 
 //TODO: replace 'success' with 'completed'
 // - delete table
@@ -39,14 +47,18 @@ export class TokenService {
     network: string;
     logger: AppLogger;
     authManager: IAuthManager;
+    userGameStats: IUserGameStatsRepo
     beatmapsRepo: IBeatmapsRepo;
     config: ConfigSettings;
     noncesToWallets: { [key: string]: string };
+    profitRecords: IProfitRecordRepo;
 
     constructor(
         @Inject('ConfigSettingsModule') configSettingsModule: ConfigSettingsModule,
         @Inject('BeatmapsModule') beatmapsModule: BeatmapsModule,
         @Inject('AuthManagerModule') authManagerModule: AuthManagerModule,
+        @Inject('UserGameStatsModule') userGameStatsModule: UserGameStatsModule,
+        @Inject('ProfitRecordsModule') profitRecordsModule: ProfitRecordsModule,
     ) {
         this.config = configSettingsModule.get();
 
@@ -60,7 +72,9 @@ export class TokenService {
         this.provider = this._createRpcProvider(this.network);
         this.signer = new RawSigner(this.keypair, this.provider);
         this.authManager = authManagerModule.get(this.config);
+        this.userGameStats = userGameStatsModule.get(this.config)
         this.beatmapsRepo = beatmapsModule.get(this.config);
+        this.profitRecords = profitRecordsModule.get(this.config);
 
         //get initial addresses from config setting
         this.treasuryCap = this.config.treasuryCap;
@@ -348,12 +362,14 @@ export class TokenService {
                 this.logger.error(`Error getting balance of token for ${recipient}`, e);
             }
 
-            //slash amounts by half
-            amount = Math.floor(amount / 2);
+            // //slash amounts by half
+            // amount = Math.floor(amount / 2);
+            //
+            // //slash further based on balance
+            // if (balance > 100000) amount = Math.floor(amount / 2);
+            // if (balance > 200000) amount = Math.floor(amount / 2);
 
-            //slash further based on balance
-            if (balance > 100000) amount = Math.floor(amount / 2);
-            if (balance > 200000) amount = Math.floor(amount / 2);
+            await this.profitRecords.increaseProfit(balance)
 
             const signature = result.effects?.transactionDigest;
             return {

@@ -219,7 +219,7 @@ export class AuthService {
 
     async rewardReferral(referralCode: IReferralCode, newUserWallet: any) {
         try {
-            const settings = this.settingsService.getSettings();
+            const settings = await this.settingsService.getSettings();
             this.logger.log(`Rewarding tokens to new referred user ${newUserWallet}`);
             await this.tokenService.mintTokens(newUserWallet, settings.beatmapReferrerReward);
         } catch (e) {
@@ -228,7 +228,7 @@ export class AuthService {
 
         let referrer;
         try {
-            const settings = this.settingsService.getSettings();
+            const settings = await this.settingsService.getSettings();
 
             const beatmap = await this.beatmapsRepo.getBeatmap(referralCode.beatmapId)
             referrer = await this.authManager.getAuthRecord(beatmap.owner, 'sui');
@@ -242,6 +242,10 @@ export class AuthService {
         } catch (e) {
             this.logger.error(`Errror rewarding to referrer ${referrer ? referrer : ''}: ${JSON.stringify(e)}`);
         }
+    }
 
+
+    async getUsersCount(): Promise<number> {
+        return (await this.authManager.getAuthRecords()).length;
     }
 }

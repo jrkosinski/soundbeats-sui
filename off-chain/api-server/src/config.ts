@@ -11,6 +11,9 @@ export class Config {
     static get mnemonicPhrase(): string {
         return process.env.MNEMONIC_PHRASE;
     }
+    static get jwtSecret(): string {
+        return process.env.ADMIN_JWT_SECRET;
+    }
     static get beatsCoinPackageId(): string {
         return process.env.BEATS_COIN_PACKAGE_ID;
     }
@@ -93,8 +96,12 @@ export interface IConfigSettings {
     get sprintsTableName(): string;
     get scoresTableName(): string;
     get beatmapsTableName(): string;
+    get rewardsTableName(): string;
+    get userGameStatsTableName(): string;
+    get profitRecordsTableName(): string;
     get localBeatmapsTableName(): string;
     get referralTableName(): string;
+    get adminTableName(): string;
     get authTableName(): string;
     get authSessionTableName(): string;
     get allowedCorsOrigin(): string;
@@ -103,6 +110,8 @@ export interface IConfigSettings {
     get certFilePath(): string;
     get keyFilePath(): string;
     get httpPort(): number;
+    get awsS3Settings(): object;
+    get mubertSettings(): string;
 }
 
 export class ConfigSettings implements IConfigSettings {
@@ -151,6 +160,19 @@ export class ConfigSettings implements IConfigSettings {
     get beatmapsTableName(): string {
         return process.env.DBTABLE_NAME_BEATMAPS;
     }
+
+    get rewardsTableName(): string {
+        return process.env.DBTABLE_NAME_REWARDS;
+    }
+
+    get userGameStatsTableName(): string {
+        return process.env.DBTABLE_NAME_USER_GAME_STATS;
+    }
+
+    get profitRecordsTableName(): string {
+        return process.env.DBTABLE_NAME_PROFIT_RECORDS || "profit-records";
+    }
+
     get localBeatmapsTableName(): string {
         return process.env.DBTABLE_LOCAL_BEATMAP;
     }
@@ -159,6 +181,9 @@ export class ConfigSettings implements IConfigSettings {
     }
     get authTableName(): string {
         return process.env.DBTABLE_NAME_AUTH || "auth-dev";
+    }
+    get adminTableName(): string {
+        return process.env.DBTABLE_NAME_ADMIN;
     }
     get authSessionTableName(): string {
         return process.env.DBTABLE_NAME_AUTH_SESSION || "auth-session-dev";
@@ -192,6 +217,19 @@ export class ConfigSettings implements IConfigSettings {
         }
 
         return false;
+    }
+
+    get awsS3Settings() {
+        return {
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+            bucket: process.env.AWS_BUCKET,
+            region: process.env.REGION
+        };
+    }
+
+    get mubertSettings(): string {
+        return `${process.env.MUBERT_PAT}`;
     }
 }
 
@@ -241,7 +279,19 @@ export class TestConfigSettings implements IConfigSettings {
     get authTableName(): string {
         return '';
     }
+    get adminTableName(): string {
+        return '';
+    }
     get beatmapsTableName(): string {
+        return '';
+    }
+    get rewardsTableName(): string {
+        return '';
+    }
+    get userGameStatsTableName(): string {
+        return '';
+    }
+    get profitRecordsTableName(): string {
         return '';
     }
     get localBeatmapsTableName(): string {
@@ -273,5 +323,11 @@ export class TestConfigSettings implements IConfigSettings {
     }
     get httpsPort(): number {
         return 443;
+    }
+    get awsS3Settings(): object {
+        return {};
+    }
+    get mubertSettings():string {
+        return '';
     }
 }
