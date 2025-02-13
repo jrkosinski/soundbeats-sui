@@ -236,20 +236,17 @@ export class TokenController {
     async mintBeatsToken(@Body() body: MintTokenDto): Promise<MintTokenResponseDto> {
         const logString = `POST /api/v2/token ${JSON.stringify(body)}`;
         this.logger.log(logString);
-        const { recipient, beatmapAddress, referralOwnerUsername } = body;
+        const { recipient, amount } = body;
 
-
+        if (!amount || amount <= 0) {
+            returnError(this.logger, logString, 400, 'amount cannot be null, zero or negative');
+        }
         if (!recipient || recipient == '') {
             returnError(this.logger, logString, 400, 'recipient cannot be null or empty');
         }
-        if (!beatmapAddress || recipient == '') {
-            returnError(this.logger, logString, 400, 'beatmapAddress cannot be null or empty');
-        }
 
         try {
-            const settings = await this.settingsService.getSettings(recipient);
-
-            const output = await this.tokenService.mintTokens(recipient, settings.beatmapReferrerReward);
+            const output = await this.tokenService.mintTokens(recipient, amount);
             this.logger.log(`${logString} returning ${JSON.stringify(output)}`);
 
             return output;
